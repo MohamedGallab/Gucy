@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:gucy/main_widgets/main_scaffold.dart';
+
+import 'main_widgets/nav_bar.dart';
+import 'pages/staff_page.dart';
+import 'pages/home_page.dart';
+import 'pages/outlets_page.dart';
 
 void main() {
   runApp(const MainApp());
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
   @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  int _currentPageIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      theme: ThemeData(useMaterial3: true),
+      darkTheme: ThemeData(useMaterial3: true),
+      home: MainScaffold(),
     );
   }
 }
