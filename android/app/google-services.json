@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "527400651671",
+    "firebase_url": "https://gucy-45427-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "gucy-45427",
+    "storage_bucket": "gucy-45427.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527400651671:android:0eff33db483e9a6efbd2d2",
+        "android_client_info": {
+          "package_name": "com.fouram.gucy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm_TY8TD13vYnYxB_Zsfx4xJJtCeTiJ9M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
