@@ -9,27 +9,48 @@ class MainScaffold extends StatefulWidget {
   _MainScaffoldState createState() => _MainScaffoldState();
 }
 
-class _MainScaffoldState extends State<MainScaffold> {
+class _MainScaffoldState extends State<MainScaffold>
+    with TickerProviderStateMixin {
   int _currentPageIndex = 0;
+  var tabControllers = <TabController>[];
+
+  @override
+  void initState() {
+    super.initState();
+
+    for (var i = 0; i < tabBars.length; i++) {
+      tabControllers.add(TabController(vsync: this, length: tabBars[i].length));
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var i = 0; i < tabControllers.length; i++) {
+      tabControllers[i].dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: tabBars[_currentPageIndex].tabs.length,
-      child: Scaffold(
-        appBar: AppBar(
+    return Scaffold(
+      appBar: AppBar(
           title: const Text('Gucy'),
-          bottom: tabBars[_currentPageIndex],
-        ),
-        body: tabBarViews[_currentPageIndex],
-        bottomNavigationBar: NavBar(
-          currentPageIndex: _currentPageIndex,
-          onDestinationSelected: (int index) {
-            setState(() {
-              _currentPageIndex = index;
-            });
-          },
-        ),
+          bottom: TabBar(
+            controller: tabControllers[_currentPageIndex],
+            tabs: tabBars[_currentPageIndex],
+          )),
+      body: TabBarView(
+        controller: tabControllers[_currentPageIndex],
+        children: tabBarViews[_currentPageIndex],
+      ),
+      bottomNavigationBar: NavBar(
+        currentPageIndex: _currentPageIndex,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _currentPageIndex = index;
+          });
+        },
       ),
     );
   }
