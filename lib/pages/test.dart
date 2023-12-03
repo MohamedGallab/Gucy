@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gucy/pages/OutletProfilePage.dart';
+
+
 
 class Outlet {
   final String image;
@@ -23,6 +24,7 @@ class Outlet {
   });
 }
 
+// Custom class to represent reviews
 class Review {
   final String user;
   final double rating;
@@ -35,22 +37,22 @@ class Review {
   });
 }
 
-// void main() => runApp(
-//       MaterialApp(
-//         debugShowCheckedModeBanner: false,
-//         home: OutletPage(),
-//       ),
-//     );
-
-class OutletPage extends StatefulWidget {
-  const OutletPage({Key? key}) : super(key: key);
-
+void main() => runApp(
+  MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: HomePage(),
+  )
+);
+class HomePage extends StatefulWidget {
+  const HomePage({ Key? key }) : super(key: key);
   @override
-  _OutletPageState createState() => _OutletPageState();
+  _HomePageState createState() => _HomePageState();
 }
+class _HomePageState extends State<HomePage> {
+  
 
-class _OutletPageState extends State<OutletPage> {
- List<Outlet> outletsList = [
+   ///// outlets list /////////////////////
+   List<Outlet> outletsList = [
   Outlet(
     image: 'https://images.unsplash.com/photo-1504735217152-b768bcab5ebc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=0ec8291c3fd2f774a365c8651210a18b',
     desc: 'Description for 3msaad',
@@ -263,182 +265,178 @@ class _OutletPageState extends State<OutletPage> {
   ),
 ];
 
-  List<Outlet> filteredList = [];
 
+///////////////////////////////////////////////////////
+  List<Outlet> filteredList = [];
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     setState(() {
       filteredList = outletsList;
+     
     });
   }
-
   onSearch(String search) {
     setState(() {
+      
       filteredList = outletsList.where((outlet) {
-        return outlet.name.toLowerCase().contains(search.toLowerCase()) ||
-            outlet.desc.toLowerCase().contains(search.toLowerCase()) ||
-            outlet.location.toLowerCase().contains(search.toLowerCase()) ||
-            outlet.office.toLowerCase().contains(search.toLowerCase());
-      }).toList();
+      return outlet.name.toLowerCase().contains(search.toLowerCase()) ||
+          outlet.desc.toLowerCase().contains(search.toLowerCase()) ||
+          outlet.location.toLowerCase().contains(search.toLowerCase()) ||
+          outlet.office.toLowerCase().contains(search.toLowerCase());
+    }).toList();
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          color: Colors.grey.shade900,
-          child: TextField(
-            onChanged: (value) => onSearch(value),
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[850],
-              contentPadding: EdgeInsets.all(0),
-              prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(50),
-                borderSide: BorderSide.none,
-              ),
-              hintStyle: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade500,
-              ),
-              hintText: "Search Outlets",
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Container(
+        
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        color: Colors.grey.shade900,
+        child: TextField(
+          onChanged: (value) => onSearch(value),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[850],
+            contentPadding: EdgeInsets.all(0),
+            prefixIcon: Icon(Icons.search, color: Colors.grey.shade500,),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50),
+              borderSide: BorderSide.none
             ),
+            hintStyle: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade500
+            ),
+            hintText: "Search Outlets"
           ),
         ),
-        Expanded(
-          child: Container(
-            color: Colors.grey.shade900,
-            child: filteredList.isNotEmpty
-                ? ListView.builder(
-                    itemCount: filteredList.length,
-                    itemBuilder: (context, index) {
-                      return outletComponent(outlet: filteredList[index]);
-                    },
-                  )
-                : Center(
-                    child: Text(
-                      "No outlets found",
-                      style: TextStyle(color: Colors.white),
-                    ),
+      ),
+      Expanded(
+        child: Container(
+          
+          color: Colors.grey.shade900,
+          child: filteredList.isNotEmpty
+              ? ListView.builder(
+                  itemCount: filteredList.length,
+                  itemBuilder: (context, index) {
+                    return outletComponent(outlet: filteredList[index]);
+                  },
+                )
+              : Center(
+                  child: Text(
+                    "No outlets found",
+                    style: TextStyle(color: Colors.white),
                   ),
-          ),
+                ),
         ),
-      ],
-    );
+      ),
+    ],
+  );
   }
 
-  Widget outletComponent({required Outlet outlet}) {
-    // return GestureDetector(
-    //   onTap: () {
-        
-    //     // Add code here to perform actions when tapped
-    //   },
-    //   child:
-      return Container(
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey),
-        ),
-        child: Material(
-          color: Colors.transparent, // Required for tap effect
-          child: InkWell(
-            onTap: () {
-              print("Outlet clicked: ${outlet.name}");
-              Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => OutletProfilePage(outlet: outlet),
-          ),
-        );
-              // Add code here to perform actions when tapped
-            },
-            borderRadius: BorderRadius.circular(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+ outletComponent({required Outlet outlet}) {
+   return GestureDetector(
+  onTap: () {
+    print("abdo");
+    // Add code here to perform actions when tapped
+  },
+  child: Container(
+    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    padding: EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(color: Colors.grey),
+    ),
+    child: Material(
+      color: Colors.transparent, // Required for tap effect
+      child: InkWell(
+        onTap: () {
+          print("abdo");
+          // Add code here to perform actions when tapped
+        },
+        borderRadius: BorderRadius.circular(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.network(outlet.image),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          outlet.name,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        _buildRatingStars(outlet.rating),
-                      ],
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Icon(
-                        Icons.store,
-                        color:Color.fromARGB(255, 217, 0, 255),
-                        size: 20,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        outlet.location,
-                        textAlign: TextAlign.right,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
+                Container(
+                  width: 60,
+                  height: 60,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image.network(outlet.image),
                   ),
+                ),
+                SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      outlet.name,
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(height: 5),
+                    _buildRatingStars(outlet.rating),
+                  ],
                 ),
               ],
             ),
-          ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(
+                    Icons.store,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    outlet.location,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      );
-    
-  }
-
-  Widget _buildRatingStars(double rating) {
-    int fullStars = rating.floor(); // Extract the whole number part
-    double fraction = rating - fullStars; // Calculate the fractional part
-
-    List<Widget> stars = List.generate(
-      fullStars,
-      (index) => Icon(
-        Icons.star,
-        color:Color.fromARGB(255, 217, 0, 255),
-        size: 15,
       ),
-    );
+    ),
+  ),
+);
 
-    if (fraction > 0) {
-      stars.add(Icon(
-        Icons.star_half,
-        color: Color.fromARGB(255, 217, 0, 255),
-        size: 15,
-      ));
-    }
+}
 
-    return Row(children: stars);
+Widget _buildRatingStars(double rating) {
+  int fullStars = rating.floor(); // Extract the whole number part
+  double fraction = rating - fullStars; // Calculate the fractional part
+
+  List<Widget> stars = List.generate(
+    fullStars,
+    (index) => Icon(
+      Icons.star,
+      color: Colors.red,
+      size: 15,
+    ),
+  );
+
+  if (fraction > 0) {
+    stars.add(Icon(
+      Icons.star_half,
+      color: Colors.red,
+      size: 15,
+    ));
   }
+
+  return Row(children: stars);
+
+}
 }

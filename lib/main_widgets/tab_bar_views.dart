@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gucy/pages/contacts_page.dart';
 import 'package:gucy/pages/outlets_page.dart';
 import 'package:gucy/pages/staff_page.dart';
+import 'package:gucy/pages/test.dart';
 
 List<TabBarView> tabBarViews = [
   TabBarView(
@@ -33,9 +34,12 @@ List<TabBarView> tabBarViews = [
   TabBarView(
     children: [
       // Facilities Page Contents for Tab X
-      OutletsPage(),
+      OutletPage(),
+     
       // Facilities Page Contents for Tab Y
-      ContactsPage()
+       ContactsPage()
+      
+      
     ],
   )
 ];
