@@ -11,6 +11,7 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
+      labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       onDestinationSelected: onDestinationSelected,
       selectedIndex: currentPageIndex,
       destinations: const <Widget>[

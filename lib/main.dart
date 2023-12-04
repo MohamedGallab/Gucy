@@ -1,32 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gucy/main_widgets/main_scaffold.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-import 'main_widgets/nav_bar.dart';
-import 'pages/staff_page.dart';
-import 'pages/home_page.dart';
-import 'pages/outlets_page.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MainApp());
 }
 
-class MainApp extends StatefulWidget {
+final _router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => MainScaffold(),
+    ),
+  ],
+);
+
+class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
-  State<MainApp> createState() => _MainAppState();
-}
-
-class _MainAppState extends State<MainApp> {
-  int _currentPageIndex = 0;
-
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      //theme: ThemeData(useMaterial3: true),
-      theme: ThemeData.dark(useMaterial3: true),
+    return MaterialApp.router(
+      theme: ThemeData(useMaterial3: true),
       darkTheme: ThemeData.dark(useMaterial3: true),
-      home: MainScaffold(),
+      routerConfig: _router,
     );
   }
 }
