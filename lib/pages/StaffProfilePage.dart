@@ -30,13 +30,15 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
         title: Text(widget.staff.name),
       ),
       floatingActionButton: FloatingActionButton(
-                  onPressed: () {
-                    setState(() {
-                      _isAddingReview = true;
-                    });
-                  },
-                  child: Icon(Icons.add),
-                ),
+        onPressed: () {
+          print(MediaQuery.of(context).viewInsets.bottom);
+          setState(() {
+            _isAddingReview = true;
+            showNewReview(context);
+          });
+        },
+        child: Icon(Icons.add),
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -114,10 +116,11 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
                 children: [
                   SizedBox(height: 20),
                   Text(
-                    'Reviews:',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    'Reviews',
+                    style: TextStyle(fontSize: 20),
                   ),
-                  SizedBox(height: 10),
+                  Divider(),
+                  //SizedBox(height: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: _buildReviewsList(),
@@ -142,56 +145,7 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
             // ),
 
             // Add a review form
-            if (_isAddingReview)
-              Padding(
-                padding: EdgeInsets.only(bottom: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Rate this Staff member:',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    RatingBar.builder(
-                      initialRating: _userRating,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemSize: 30,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: (rating) {
-                        setState(() {
-                          _userRating = rating;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller: _reviewController,
-                      decoration: InputDecoration(
-                        hintText: 'Write your review here...',
-                        border: OutlineInputBorder(),
-                      ),
-                      minLines: 3,
-                      maxLines: null,
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        _addReview();
-                      },
-                      child: Text('Submit Review'),
-                    ),
-                  ],
-                ),
-              ),
+            //if (_isAddingReview)
           ],
         ),
       ),
@@ -200,44 +154,111 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
 
   List<Widget> _buildReviewsList() {
     return _reviews.map((review) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 60,
-            height: 60,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: Image.network(
-                  "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
-            ),
-          ),
-          Column(
+      return Padding(
+          padding: EdgeInsets.only(bottom: 10),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            Row(
-              children: [
-              SizedBox(width: 10),
-              Text(
-                review.user,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              Container(
+                width: 60,
+                height: 60,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Image.network(
+                      "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
+                ),
               ),
-              SizedBox(width: 110),
-              _buildRatingStars(review.rating),
-            ]),
-            Padding(
-              padding: EdgeInsets.only(left:10),
-              child:
-              Text(
-                review.body,
-                //"asasd asdasd asdf asdasd as das d asd as das d asd asd sad as d asd asd"
-                //style: TextStyle(fontWeight: FontWeight.bold),
-              )
-            ),
-          ])
-        ],
-      );
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  SizedBox(width: 10),
+                  Text(
+                    review.user,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                  SizedBox(width: 110),
+                  _buildRatingStars(review.rating),
+                ]),
+                Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: SizedBox(
+                    width: 300,
+                    child:Text(
+                      review.body,
+                      //"asasd asdasd asdf asdasd as das d asd as das d asd asd sad as d asd asd"
+                      //style: TextStyle(fontWeight: FontWeight.bold),
+                    ))),
+              ])
+            ],
+          ));
     }).toList();
+  }
+
+  void showNewReview(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        isScrollControlled: true,
+        builder: (sheetContext) {
+          return 
+          Padding(
+          padding: EdgeInsets.only(bottom:MediaQuery.of(context).viewInsets.bottom),
+          child:Container(
+            height: 400,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 30),
+                Text(
+                  'What is your rating?',
+                  style: TextStyle(fontSize: 25),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 10),
+                RatingBar.builder(
+                  initialRating: _userRating,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 50,
+                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (rating) {
+                    setState(() {
+                      _userRating = rating;
+                    });
+                  },
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Please share your opinion',
+                  style: TextStyle(fontSize: 25),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: _reviewController,
+                  decoration: InputDecoration(
+                    hintText: 'Write your review here...',
+                    border: OutlineInputBorder(),
+                  ),
+                  minLines: 3,
+                  maxLines: null,
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    _addReview();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Submit Review'),
+                ),
+              ],
+            ),
+          ));
+        });
   }
 
   void _addReview() {
@@ -245,7 +266,7 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
       setState(() {
         _reviews.add(
           Review(
-            user: 'User', // Replace with the actual user's name or ID
+            user: 'User X', // Replace with the actual user's name or ID
             rating: _userRating,
             body: _reviewController.text,
           ),

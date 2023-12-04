@@ -68,12 +68,12 @@ class _StaffPageState extends State<StaffPage> {
         Review(
           user: 'User 1',
           rating: 4.0,
-          body: 'Review 1',
+          body: 'This Professor is fire ngl .. Best grades so far!',
         ),
         Review(
           user: 'User 2',
-          rating: 5.0,
-          body: 'Review 2',
+          rating: 2.5,
+          body: 'There is no way I\'m passing his courses',
         ),
       ],
     ),
