@@ -26,7 +26,7 @@ List<List<Widget>> tabBarViews = [
     ),
   ],
   [
-    OutletsPage(),
+    OutletPage(),
     // Facilities Page Contents for Tab Y
     ContactsPage()
   ]
