@@ -5,11 +5,13 @@ import 'tab_bar_views.dart';
 import 'tab_bars.dart';
 
 class MainScaffold extends StatefulWidget {
+  const MainScaffold({super.key});
+
   @override
-  _MainScaffoldState createState() => _MainScaffoldState();
+  MainScaffoldState createState() => MainScaffoldState();
 }
 
-class _MainScaffoldState extends State<MainScaffold>
+class MainScaffoldState extends State<MainScaffold>
     with TickerProviderStateMixin {
   int _currentPageIndex = 0;
   var tabControllers = <TabController>[];

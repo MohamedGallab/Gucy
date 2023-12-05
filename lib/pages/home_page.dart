@@ -1,35 +1,46 @@
 import 'package:flutter/material.dart';
 
+import '../models/post_data.dart';
+import '../widgets/post.dart';
+
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final List<PostData> dummyPosts = [
+    PostData(
+      profilePicture: 'https://example.com/profile1.jpg',
+      username: 'Hana Tamer',
+      timeStamp: DateTime.now().subtract(Duration(days: 2)),
+      title: 'I have a crush on the boy with green hoodie and a short beard',
+      body:
+          'I saw this boy at C5 and he was wearing a green hoodie and was with his friends. I just want to say I LOOOOOOOVE YOU <3',
+      tags: ['Crush', 'Rant', 'Help'],
+      likes: 1500,
+      dislikes: 300,
+      comments: 70,
+      score: 70,
+    ),
+    PostData(
+      profilePicture: 'https://example.com/profile2.jpg',
+      username: 'Ali Omar',
+      timeStamp: DateTime.now().subtract(Duration(hours: 12)),
+      title: 'FLUSH AFTER YOU ARE DONE',
+      body:
+          'You guys are disgusting. I went to the bathroom and there was poop everywhere. Please flush after you are done.',
+      tags: ['Help', 'Rant'],
+      likes: 80,
+      dislikes: 20,
+      comments: 5,
+      score: 10,
+    ),
+    // Add more dummy data as needed
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Gucy'),
-          bottom: TabBar(
-            tabs: [
-              Tab(text: 'Tab A'),
-              Tab(text: 'Tab B'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            // Academics Page Contents for Tab A
-            Center(
-              child: Text('Academics Tab A Content'),
-            ),
-            // Academics Page Contents for Tab B
-            Center(
-              child: Text('Academics Tab B Content'),
-            ),
-          ],
-        ),
-      ),
+    return ListView.builder(
+      itemCount: dummyPosts.length,
+      itemBuilder: (context, index) {
+        return Post(postData: dummyPosts[index]);
+      },
     );
   }
 }

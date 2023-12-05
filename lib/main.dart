@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gucy/main_widgets/main_scaffold.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:gucy/providers/posts_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 
@@ -11,7 +13,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MainApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => PostsProvider()),
+  ], child: MainApp()));
 }
 
 final _router = GoRouter(
