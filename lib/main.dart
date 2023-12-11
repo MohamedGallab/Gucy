@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gucy/main_widgets/main_scaffold.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:gucy/pages/home_page.dart';
+import 'package:gucy/pages/login_signup_page.dart';
 import 'package:gucy/providers/posts_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +16,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await Future.delayed(const Duration(seconds: 2));
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => PostsProvider()),
   ], child: MainApp()));
@@ -22,7 +27,7 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => MainScaffold(),
+      builder: (context, state) => const LoginPage(),
     ),
   ],
 );
