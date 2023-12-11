@@ -31,7 +31,7 @@ final _router = GoRouter(
     ),
     GoRoute(
       path: '/homepage',
-      builder: (context, state) => HomePage(),
+      builder: (context, state) => const MainScaffold(),
     )
   ],
 );

@@ -166,8 +166,6 @@ class _LoginPageState extends State<LoginPage>
                         child: FilledButton.tonal(
                           onPressed: () async {
                             setState(() {
-                              context.go("/homepage");
-                              return;
                               if (username == '') {
                                 usernameError = 'Username is required';
                               } else {
@@ -185,12 +183,13 @@ class _LoginPageState extends State<LoginPage>
                                 confirmPasswordError = '';
                               }
                             });
-                            if (state == "login" && username == '' ||
-                                password == '') {
+                            if (state == "login" &&
+                                (username == '' || password == '')) {
                               return;
-                            } else if (state == "signup" && username == '' ||
-                                password == '' ||
-                                confirmPassword == '') {
+                            } else if (state == "signup" &&
+                                (username == '' ||
+                                    password == '' ||
+                                    confirmPassword == '')) {
                               return;
                             }
                             RegExp emailRegex = RegExp(
@@ -235,8 +234,8 @@ class _LoginPageState extends State<LoginPage>
                                   );
                                 },
                               );
-                            } else if (state ==
-                                "login") //add and condition for db returning false
+                            } else if (state == "login" &&
+                                false) //add and condition for db returning false
                             {
                               await showDialog<void>(
                                 context: context,
