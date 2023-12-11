@@ -3,7 +3,6 @@ import 'package:gucy/pages/contacts_page.dart';
 import 'package:gucy/pages/home_page.dart';
 import 'package:gucy/pages/outlets_page.dart';
 import 'package:gucy/pages/staff_page.dart';
-import 'package:gucy/pages/test.dart';
 
 List<List<Widget>> tabBarViews = [
   [
@@ -25,7 +24,7 @@ List<List<Widget>> tabBarViews = [
     ),
   ],
   [
-    OutletsPage(),
+    OutletPage(),
     // Facilities Page Contents for Tab Y
     ContactsPage()
   ]

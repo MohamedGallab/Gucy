@@ -68,22 +68,25 @@ class _ContactsPageState extends State<ContactsPage> {
       children: [
         Container(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          color: Colors.grey.shade900,
+          //color: Colors.grey.shade900,
           child: TextField(
             onChanged: (value) => onSearch(value),
-            style: TextStyle(color: Colors.white),
+           // style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.grey[850],
+              //fillColor: Colors.grey[850],
               contentPadding: EdgeInsets.all(0),
-              prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
+              prefixIcon: Icon(
+                Icons.search,
+                // color: Colors.grey.shade500
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(50),
                 borderSide: BorderSide.none,
               ),
               hintStyle: TextStyle(
                 fontSize: 14,
-                color: Colors.grey.shade500,
+                //color: Colors.grey.shade500,
               ),
               hintText: "Search Contacts",
             ),
@@ -91,7 +94,7 @@ class _ContactsPageState extends State<ContactsPage> {
         ),
         Expanded(
           child: Container(
-            color: Colors.grey.shade900,
+            //color: Colors.grey.shade900,
             child: filteredList.isNotEmpty
                 ? ListView.builder(
                     itemCount: filteredList.length,
@@ -102,7 +105,7 @@ class _ContactsPageState extends State<ContactsPage> {
                 : Center(
                     child: Text(
                       "No contacts found",
-                      style: TextStyle(color: Colors.white),
+                      //style: TextStyle(color: Colors.white),
                     ),
                   ),
           ),
@@ -118,75 +121,170 @@ class _ContactsPageState extends State<ContactsPage> {
   //     // Add code here to perform actions when tapped
   //   },
   //   child:
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey),
-      ),
-      child: Material(
-        color: Colors.transparent, // Required for tap effect
-        child: InkWell(
-          onTap: () async {
-        if (contact.isEmergency) {
-        try {
-          await FlutterPhoneDirectCaller.callNumber(contact.phoneNumber);
-        } catch (e) {
-          print('Error calling phone number: $e');
-          // Handle the error as needed
-        }
-      } else {
-        // Handle normal contact action here (e.g., open dialer)
-        // You can implement your desired action for normal contacts here
-         try {
-          String temp =contact.phoneNumber;
-          Uri phoneno = Uri.parse('tel:$temp');
-          await launchUrl(phoneno);
-        } catch (e) {
-          print('Error calling phone number: $e');
-          // Handle the error as needed
-        }
-      }
-          },
-          borderRadius: BorderRadius.circular(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    contact.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                   Text(
-                      contact.isEmergency ? 'Emergency contact' : 'Normal contact',
-                      style: TextStyle(
-                        color: contact.isEmergency ? Colors.red : Colors.green,
-                        fontSize: 12,
-                      ),
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  //     padding: EdgeInsets.all(10),
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(10),
+  //       //border: Border.all(color: Colors.grey),
+  //     ),
+  //     child: Material(
+  //       //color: Colors.transparent, // Required for tap effect
+  //       child: InkWell(
+  //         onTap: () async {
+  //       if (contact.isEmergency) {
+  //       try {
+  //         await FlutterPhoneDirectCaller.callNumber(contact.phoneNumber);
+  //       } catch (e) {
+  //         print('Error calling phone number: $e');
+  //         // Handle the error as needed
+  //       }
+  //     } else {
+  //       // Handle normal contact action here (e.g., open dialer)
+  //       // You can implement your desired action for normal contacts here
+  //        try {
+  //         String temp =contact.phoneNumber;
+  //         Uri phoneno = Uri.parse('tel:$temp');
+  //         await launchUrl(phoneno);
+  //       } catch (e) {
+  //         print('Error calling phone number: $e');
+  //         // Handle the error as needed
+  //       }
+  //     }
+  //         },
+  //         borderRadius: BorderRadius.circular(10),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   contact.name,
+  //                   style: TextStyle(
+  //                    // color: Colors.white,
+  //                     fontWeight: FontWeight.bold,
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 5),
+  //                  Text(
+  //                     contact.isEmergency ? 'Emergency contact' : 'Normal contact',
+  //                     style: TextStyle(
+  //                       color: contact.isEmergency ? Colors.red : Colors.green,
+  //                       fontSize: 12,
+  //                     ),
                 
+  //                 ),
+  //               ],
+  //             ),
+  //             SizedBox(width: 10),
+  //             Text(
+  //               contact.phoneNumber,
+  //               style: TextStyle(
+  //                 //color: Colors.grey,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   // ),
+  // );
+  return Container(
+        //margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        //padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          //border: Border.all(color: Theme.of(context).colorScheme.primary),
+        ),
+        child: Column(children: [
+          Material(
+            //color: Colors.transparent, // Required for tap effect
+            child: InkWell(
+           onTap: () async {
+         if (contact.isEmergency) {
+         try {
+          await FlutterPhoneDirectCaller.callNumber(contact.phoneNumber);
+         } catch (e) {
+           print('Error calling phone number: $e');
+           // Handle the error as needed
+         }
+       } else {
+         // Handle normal contact action here (e.g., open dialer)
+         // You can implement your desired action for normal contacts here
+          try {
+           String temp =contact.phoneNumber;
+           Uri phoneno = Uri.parse('tel:$temp');
+           await launchUrl(phoneno);
+         } catch (e) {
+           print('Error calling phone number: $e');
+           // Handle the error as needed
+        }
+       }
+              },
+              borderRadius: BorderRadius.circular(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                     
+                      SizedBox(width: 10),
+                      //rest
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                         
+                          Text(
+                            contact.name,
+                            style: TextStyle(
+                                //color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 20),
+                          ),
+                          SizedBox(height: 5),
+                    Text(
+                     contact.isEmergency ? 'Emergency contact' : 'Normal contact',
+                       style: TextStyle(
+                         color: contact.isEmergency ? Colors.red : Colors.green,
+                         fontSize: 12,
+                       ),
+                
+                          ),
+                        
+                        ],
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(
+                          Icons.phone,
+                          color: Theme.of(context).colorScheme.primary,
+                          size: 25,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          contact.phoneNumber,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              //color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15),
+                          //style: TextStyle(color: Colors.white),
+                        ),
+                        SizedBox(width: 20)
+                      ],
+                    ),
                   ),
                 ],
               ),
-              SizedBox(width: 10),
-              Text(
-                contact.phoneNumber,
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-    // ),
-  );
+          Divider()
+        ]));
 }
 
 }
