@@ -36,8 +36,11 @@ class MainScaffoldState extends State<MainScaffold>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const Drawer(
+        child: Center(child: Text('Drawer')),
+      ),
       appBar: AppBar(
-          title: const Text('Gucy'),
+          title: Text('Gucy'),
           bottom: TabBar(
             controller: tabControllers[_currentPageIndex],
             tabs: tabBars[_currentPageIndex],

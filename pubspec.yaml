@@ -14,12 +14,21 @@ dependencies:
     sdk: flutter
   go_router: ^12.1.1
   intl: ^0.18.1
+  password_strength_checker: ^1.2.2
   provider: ^6.1.1
+  flutter_native_splash: ^2.0.1+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/logo.png
+  android: true
+  ios: true
+  image_size: "300x300"
 
 flutter:
   uses-material-design: true
