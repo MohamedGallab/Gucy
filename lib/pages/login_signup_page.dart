@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:go_router/go_router.dart';
 import 'package:password_strength_checker/password_strength_checker.dart';
 import 'dart:ui';
 
@@ -182,12 +183,13 @@ class _LoginPageState extends State<LoginPage>
                                 confirmPasswordError = '';
                               }
                             });
-                            if (state == "login" && username == '' ||
-                                password == '') {
+                            if (state == "login" &&
+                                (username == '' || password == '')) {
                               return;
-                            } else if (state == "signup" && username == '' ||
-                                password == '' ||
-                                confirmPassword == '') {
+                            } else if (state == "signup" &&
+                                (username == '' ||
+                                    password == '' ||
+                                    confirmPassword == '')) {
                               return;
                             }
                             RegExp emailRegex = RegExp(
@@ -214,7 +216,6 @@ class _LoginPageState extends State<LoginPage>
                                   );
                                 },
                               );
-                              return;
                             } else if (!emailRegex.hasMatch(username)) {
                               await showDialog<void>(
                                 context: context,
@@ -233,8 +234,52 @@ class _LoginPageState extends State<LoginPage>
                                   );
                                 },
                               );
+                            } else if (state == "login" &&
+                                false) //add and condition for db returning false
+                            {
+                              await showDialog<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Error'),
+                                    content: const Text(
+                                        'Invalid username or password!'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else if (false) // fail on signup from db
+                              await showDialog<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Error'),
+                                    content: const Text('User already exists!'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            else if (true) {
+                              //success login from db (assign tokens)
+                              context.go('/homepage');
+                            } else if (true) {
+                              // success signup from db (assign tokens)
+                              context.go('/homepage');
                             }
-                            return;
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(20),
