@@ -39,22 +39,32 @@ class _LoginPageState extends State<LoginPage>
 
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        setState(() {
-          isAnimating = false;
-        });
+        _handleAnimationCompleted();
       }
     });
 
     _animationController.forward();
   }
 
+  void _handleAnimationCompleted() {
+    if (mounted) {
+      setState(() {
+        isAnimating = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose(); // Cancel the animation controller.
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(milliseconds: 1100));
-      setState(() {
-        isAnimating = false;
-      });
+      _handleAnimationCompleted();
     });
     return Scaffold(
       body: SingleChildScrollView(
@@ -195,7 +205,6 @@ class _LoginPageState extends State<LoginPage>
                             RegExp emailRegex = RegExp(
                               r'^[a-zA-Z]+[.][a-zA-Z]+@(student\.)?guc\.edu\.eg$',
                             );
-
                             if (password != confirmPassword &&
                                 state == "signup") {
                               await showDialog<void>(
