@@ -8,10 +8,10 @@ class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});
 
   @override
-  MainScaffoldState createState() => MainScaffoldState();
+  State<MainScaffold> createState() => _MainScaffoldState();
 }
 
-class MainScaffoldState extends State<MainScaffold>
+class _MainScaffoldState extends State<MainScaffold>
     with TickerProviderStateMixin {
   int _currentPageIndex = 0;
   var tabControllers = <TabController>[];

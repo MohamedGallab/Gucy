@@ -15,7 +15,7 @@ class Post extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PostState createState() => _PostState();
+  State<Post> createState() => _PostState();
 }
 
 class _PostState extends State<Post> {
@@ -39,7 +39,7 @@ class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal:30 , vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -139,7 +139,8 @@ class _PostState extends State<Post> {
               Row(
                 children: [
                   IconButton(
-                    icon: Icon(disliked ? Icons.thumb_down : Icons.thumb_down_off_alt),
+                    icon: Icon(
+                        disliked ? Icons.thumb_down : Icons.thumb_down_off_alt),
                     onPressed: () {
                       setState(() {
                         disliked = !disliked;
