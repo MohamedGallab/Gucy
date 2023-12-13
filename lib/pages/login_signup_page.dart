@@ -171,6 +171,7 @@ class _LoginPageState extends State<LoginPage>
                             child: TextField(
                               controller: confirmPasswordController,
                               onChanged: (value) => confirmPassword = value,
+                              obscureText: true,
                               decoration: InputDecoration(
                                 helperText: confirmPasswordError,
                                 border: const OutlineInputBorder(),
