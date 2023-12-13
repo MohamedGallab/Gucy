@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gucy/main_widgets/main_drawer.dart';
 
 import 'nav_bar.dart';
 import 'tab_bar_views.dart';
@@ -36,8 +37,8 @@ class _MainScaffoldState extends State<MainScaffold>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const Drawer(
-        child: Center(child: Text('Drawer')),
+      drawer: Drawer(
+        child: MainDrawer(),
       ),
       appBar: AppBar(
           title: Text('Gucy'),

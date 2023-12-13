@@ -6,7 +6,8 @@ import '../widgets/post.dart';
 class HomePage extends StatelessWidget {
   final List<PostData> dummyPosts = [
     PostData(
-      profilePicture: 'https://example.com/profile1.jpg',
+      profilePicture:
+          'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg',
       username: 'Hana Tamer',
       timeStamp: DateTime.now().subtract(Duration(days: 2)),
       title: 'I have a crush on the boy with green hoodie and a short beard',
@@ -19,7 +20,8 @@ class HomePage extends StatelessWidget {
       score: 70,
     ),
     PostData(
-      profilePicture: 'https://example.com/profile2.jpg',
+      profilePicture:
+          'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg',
       username: 'Ali Omar',
       timeStamp: DateTime.now().subtract(Duration(hours: 12)),
       title: 'FLUSH AFTER YOU ARE DONE',
