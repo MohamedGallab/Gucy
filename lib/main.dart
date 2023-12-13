@@ -8,7 +8,7 @@ import 'package:gucy/pages/login_signup_page.dart';
 import 'package:gucy/providers/posts_provider.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-import 'providers/user_provider.dart'; // Import your user provider file
+import 'providers/user_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

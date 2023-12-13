@@ -14,14 +14,14 @@ class _MainDrawerState extends State<MainDrawer> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final TextEditingController controller =
-        TextEditingController(text: (userProvider.email as String));
+        TextEditingController(text: (userProvider.email));
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         AppBar(
           title: const Text(''),
-          automaticallyImplyLeading: false, // Disable automatic leading icon
+          automaticallyImplyLeading: false,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -29,12 +29,19 @@ class _MainDrawerState extends State<MainDrawer> {
             },
           ),
         ),
-        SizedBox(height: 20), // Add spacing
+        const SizedBox(height: 20),
+        Image.asset(
+            userProvider.user["picutre"] == ""
+                ? 'assets/default_profile.png'
+                : "",
+            width: 220,
+            height: 220),
+        const SizedBox(height: 20),
         Text(
-          (userProvider.user as Map<String, dynamic>)['name'] as String,
+          (userProvider.user)['name'],
           style: Theme.of(context).textTheme.headlineLarge,
         ),
-        SizedBox(height: 20), // Add spacing
+        const SizedBox(height: 20),
         SizedBox(
           width: 250,
           child: TextField(
@@ -46,7 +53,7 @@ class _MainDrawerState extends State<MainDrawer> {
             ),
           ),
         ),
-        SizedBox(height: 20), // Add spacing
+        const SizedBox(height: 20),
         TextButton(
           onPressed: () {
             userProvider.logoutUser();

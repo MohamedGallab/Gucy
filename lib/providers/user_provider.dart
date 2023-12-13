@@ -9,8 +9,8 @@ class UserProvider extends ChangeNotifier {
   FirebaseFirestore db = FirebaseFirestore.instance;
   var _email;
 
-  Object get user => _user;
-  Object get email => _email;
+  Map<String, dynamic> get user => _user as Map<String, dynamic>;
+  String get email => _email as String;
 
   bool get isAuthenticated => _user != null;
 
@@ -18,7 +18,6 @@ class UserProvider extends ChangeNotifier {
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       _email = "";
       if (user == null) {
-        // User is signed out
         _user = null;
         _email = "";
       } else {
@@ -77,6 +76,17 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
       return "success";
     } on FirebaseAuthException catch (e) {
+      return e.code;
+    }
+  }
+
+  Future<String> updateUser(Map<String, dynamic> user) async {
+    try {
+      await db.collection("users").doc(user['uid']).update(user);
+      _user = user;
+      notifyListeners();
+      return "success";
+    } on FirebaseException catch (e) {
       return e.code;
     }
   }
