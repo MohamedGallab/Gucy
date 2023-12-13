@@ -37,7 +37,7 @@ class _MainScaffoldState extends State<MainScaffold>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
+      drawer: const Drawer(
         child: MainDrawer(),
       ),
       appBar: AppBar(

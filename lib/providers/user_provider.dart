@@ -7,21 +7,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 class UserProvider extends ChangeNotifier {
   var _user;
   FirebaseFirestore db = FirebaseFirestore.instance;
+  var _email;
 
-  Object get user => _user;
+  Map<String, dynamic> get user => _user as Map<String, dynamic>;
+  String get email => _email as String;
 
   bool get isAuthenticated => _user != null;
 
   UserProvider() {
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+      _email = "";
       if (user == null) {
-        // User is signed out
         _user = null;
+        _email = "";
       } else {
         var docRef = db.collection("users").doc(user.uid);
         await docRef.get().then((DocumentSnapshot doc) {
           final data = doc.data() as Map<String, dynamic>;
           _user = data;
+          _email = user.email!;
         });
       }
       notifyListeners();
@@ -43,6 +47,7 @@ class UserProvider extends ChangeNotifier {
         "eventPermission": "None"
       };
       await db.collection("users").doc(userCredential.user!.uid).set(user);
+      _email = userCredential.user!.email!;
 
       _user = user;
       notifyListeners();
@@ -64,6 +69,7 @@ class UserProvider extends ChangeNotifier {
         (DocumentSnapshot doc) {
           final data = doc.data() as Map<String, dynamic>;
           _user = data;
+          _email = userCredential.user!.email!;
         },
       );
 
@@ -74,9 +80,22 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+  Future<String> updateUser(Map<String, dynamic> user) async {
+    try {
+      await db.collection("users").doc(user['uid']).update(user);
+      _user = user;
+      notifyListeners();
+      return "success";
+    } on FirebaseException catch (e) {
+      return e.code;
+    }
+  }
+
   Future<void> logoutUser() async {
     await FirebaseAuth.instance.signOut();
     _user = null;
+    _email = "";
+
     notifyListeners();
   }
 
