@@ -44,7 +44,7 @@ class UserProvider extends ChangeNotifier {
         "name": convertEmailToName(email),
         "picture": "",
         "score": 0,
-        "eventPermission": "None"
+        "eventPermission": (email.contains("student")) ? "None" : "All"
       };
       await db.collection("users").doc(userCredential.user!.uid).set(user);
       _email = userCredential.user!.email!;
