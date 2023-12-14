@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use, empty_catches
 
 import 'dart:io';
 
@@ -35,7 +35,6 @@ class _MainDrawerState extends State<MainDrawer> {
               FirebaseStorage.instance.refFromURL(userProvider.user["picture"]);
           await storageReference.getDownloadURL();
           await storageReference.delete();
-          print('File deleted from Firebase Storage. URL: ');
         } catch (e) {}
         String fileName = basename(imageFile.path);
 
@@ -46,11 +45,7 @@ class _MainDrawerState extends State<MainDrawer> {
         final String imageUrl = await storageReference.getDownloadURL();
         userProvider.user["picture"] = imageUrl;
         userProvider.updateUser(userProvider.user);
-
-        print('Image uploaded to Firebase Storage. URL: $imageUrl');
-      } catch (error) {
-        print('Error uploading image to Firebase Storage: $error');
-      }
+      } catch (error) {}
     }
 
     Future<void> deleteImage() async {
@@ -62,7 +57,6 @@ class _MainDrawerState extends State<MainDrawer> {
         await storageReference.delete();
         userProvider.user["picture"] = "";
         userProvider.updateUser(userProvider.user);
-        print('File deleted from Firebase Storage. URL: ');
       } catch (e) {}
     }
 
@@ -84,7 +78,6 @@ class _MainDrawerState extends State<MainDrawer> {
                   );
                   if (pickedFile != null) {
                     await uploadImage(pickedFile);
-                    print('Photo taken: ${pickedFile.path}');
                   }
                   Navigator.pop(context);
                 },
@@ -98,7 +91,6 @@ class _MainDrawerState extends State<MainDrawer> {
                   );
                   if (pickedFile != null) {
                     await uploadImage(pickedFile);
-                    print('Photo selected: ${pickedFile.path}');
                   }
                   Navigator.pop(context);
                 },
@@ -138,17 +130,16 @@ class _MainDrawerState extends State<MainDrawer> {
             alignment: Alignment.bottomRight,
             children: [
               userProvider.user["picture"] == ""
-                  ? Image.asset(
-                      'assets/default_profile.png',
+                  ? Image.network(
+                      "https://firebasestorage.googleapis.com/v0/b/gucy-45427.appspot.com/o/default_profile.png?alt=media&token=7f72bda5-bf9e-44bf-9461-b1f650d3d840",
                       width: 220,
                       height: 220,
                     )
                   : ClipOval(
-                      child: Container(
-                        width: 220, // Set width as needed
+                      child: SizedBox(
+                        width: 220,
                         height: 220,
                         child: Image.network(
-                          // Set height as needed
                           userProvider.user["picture"],
                         ),
                       ),

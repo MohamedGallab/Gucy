@@ -257,7 +257,6 @@ class _LoginPageState extends State<LoginPage>
                             {
                               String code = await userProvider.loginUser(
                                   username, password);
-                              print(code);
                               if (code == 'invalid-credential') {
                                 await showDialog<void>(
                                   context: context,
@@ -318,7 +317,6 @@ class _LoginPageState extends State<LoginPage>
                             } else if (state == "signup") {
                               String code = await userProvider.registerUser(
                                   username, password);
-                              print(code);
 
                               if (code == 'weak-password') {
                                 await showDialog<void>(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:gucy/models/post_data.dart';
 import 'package:gucy/pages/preview_post_page.dart';
 import 'package:gucy/providers/user_provider.dart';
@@ -84,106 +83,116 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Wrap(
-                  spacing:
-                      8.0, // Adjust the spacing between items according to your preference
-                  runSpacing:
-                      8.0, // Adjust the spacing between lines according to your preference
-                  children: [
-                    ...flairs.map((e) => OutlinedButton(
-                          onPressed: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0), // Adjust the padding here
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(e),
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      flairs.remove(e);
-                                    });
-                                  },
-                                  child: Ink(
-                                    padding: const EdgeInsets.all(
-                                        0.0), // Adjust the padding here
-                                    child: const Icon(Icons.delete),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Wrap(
+                    spacing:
+                        8.0, // Adjust the spacing between items according to your preference
+                    runSpacing:
+                        8.0, // Adjust the spacing between lines according to your preference
+                    children: [
+                      ...flairs.map((e) => OutlinedButton(
+                            onPressed: () {},
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 0.0), // Adjust the padding here
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(e),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        flairs.remove(e);
+                                      });
+                                    },
+                                    child: Ink(
+                                      padding: const EdgeInsets.all(
+                                          0.0), // Adjust the padding here
+                                      child: const Icon(Icons.delete),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
+                          )),
+                      if (!isAddingFlair)
+                        OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              isAddingFlair = !isAddingFlair;
+                            });
+                          },
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [Icon(Icons.add), Text("Flair")],
                           ),
-                        )),
-                    if (!isAddingFlair)
-                      OutlinedButton(
-                        onPressed: () {
-                          setState(() {
-                            isAddingFlair = !isAddingFlair;
-                          });
-                        },
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [Icon(Icons.add), Text("Flair")],
                         ),
-                      ),
-                    if (isAddingFlair)
-                      Expanded(
-                        child: IntrinsicWidth(
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              minWidth: 100.0,
-                            ),
-                            child: TextField(
-                              maxLength: 20,
-                              maxLines: 1,
-                              autofocus: true,
-                              onTapOutside: (event) {
-                                setState(() {
-                                  isAddingFlair = !isAddingFlair;
-                                });
-                              },
-                              onSubmitted: (value) {
-                                setState(() {
-                                  if (value.isNotEmpty) {
-                                    flairs.add(value);
+                      if (isAddingFlair)
+                        Expanded(
+                          child: IntrinsicWidth(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(
+                                minWidth: 100.0,
+                              ),
+                              child: TextField(
+                                maxLength: 20,
+                                maxLines: 1,
+                                autofocus: true,
+                                onTapOutside: (event) {
+                                  setState(() {
                                     isAddingFlair = !isAddingFlair;
-                                  }
-                                });
-                              },
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 15.0),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor),
-                                ),
-                                enabledBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
-                                ),
-                                labelText: 'Flair',
-                                suffixIcon: IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed: () {
-                                    setState(() {
+                                  });
+                                },
+                                onSubmitted: (value) {
+                                  setState(() {
+                                    if (value.isNotEmpty) {
+                                      if (flairs.contains(value)) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    "Flair already added")));
+                                      } else {
+                                        flairs.add(value);
+                                      }
                                       isAddingFlair = !isAddingFlair;
-                                    });
-                                  },
+                                    }
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 15.0),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                                  labelText: 'Flair',
+                                  suffixIcon: IconButton(
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () {
+                                      setState(() {
+                                        isAddingFlair = !isAddingFlair;
+                                      });
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    if (widget.type != "confession")
-                      OutlinedButton(
-                        onPressed: () {},
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [Icon(Icons.add), Text("Image")],
+                      if (widget.type != "confession")
+                        OutlinedButton(
+                          onPressed: () {},
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [Icon(Icons.add), Text("Image")],
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 10),
                 TextField(
