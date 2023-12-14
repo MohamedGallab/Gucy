@@ -37,7 +37,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 Row(
                   children: <Widget>[
                     CircleAvatar(
-                      backgroundImage: isAnonymous
+                      backgroundImage: (isAnonymous ||
+                              userProvider.user["picture"] == "")
                           ? const Image(
                                   image:
                                       AssetImage("assets/default_profile.png"))
@@ -210,7 +211,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 FilledButton(
                     onPressed: () {
                       PostData post = PostData(
-                          profilePicture: isAnonymous
+                          profilePicture: (isAnonymous ||
+                                  userProvider.user["picture"] == "")
                               ? "https://firebasestorage.googleapis.com/v0/b/gucy-45427.appspot.com/o/default_profile.png?alt=media&token=7f72bda5-bf9e-44bf-9461-b1f650d3d840"
                               : userProvider.user["picture"],
                           username: isAnonymous
