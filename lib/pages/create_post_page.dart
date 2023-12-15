@@ -30,6 +30,13 @@ class _CreatePostPageState extends State<CreatePostPage> {
   bool isAddingFlair = false;
   String _selectedItem = "Crush";
   String picture = "";
+  bool willPost = false;
+  void postFinalize() {
+    setState(() {
+      willPost = true;
+    });
+  }
+
   final ImagePicker picker = ImagePicker();
   final storage = FirebaseStorage.instance;
   @override
@@ -117,8 +124,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
     }
 
     return PopScope(
-      onPopInvoked: (e) {
-        deleteImage();
+      onPopInvoked: (e) async {
+        if (!willPost) await deleteImage();
       },
       child: Scaffold(
           appBar: AppBar(
@@ -311,7 +318,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                         );
 
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => PreviewPost(post)));
+                            builder: (context) =>
+                                PreviewPost(post, postFinalize)));
                       },
                       child: const Text("Preview Post"))
                 ],
