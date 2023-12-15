@@ -75,51 +75,59 @@ class _PostState extends State<Post> {
             }).toList(),
           ),
           SizedBox(height: 10),
-          Align(
-            alignment: Alignment.center,
-            child: Transform.rotate(
-              angle: math.pi / 10.0,
-              child: badges.Badge(
-                position: badges.BadgePosition.topEnd(top: -85, end: -20),
-                showBadge: true,
-                badgeContent: Text("GUICYYY!!!"),
-                badgeAnimation: badges.BadgeAnimation.scale(
-                  animationDuration: Duration(seconds: 3),
-                  colorChangeAnimationDuration: Duration(seconds: 1),
-                  loopAnimation: true,
-                  curve: Curves.easeOutCirc,
-                  colorChangeAnimationCurve: Curves.easeInCubic,
-                ),
-                badgeStyle: badges.BadgeStyle(
-                  shape: badges.BadgeShape.square,
-                  badgeColor: Colors.blue,
-                  padding: EdgeInsets.all(5),
-                  borderRadius: BorderRadius.circular(4),
-                  badgeGradient: badges.BadgeGradient.linear(
-                    colors: [
-                      const Color.fromARGB(255, 159, 33, 243),
-                      const Color.fromARGB(255, 255, 59, 121)
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+          if (widget.postData.type == "confession")
+            Align(
+              alignment: Alignment.center,
+              child: Transform.rotate(
+                angle: math.pi / 10.0,
+                child: badges.Badge(
+                  position: badges.BadgePosition.topEnd(top: -85, end: -20),
+                  showBadge: true,
+                  badgeContent: Text("GUICYYY!!!"),
+                  badgeAnimation: badges.BadgeAnimation.scale(
+                    animationDuration: Duration(seconds: 3),
+                    colorChangeAnimationDuration: Duration(seconds: 1),
+                    loopAnimation: true,
+                    curve: Curves.easeOutCirc,
+                    colorChangeAnimationCurve: Curves.easeInCubic,
                   ),
-                  elevation: 0,
-                ),
-                child: FractionallySizedBox(
-                  widthFactor: 0.8,
-                  child: Transform.rotate(
-                    angle: -math.pi / 10.0,
-                    child: LinearProgressIndicator(
-                      value: widget.postData.score / 100,
-                      minHeight: 5,
+                  badgeStyle: badges.BadgeStyle(
+                    shape: badges.BadgeShape.square,
+                    badgeColor: Colors.blue,
+                    padding: EdgeInsets.all(5),
+                    borderRadius: BorderRadius.circular(4),
+                    badgeGradient: badges.BadgeGradient.linear(
+                      colors: [
+                        const Color.fromARGB(255, 159, 33, 243),
+                        const Color.fromARGB(255, 255, 59, 121)
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    elevation: 0,
+                  ),
+                  child: FractionallySizedBox(
+                    widthFactor: 0.8,
+                    child: Transform.rotate(
+                      angle: -math.pi / 10.0,
+                      child: LinearProgressIndicator(
+                        value: widget.postData.score / 100,
+                        minHeight: 5,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
+          if (widget.postData.type != "confession" &&
+              widget.postData.picture != "")
+            Image.network(
+              widget.postData.picture,
+              height: 300,
+              width: double.infinity,
+            ),
           Text(widget.postData.body),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
