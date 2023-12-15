@@ -4,7 +4,8 @@ import 'package:gucy/widgets/post.dart';
 
 class PreviewPost extends StatelessWidget {
   final PostData post;
-  const PreviewPost(this.post, {Key? key}) : super(key: key);
+  final Function postFinalize;
+  const PreviewPost(this.post, this.postFinalize, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +19,10 @@ class PreviewPost extends StatelessWidget {
           IgnorePointer(ignoring: true, child: Post(postData: post)),
           FilledButton(
               onPressed: () {
+                postFinalize();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
+
                 //backend stuff add the post
               },
               child: const Text("Post"))
