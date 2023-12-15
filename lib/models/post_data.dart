@@ -11,6 +11,9 @@ class PostData {
   final int score;
   final String type;
   final String picture;
+  final List<String> commentsList;
+  final List<String> likesList;
+  final List<String> dislikesList;
 
   const PostData({
     required this.profilePicture,
@@ -25,5 +28,8 @@ class PostData {
     required this.score,
     required this.type,
     required this.picture,
+    required this.commentsList,
+    required this.likesList,
+    required this.dislikesList,
   });
 }

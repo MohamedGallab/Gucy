@@ -19,7 +19,10 @@ class HomePage extends StatelessWidget {
         comments: 70,
         score: 70,
         type: "confession",
-        picture: ""),
+        picture: "",
+        likesList: [],
+        dislikesList: [],
+        commentsList: []),
     PostData(
         profilePicture:
             'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg',
@@ -34,7 +37,10 @@ class HomePage extends StatelessWidget {
         comments: 5,
         score: 10,
         type: "confession",
-        picture: ""),
+        picture: "",
+        likesList: [],
+        dislikesList: [],
+        commentsList: []),
     // Add more dummy data as needed
   ];
 
