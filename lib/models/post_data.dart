@@ -9,6 +9,8 @@ class PostData {
   final int dislikes;
   final int comments;
   final int score;
+  final String type;
+  final String picture;
 
   const PostData({
     required this.profilePicture,
@@ -21,5 +23,7 @@ class PostData {
     required this.dislikes,
     required this.comments,
     required this.score,
+    required this.type,
+    required this.picture,
   });
 }
