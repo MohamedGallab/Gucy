@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../models/comment_data.dart';
 import '../models/post_data.dart';
 import '../models/user_data.dart';
-import 'user_provider.dart';
 
 class PostsProvider with ChangeNotifier {
   late List<PostData> _posts;
