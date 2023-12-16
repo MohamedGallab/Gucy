@@ -156,7 +156,7 @@ class _PostState extends State<Post> {
                         });
                       },
                     ),
-                    Text(widget.postData.likes.toString()),
+                    Text(widget.postData.likes.length.toString()),
                   ],
                 ),
                 Row(
@@ -171,7 +171,7 @@ class _PostState extends State<Post> {
                         });
                       },
                     ),
-                    Text(widget.postData.dislikes.toString()),
+                    Text(widget.postData.dislikes.length.toString()),
                   ],
                 ),
                 Row(
@@ -180,7 +180,7 @@ class _PostState extends State<Post> {
                       icon: Icon(Icons.comment),
                       onPressed: () {},
                     ),
-                    Text(widget.postData.comments.toString()),
+                    Text(widget.postData.comments.length.toString()),
                   ],
                 ),
                 IconButton(

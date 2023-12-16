@@ -59,7 +59,7 @@ class _CommentState extends State<Comment> {
             ],
           ),
           SizedBox(height: 2),
-          Text(widget.commentData.comment),
+          Text(widget.commentData.body),
           const SizedBox(height: 2),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -74,7 +74,7 @@ class _CommentState extends State<Comment> {
                       });
                     },
                   ),
-                  Text(widget.commentData.likesList.length.toString()),
+                  Text(widget.commentData.likes.length.toString()),
                 ],
               ),
               Row(

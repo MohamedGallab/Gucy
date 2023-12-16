@@ -29,10 +29,10 @@ final List<PostData> dummyPosts = [
             score: 120,
             uid: 'user1',
           ),
-          comment: 'This is a great post!',
+          body: 'This is a great post!',
           createdAt: DateTime.now().subtract(Duration(days: 2)),
-          likesList: [],
-          dislikesList: [],
+          likes: [],
+          dislikes: [],
         ),
         CommentData(
           user: UserData(
@@ -42,10 +42,10 @@ final List<PostData> dummyPosts = [
             score: 80,
             uid: 'user2',
           ),
-          comment: 'Oh my god you are so real for that. go get him girl.',
+          body: 'Oh my god you are so real for that. go get him girl.',
           createdAt: DateTime.now().subtract(Duration(days: 2)),
-          likesList: [],
-          dislikesList: [],
+          likes: [],
+          dislikes: [],
         ),
         CommentData(
           user: UserData(
@@ -55,10 +55,10 @@ final List<PostData> dummyPosts = [
             score: 80,
             uid: 'user2',
           ),
-          comment: 'He looked pretty average to me idk what you talking about',
+          body: 'He looked pretty average to me idk what you talking about',
           createdAt: DateTime.now().subtract(Duration(days: 2)),
-          likesList: [],
-          dislikesList: [],
+          likes: [],
+          dislikes: [],
         ),
         CommentData(
           user: UserData(
@@ -68,10 +68,10 @@ final List<PostData> dummyPosts = [
             score: 80,
             uid: 'user2',
           ),
-          comment: 'this uni is doomed i swear to god',
+          body: 'this uni is doomed i swear to god',
           createdAt: DateTime.now().subtract(Duration(days: 2)),
-          likesList: [],
-          dislikesList: [],
+          likes: [],
+          dislikes: [],
         ),
         CommentData(
           user: UserData(
@@ -81,11 +81,11 @@ final List<PostData> dummyPosts = [
             score: 80,
             uid: 'user2',
           ),
-          comment:
+          body:
               'I can\'t believe this what our uni has come to. I\'m leaving this place. I hope you find him though. Good luck!',
           createdAt: DateTime.now().subtract(Duration(days: 2)),
-          likesList: [],
-          dislikesList: [],
+          likes: [],
+          dislikes: [],
         ),
         // Add more dummy comments as needed
       ]),

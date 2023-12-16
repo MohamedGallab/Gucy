@@ -1,27 +1,27 @@
 import 'user_data.dart';
 
 class CommentData {
-  final String comment;
+  final String body;
   final UserData user;
   final DateTime createdAt;
-  final List<String> likesList;
-  final List<String> dislikesList;
+  final List<String> likes;
+  final List<String> dislikes;
 
   CommentData({
-    required this.comment,
+    required this.body,
     required this.user,
     required this.createdAt,
-    required this.likesList,
-    required this.dislikesList,
+    required this.likes,
+    required this.dislikes,
   });
 
   factory CommentData.fromJson(Map<String, dynamic> json) {
     return CommentData(
       user: UserData.fromJson(json['user'] ?? {}), // Parse user data
-      comment: json['comment'],
-      createdAt: DateTime.parse(json['created_at']),
-      likesList: List<String>.from(json['likesList']),
-      dislikesList: List<String>.from(json['dislikesList']),
+      body: json['body'],
+      createdAt: DateTime.parse(json['createdAt']),
+      likes: List<String>.from(json['likes']),
+      dislikes: List<String>.from(json['dislikes']),
     );
   }
 }
