@@ -16,7 +16,7 @@ class PreviewPost extends StatelessWidget {
       body: SingleChildScrollView(
           child: Column(
         children: [
-          IgnorePointer(ignoring: true, child: Post(postData: post)),
+          IgnorePointer(ignoring: true, child: Post(postData: post, isClickable: false)),
           FilledButton(
               onPressed: () {
                 postFinalize();

@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gucy/models/flairs.dart';
 import 'package:gucy/models/post_data.dart';
+import 'package:gucy/models/user_data.dart';
 import 'package:gucy/pages/preview_post_page.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -295,26 +296,23 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   FilledButton(
                       onPressed: () {
                         PostData post = PostData(
-                          profilePicture: (isAnonymous ||
+                          user: UserData( name: isAnonymous
+                              ? "Anonymous"
+                              : userProvider.user["name"],, picture: (isAnonymous ||
                                   userProvider.user["picture"] == "")
                               ? "https://firebasestorage.googleapis.com/v0/b/gucy-45427.appspot.com/o/default_profile.png?alt=media&token=7f72bda5-bf9e-44bf-9461-b1f650d3d840"
-                              : userProvider.user["picture"],
-                          username: isAnonymous
-                              ? "Anonymous"
-                              : userProvider.user["name"],
-                          timeStamp: DateTime.now(),
+                              : userProvider.user["picture"], uid: uid),
+                          
+                          createdAt: DateTime.now(),
                           title: title,
                           body: body,
                           tags: flairs,
-                          likes: 0,
-                          dislikes: 0,
-                          comments: 0,
+                          likes: [],
+                          dislikes: [],
+                          comments: [],
                           score: 0,
                           type: widget.type,
                           picture: picture,
-                          commentsList: [],
-                          likesList: [],
-                          dislikesList: [],
                         );
 
                         Navigator.of(context).push(MaterialPageRoute(

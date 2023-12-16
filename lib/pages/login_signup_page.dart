@@ -1,13 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:go_router/go_router.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:password_strength_checker/password_strength_checker.dart';
 import 'dart:ui';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {

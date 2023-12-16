@@ -1,24 +1,22 @@
+import 'package:gucy/models/comment_data.dart';
+import 'package:gucy/models/user_data.dart';
+
 class PostData {
-  final String profilePicture;
-  final String username;
-  final DateTime timeStamp;
+  final UserData user;
+  final DateTime createdAt;
   final String title;
   final String body;
   final List<String> tags;
-  final int likes;
-  final int dislikes;
-  final int comments;
+  final List<String> likes;
+  final List<String> dislikes;
   final int score;
   final String type;
   final String picture;
-  final List<String> commentsList;
-  final List<String> likesList;
-  final List<String> dislikesList;
+  final List<CommentData> comments;
 
   const PostData({
-    required this.profilePicture,
-    required this.username,
-    required this.timeStamp,
+    required this.user,
+    required this.createdAt,
     required this.title,
     required this.body,
     required this.tags,
@@ -28,8 +26,25 @@ class PostData {
     required this.score,
     required this.type,
     required this.picture,
-    required this.commentsList,
-    required this.likesList,
-    required this.dislikesList,
   });
+
+  factory PostData.fromJson(Map<String, dynamic> json) {
+    return PostData(
+      user: UserData.fromJson(json['user'] ?? {}),
+      createdAt: DateTime.parse(json['createdAt']),
+      title: json['title'],
+      body: json['body'],
+      tags: List<String>.from(json['tags']),
+      likes: List<String>.from(json['likes']),
+      dislikes: List<String>.from(json['dislikesList']),
+      score: json['score'],
+      type: json['type'],
+      picture: json['picture'],
+      comments: List<CommentData>.from(
+        (json['comments'] as List).map(
+          (commentJson) => CommentData.fromJson(commentJson),
+        ),
+      ),
+    );
+  }
 }

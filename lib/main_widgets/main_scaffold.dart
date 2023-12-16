@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:gucy/main_widgets/main_drawer.dart';
 import 'package:gucy/pages/create_post_page.dart';
 import 'package:gucy/providers/user_provider.dart';
