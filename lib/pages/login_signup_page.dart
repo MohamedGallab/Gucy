@@ -27,10 +27,14 @@ class _LoginPageState extends State<LoginPage>
   String confirmPassword = '';
   bool showPasswordStrength = false;
   bool isAnimating = true;
+  bool isSendingData = false;
   final passNotifier = ValueNotifier<PasswordStrength?>(null);
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   late AnimationController _animationController;
+  final FocusNode _usernameFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _confirmPasswordFocusNode = FocusNode();
   @override
   void initState() {
     super.initState();
@@ -58,13 +62,158 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   void dispose() {
-    _animationController.dispose(); // Cancel the animation controller.
+    _animationController.dispose();
+    _usernameFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
     super.dispose();
+  }
+
+  void moveToNextField(FocusNode currentFocus, FocusNode nextFocus) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
   }
 
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    void onLoginSignUpClick() async {
+      setState(() {
+        if (username == '') {
+          usernameError = 'Username is required';
+        } else {
+          usernameError = '';
+        }
+        if (password == '') {
+          passwordError = 'Password is required';
+        } else {
+          passwordError = '';
+        }
+        if (confirmPassword == '') {
+          confirmPasswordError = 'Confirm Password is required';
+        } else {
+          confirmPasswordError = '';
+        }
+      });
+      if (state == "login" && (username == '' || password == '')) {
+        return;
+      } else if (state == "signup" &&
+          (username == '' || password == '' || confirmPassword == '')) {
+        return;
+      }
+      RegExp emailRegex = RegExp(
+        r'^[a-zA-Z]+[.][a-zA-Z]+@(student\.)?guc\.edu\.eg$',
+      );
+      if (password != confirmPassword && state == "signup") {
+        confirmPasswordError = 'Passwords do not match!';
+      } else if (!emailRegex.hasMatch(username)) {
+        usernameError = 'Invalid Email!';
+      } else if (state == "login") //add and condition for db returning false
+      {
+        isSendingData = true;
+        String code = await userProvider.loginUser(username, password);
+        isSendingData = false;
+        if (code == 'invalid-credential') {
+          await showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Invalid Credentials!'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else if (code == "too-many-requests") {
+          await showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Too many requests. Try again later!'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else if (code != "success") {
+          await showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Unknown Error!'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } else if (state == "signup") {
+        isSendingData = true;
+        String code = await userProvider.registerUser(username, password);
+        isSendingData = false;
+        if (code == 'weak-password') {
+          passwordError = 'Password is too weak!';
+        } else if (code == 'email-already-in-use') {
+          await showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text('User already exists!'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else if (code != "success") {
+          await showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Unknown Error!'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      }
+    }
 
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(milliseconds: 1100));
@@ -108,7 +257,6 @@ class _LoginPageState extends State<LoginPage>
                   opacity: _animationController.value,
                   duration: const Duration(milliseconds: 500),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -117,16 +265,24 @@ class _LoginPageState extends State<LoginPage>
                         child: SizedBox(
                           width: 250,
                           child: TextField(
+                            focusNode: _usernameFocusNode,
                             controller: usernameController,
                             onChanged: (value) => username = value,
+                            textInputAction: TextInputAction.next,
+                            onEditingComplete: () {
+                              moveToNextField(
+                                  _usernameFocusNode, _passwordFocusNode);
+                            },
                             decoration: InputDecoration(
-                              helperText: usernameError,
+                              errorText:
+                                  usernameError != "" ? usernameError : null,
                               border: const OutlineInputBorder(),
-                              labelText: 'Username',
+                              labelText: 'Email',
                             ),
                           ),
                         ),
                       ),
+                      const SizedBox(height: 20),
                       Container(
                         margin: const EdgeInsets.fromLTRB(50, 0, 50, 0),
                         child: SizedBox(
@@ -137,24 +293,37 @@ class _LoginPageState extends State<LoginPage>
                               passNotifier.value =
                                   PasswordStrength.calculate(text: value);
                             },
+                            textInputAction:
+                                state == "signup" ? TextInputAction.next : null,
                             obscureText: true,
                             onTap: () => setState(() {
                               if (state == "signup") {
                                 showPasswordStrength = true;
                               }
                             }),
+                            focusNode: _passwordFocusNode,
                             controller: passwordController,
+                            onEditingComplete: () async {
+                              if (state == "signup") {
+                                moveToNextField(_passwordFocusNode,
+                                    _confirmPasswordFocusNode);
+                              } else {
+                                onLoginSignUpClick();
+                              }
+                            },
                             decoration: InputDecoration(
-                              helperText: passwordError,
+                              errorText:
+                                  passwordError != "" ? passwordError : null,
                               border: const OutlineInputBorder(),
                               labelText: 'Password',
                             ),
                           ),
                         ),
                       ),
+                      const SizedBox(height: 20),
                       if (state == 'signup' && showPasswordStrength)
                         Container(
-                          margin: const EdgeInsets.fromLTRB(50, 00, 50, 15),
+                          margin: const EdgeInsets.fromLTRB(80, 00, 80, 15),
                           child: PasswordStrengthChecker(
                             strength: passNotifier,
                           ),
@@ -165,226 +334,37 @@ class _LoginPageState extends State<LoginPage>
                           child: SizedBox(
                             width: 250,
                             child: TextField(
+                              focusNode: _confirmPasswordFocusNode,
+                              onEditingComplete: () async {
+                                onLoginSignUpClick();
+                              },
                               controller: confirmPasswordController,
                               onChanged: (value) => confirmPassword = value,
                               obscureText: true,
                               decoration: InputDecoration(
-                                helperText: confirmPasswordError,
+                                errorText: confirmPasswordError != ""
+                                    ? confirmPasswordError
+                                    : null,
                                 border: const OutlineInputBorder(),
-                                labelText: 'ConfirmPassword',
+                                labelText: 'Confirm Password',
                               ),
                             ),
                           ),
                         ),
                       Container(
                         margin: const EdgeInsets.fromLTRB(50, 00, 50, 15),
-                        child: FilledButton.tonal(
-                          onPressed: () async {
-                            setState(() {
-                              if (username == '') {
-                                usernameError = 'Username is required';
-                              } else {
-                                usernameError = '';
-                              }
-                              if (password == '') {
-                                passwordError = 'Password is required';
-                              } else {
-                                passwordError = '';
-                              }
-                              if (confirmPassword == '') {
-                                confirmPasswordError =
-                                    'Confirm Password is required';
-                              } else {
-                                confirmPasswordError = '';
-                              }
-                            });
-                            if (state == "login" &&
-                                (username == '' || password == '')) {
-                              return;
-                            } else if (state == "signup" &&
-                                (username == '' ||
-                                    password == '' ||
-                                    confirmPassword == '')) {
-                              return;
-                            }
-                            RegExp emailRegex = RegExp(
-                              r'^[a-zA-Z]+[.][a-zA-Z]+@(student\.)?guc\.edu\.eg$',
-                            );
-                            if (password != confirmPassword &&
-                                state == "signup") {
-                              await showDialog<void>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Error'),
-                                    content: const Text(
-                                        'The passwords do not match!'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('OK'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            } else if (!emailRegex.hasMatch(username)) {
-                              await showDialog<void>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Error'),
-                                    content: const Text('Invalid GUC email!'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('OK'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            } else if (state ==
-                                "login") //add and condition for db returning false
-                            {
-                              String code = await userProvider.loginUser(
-                                  username, password);
-                              if (code == 'invalid-credential') {
-                                await showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content:
-                                          const Text('Invalid Credentials!'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              } else if (code == "too-many-requests") {
-                                await showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content: const Text(
-                                          'Too many requests. Try again later!'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              } else if (code != "success") {
-                                await showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content: const Text('Unknown Error!'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            } else if (state == "signup") {
-                              String code = await userProvider.registerUser(
-                                  username, password);
-
-                              if (code == 'weak-password') {
-                                await showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content:
-                                          const Text('Password is too weak!'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              } else if (code == 'email-already-in-use') {
-                                await showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content:
-                                          const Text('User already exists!'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              } else if (code != "success") {
-                                await showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Error'),
-                                      content: const Text('Unknown Error!'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Text(state == "login" ? 'Login' : 'Sign Up',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                )),
-                          ),
-                        ),
+                        child: isSendingData
+                            ? const CircularProgressIndicator()
+                            : FilledButton(
+                                onPressed: onLoginSignUpClick,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Text(
+                                      state == "login" ? 'Login' : 'Sign Up',
+                                    )),
+                              ),
                       ),
                       Container(
-                        margin: const EdgeInsets.fromLTRB(50, 00, 50, 15),
                         child: TextButton(
                           onPressed: () {
                             setState(() {
@@ -408,13 +388,10 @@ class _LoginPageState extends State<LoginPage>
                             });
                           },
                           child: Text(
-                              state == "login"
-                                  ? 'Sign Up instead'
-                                  : 'Login instead',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                              )),
+                            state == "login"
+                                ? 'Sign Up instead'
+                                : 'Login instead',
+                          ),
                         ),
                       )
                     ],
