@@ -42,7 +42,7 @@ class _MainAppState extends State<MainApp> {
         final userProvider = Provider.of<UserProvider>(context);
 
         if (!userProvider.isAuthenticated) {
-          return '/homepage';
+          return '/';
         }
 
         return '/homepage';
