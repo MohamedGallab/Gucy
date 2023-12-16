@@ -24,4 +24,14 @@ class CommentData {
       dislikes: List<String>.from(json['dislikes']),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'body': body,
+      'user': user.toJson(), // Convert user data to JSON
+      'createdAt': createdAt.toIso8601String(),
+      'likes': likes,
+      'dislikes': dislikes,
+    };
+  }
 }

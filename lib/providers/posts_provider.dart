@@ -10,12 +10,6 @@ class PostsProvider with ChangeNotifier {
     //   throw Exception('Must be logged in');
     // }
 
-    return FirebaseFirestore.instance.collection('posts').add(<String, dynamic>{
-      'title': post.title,
-      'body': post.body,
-      'createAt': DateTime.now().millisecondsSinceEpoch,
-      // 'name': FirebaseAuth.instance.currentUser!.displayName,
-      // 'userId': FirebaseAuth.instance.currentUser!.uid,
-    });
+    return FirebaseFirestore.instance.collection('posts').add(post.toJson());
   }
 }

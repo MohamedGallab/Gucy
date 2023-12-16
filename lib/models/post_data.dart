@@ -47,4 +47,19 @@ class PostData {
       ),
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'user': user.toJson(),
+      'createdAt': createdAt.toIso8601String(),
+      'title': title,
+      'body': body,
+      'tags': tags,
+      'likes': likes,
+      'dislikesList': dislikes,
+      'score': score,
+      'type': type,
+      'picture': picture,
+      'comments': comments.map((comment) => comment.toJson()).toList(),
+    };
+  }
 }
