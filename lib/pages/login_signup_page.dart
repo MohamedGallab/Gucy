@@ -25,10 +25,8 @@ class _LoginPageState extends State<LoginPage>
   String password = '';
   String username = '';
   String confirmPassword = '';
-  bool showPasswordStrength = false;
   bool isAnimating = true;
   bool isSendingData = false;
-  final passNotifier = ValueNotifier<PasswordStrength?>(null);
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   late AnimationController _animationController;
@@ -290,17 +288,10 @@ class _LoginPageState extends State<LoginPage>
                           child: TextField(
                             onChanged: (value) {
                               password = value;
-                              passNotifier.value =
-                                  PasswordStrength.calculate(text: value);
                             },
                             textInputAction:
                                 state == "signup" ? TextInputAction.next : null,
                             obscureText: true,
-                            onTap: () => setState(() {
-                              if (state == "signup") {
-                                showPasswordStrength = true;
-                              }
-                            }),
                             focusNode: _passwordFocusNode,
                             controller: passwordController,
                             onEditingComplete: () async {
@@ -308,6 +299,7 @@ class _LoginPageState extends State<LoginPage>
                                 moveToNextField(_passwordFocusNode,
                                     _confirmPasswordFocusNode);
                               } else {
+                                _passwordFocusNode.unfocus();
                                 onLoginSignUpClick();
                               }
                             },
@@ -321,13 +313,6 @@ class _LoginPageState extends State<LoginPage>
                         ),
                       ),
                       const SizedBox(height: 20),
-                      if (state == 'signup' && showPasswordStrength)
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(80, 00, 80, 15),
-                          child: PasswordStrengthChecker(
-                            strength: passNotifier,
-                          ),
-                        ),
                       if (state == 'signup')
                         Container(
                           margin: const EdgeInsets.fromLTRB(50, 0, 50, 30),
@@ -336,6 +321,7 @@ class _LoginPageState extends State<LoginPage>
                             child: TextField(
                               focusNode: _confirmPasswordFocusNode,
                               onEditingComplete: () async {
+                                _confirmPasswordFocusNode.unfocus();
                                 onLoginSignUpClick();
                               },
                               controller: confirmPasswordController,
@@ -364,34 +350,29 @@ class _LoginPageState extends State<LoginPage>
                                     )),
                               ),
                       ),
-                      Container(
-                        child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              if (state == "login") {
-                                state = "signup";
-                              } else {
-                                state = "login";
-                              }
-                              username = '';
-                              password = '';
-                              confirmPassword = '';
-                              passwordError = '';
-                              usernameError = '';
-                              confirmPasswordError = '';
-                              usernameController.clear();
-                              passwordController.clear();
-                              confirmPasswordController.clear();
-                              passNotifier.value =
-                                  PasswordStrength.calculate(text: "");
-                              showPasswordStrength = false;
-                            });
-                          },
-                          child: Text(
-                            state == "login"
-                                ? 'Sign Up instead'
-                                : 'Login instead',
-                          ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            if (state == "login") {
+                              state = "signup";
+                            } else {
+                              state = "login";
+                            }
+                            username = '';
+                            password = '';
+                            confirmPassword = '';
+                            passwordError = '';
+                            usernameError = '';
+                            confirmPasswordError = '';
+                            usernameController.clear();
+                            passwordController.clear();
+                            confirmPasswordController.clear();
+                          });
+                        },
+                        child: Text(
+                          state == "login"
+                              ? 'Sign Up instead'
+                              : 'Login instead',
                         ),
                       )
                     ],
