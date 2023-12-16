@@ -42,10 +42,10 @@ class _MainAppState extends State<MainApp> {
         final userProvider = Provider.of<UserProvider>(context);
 
         if (!userProvider.isAuthenticated) {
-          return '/homepage';
+          return '/';
         }
 
-        return '/homepage';
+        return '/mainScaffold';
       },
       routes: [
         GoRoute(
@@ -53,7 +53,7 @@ class _MainAppState extends State<MainApp> {
           builder: (context, state) => const LoginPage(),
         ),
         GoRoute(
-          path: '/homepage',
+          path: '/mainScaffold',
           builder: (context, state) => const MainScaffold(),
         )
       ],

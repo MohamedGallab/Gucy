@@ -296,6 +296,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   FilledButton(
                       onPressed: () {
                         PostData post = PostData(
+                          id: "FILL THIS FROM THE AUTO GENERATED ID FROM FIREBASE",
                           user: UserData(
                               name: isAnonymous
                                   ? "Anonymous"

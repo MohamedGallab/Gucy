@@ -4,6 +4,7 @@ import '../models/user_data.dart';
 
 final List<PostData> dummyPosts = [
   PostData(
+      id: 'post1',
       user: UserData(
           name: 'Hana Tamer',
           score: 120,
@@ -22,6 +23,7 @@ final List<PostData> dummyPosts = [
       picture: "",
       comments: [
         CommentData(
+          id: 'comment1',
           user: UserData(
             eventPermission: 'Read',
             name: 'John Doe',
@@ -35,6 +37,7 @@ final List<PostData> dummyPosts = [
           dislikes: [],
         ),
         CommentData(
+          id: 'comment2',
           user: UserData(
             eventPermission: 'Write',
             name: 'Alice Smith',
@@ -48,6 +51,7 @@ final List<PostData> dummyPosts = [
           dislikes: [],
         ),
         CommentData(
+          id: 'comment3',
           user: UserData(
             eventPermission: 'Write',
             name: 'Alice Smith',
@@ -61,6 +65,7 @@ final List<PostData> dummyPosts = [
           dislikes: [],
         ),
         CommentData(
+          id: 'comment4',
           user: UserData(
             eventPermission: 'Write',
             name: 'Alice Smith',
@@ -74,6 +79,7 @@ final List<PostData> dummyPosts = [
           dislikes: [],
         ),
         CommentData(
+          id: 'comment5',
           user: UserData(
             eventPermission: 'Write',
             name: 'Alice Smith',
@@ -90,6 +96,7 @@ final List<PostData> dummyPosts = [
         // Add more dummy comments as needed
       ]),
   PostData(
+      id: 'post2',
       user: UserData(
           name: 'Ali Omar',
           score: 120,
