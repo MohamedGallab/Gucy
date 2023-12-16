@@ -109,102 +109,94 @@ class _MainDrawerState extends State<MainDrawer> {
       );
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        AppBar(
-          title: const Text(''),
-          automaticallyImplyLeading: false,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        const SizedBox(height: 20),
-        GestureDetector(
-          onTap: showImageOptions,
-          child: Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              userProvider.user?.picture == ""
-                  ? Image.network(
-                      "https://firebasestorage.googleapis.com/v0/b/gucy-45427.appspot.com/o/default_profile.png?alt=media&token=7f72bda5-bf9e-44bf-9461-b1f650d3d840",
-                      width: 220,
-                      height: 220,
-                    )
-                  : ClipOval(
-                      child: SizedBox(
+    return Container(
+      margin: const EdgeInsets.only(top: 80.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: showImageOptions,
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                userProvider.user?.picture == ""
+                    ? Image.network(
+                        "https://firebasestorage.googleapis.com/v0/b/gucy-45427.appspot.com/o/default_profile.png?alt=media&token=7f72bda5-bf9e-44bf-9461-b1f650d3d840",
                         width: 220,
                         height: 220,
-                        child: Image.network(
-                          userProvider.user?.picture ?? "",
+                      )
+                    : ClipOval(
+                        child: SizedBox(
+                          width: 220,
+                          height: 220,
+                          child: Image.network(
+                            userProvider.user?.picture ?? "",
+                          ),
                         ),
                       ),
-                    ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Material(
-                  color: Colors.white,
-                  shape: const CircleBorder(),
-                  elevation: 5,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SvgPicture.asset(
-                      'assets/file_upload.svg',
-                      width: 24,
-                      height: 24,
-                      color: Theme.of(context).colorScheme.primary,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Material(
+                    color: Theme.of(context).colorScheme.primary,
+                    shape: const CircleBorder(),
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SvgPicture.asset(
+                        'assets/file_upload.svg',
+                        width: 24,
+                        height: 24,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 20),
-        Text(
-          (userProvider.user?.name ?? ''),
-          style: Theme.of(context).textTheme.headlineLarge,
-        ),
-        const SizedBox(height: 20),
-        SizedBox(
-          width: 250,
-          child: TextField(
-            controller: controller,
-            readOnly: true,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Email',
+              ],
             ),
           ),
-        ),
-        const SizedBox(height: 20),
-        TextButton(
-          onPressed: () {
-            userProvider.logoutUser();
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.cancel_outlined,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 5),
-                child: Text(
-                  'Log Out',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-            ],
+          const SizedBox(height: 20),
+          Text(
+            (userProvider.user?.name ?? ""),
+            style: Theme.of(context).textTheme.headlineLarge,
           ),
-        ),
-      ],
+          const SizedBox(height: 20),
+          SizedBox(
+            width: 250,
+            child: TextField(
+              controller: controller,
+              readOnly: true,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Email',
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextButton(
+            onPressed: () {
+              userProvider.logoutUser();
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.cancel_outlined,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 5),
+                  child: Text(
+                    'Log Out',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
