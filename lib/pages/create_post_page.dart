@@ -142,13 +142,13 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   Row(
                     children: <Widget>[
                       CircleAvatar(
-                        backgroundImage:
-                            (isAnonymous || userProvider.user["picture"] == "")
-                                ? const Image(
-                                        image: AssetImage(
-                                            "assets/default_profile.png"))
-                                    .image
-                                : NetworkImage(userProvider.user["picture"]),
+                        backgroundImage: (isAnonymous ||
+                                userProvider.user?.picture == "")
+                            ? const Image(
+                                    image: AssetImage(
+                                        "assets/default_profile.png"))
+                                .image
+                            : NetworkImage(userProvider.user?.picture ?? ""),
                       ),
                       const SizedBox(width: 15),
                       Column(
@@ -157,7 +157,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                           Text(
                             isAnonymous
                                 ? "Anonymous"
-                                : userProvider.user["name"],
+                                : userProvider.user?.name ?? "",
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -296,13 +296,18 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   FilledButton(
                       onPressed: () {
                         PostData post = PostData(
-                          user: UserData( name: isAnonymous
-                              ? "Anonymous"
-                              : userProvider.user["name"],, picture: (isAnonymous ||
-                                  userProvider.user["picture"] == "")
-                              ? "https://firebasestorage.googleapis.com/v0/b/gucy-45427.appspot.com/o/default_profile.png?alt=media&token=7f72bda5-bf9e-44bf-9461-b1f650d3d840"
-                              : userProvider.user["picture"], uid: uid),
-                          
+                          user: UserData(
+                              name: isAnonymous
+                                  ? "Anonymous"
+                                  : userProvider.user?.name ?? "",
+                              picture: (isAnonymous ||
+                                      userProvider.user?.picture == "")
+                                  ? "https://firebasestorage.googleapis.com/v0/b/gucy-45427.appspot.com/o/default_profile.png?alt=media&token=7f72bda5-bf9e-44bf-9461-b1f650d3d840"
+                                  : userProvider.user?.picture ?? "",
+                              uid: userProvider.user?.uid ?? "",
+                              score: userProvider.user?.score ?? 0,
+                              eventPermission:
+                                  userProvider.user?.eventPermission ?? "None"),
                           createdAt: DateTime.now(),
                           title: title,
                           body: body,

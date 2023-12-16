@@ -3,14 +3,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gucy/models/user_data.dart';
 
 class UserProvider extends ChangeNotifier {
-  var _user;
+  UserData? _user = null;
   FirebaseFirestore db = FirebaseFirestore.instance;
-  var _email;
+  String _email = "";
 
-  Map<String, dynamic> get user => _user as Map<String, dynamic>;
-  String get email => _email as String;
+  UserData? get user => _user;
+  String get email => _email;
 
   bool get isAuthenticated => _user != null;
 
@@ -24,7 +25,12 @@ class UserProvider extends ChangeNotifier {
         var docRef = db.collection("users").doc(user.uid);
         await docRef.get().then((DocumentSnapshot doc) {
           final data = doc.data() as Map<String, dynamic>;
-          _user = data;
+          _user = UserData(
+              eventPermission: data["eventPermission"],
+              name: data["name"],
+              picture: data["picture"],
+              score: data["score"],
+              uid: data["uid"]);
           _email = user.email!;
         });
       }
@@ -49,7 +55,7 @@ class UserProvider extends ChangeNotifier {
       await db.collection("users").doc(userCredential.user!.uid).set(user);
       _email = userCredential.user!.email!;
 
-      _user = user;
+      _user = UserData.fromJson(user);
       notifyListeners();
       return "success";
     } on FirebaseAuthException catch (e) {
@@ -68,7 +74,7 @@ class UserProvider extends ChangeNotifier {
       await docRef.get().then(
         (DocumentSnapshot doc) {
           final data = doc.data() as Map<String, dynamic>;
-          _user = data;
+          _user = UserData.fromJson(data);
           _email = userCredential.user!.email!;
         },
       );
@@ -80,10 +86,11 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  Future<String> updateUser(Map<String, dynamic> user) async {
+  Future<String> updateUser(UserData user) async {
     try {
-      await db.collection("users").doc(user['uid']).update(user);
+      await db.collection("users").doc(user.uid).update(user.toJson());
       _user = user;
+
       notifyListeners();
       return "success";
     } on FirebaseException catch (e) {

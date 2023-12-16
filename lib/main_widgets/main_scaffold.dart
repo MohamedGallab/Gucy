@@ -67,7 +67,7 @@ class _MainScaffoldState extends State<MainScaffold>
                       builder: (context) => CreatePostPage("confession")));
                 } else if (_currentPageIndex == 0 &&
                     _currentInnerPageIndex == 1) {
-                  if (userProvider.user["eventPermission"] == "None") {
+                  if (userProvider.user?.eventPermission == "None") {
                     await showDialog<void>(
                       context: context,
                       builder: (BuildContext context) {

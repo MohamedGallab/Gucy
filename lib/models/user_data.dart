@@ -22,4 +22,13 @@ class UserData {
       uid: json['uid'] ?? '',
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      "eventPermission": eventPermission,
+      "name": name,
+      "picture": picture,
+      "score": score,
+      "uid": uid,
+    };
+  }
 }

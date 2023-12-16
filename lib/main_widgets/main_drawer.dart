@@ -31,8 +31,8 @@ class _MainDrawerState extends State<MainDrawer> {
       try {
         try {
           // Get a reference to the file in Firebase Storage from the download URL
-          Reference storageReference =
-              FirebaseStorage.instance.refFromURL(userProvider.user["picture"]);
+          Reference storageReference = FirebaseStorage.instance
+              .refFromURL(userProvider.user?.picture ?? "");
           await storageReference.getDownloadURL();
           await storageReference.delete();
         } catch (e) {}
@@ -43,20 +43,20 @@ class _MainDrawerState extends State<MainDrawer> {
 
         await storageReference.putFile(File(imageFile.path));
         final String imageUrl = await storageReference.getDownloadURL();
-        userProvider.user["picture"] = imageUrl;
-        userProvider.updateUser(userProvider.user);
+        userProvider.user?.picture = imageUrl;
+        userProvider.updateUser(userProvider.user!);
       } catch (error) {}
     }
 
     Future<void> deleteImage() async {
       try {
         // Get a reference to the file in Firebase Storage from the download URL
-        Reference storageReference =
-            FirebaseStorage.instance.refFromURL(userProvider.user["picture"]);
+        Reference storageReference = FirebaseStorage.instance
+            .refFromURL(userProvider.user?.picture ?? "");
         await storageReference.getDownloadURL();
         await storageReference.delete();
-        userProvider.user["picture"] = "";
-        userProvider.updateUser(userProvider.user);
+        userProvider.user?.picture = "";
+        userProvider.updateUser(userProvider.user!);
       } catch (e) {}
     }
 
@@ -129,7 +129,7 @@ class _MainDrawerState extends State<MainDrawer> {
           child: Stack(
             alignment: Alignment.bottomRight,
             children: [
-              userProvider.user["picture"] == ""
+              userProvider.user?.picture == ""
                   ? Image.network(
                       "https://firebasestorage.googleapis.com/v0/b/gucy-45427.appspot.com/o/default_profile.png?alt=media&token=7f72bda5-bf9e-44bf-9461-b1f650d3d840",
                       width: 220,
@@ -140,7 +140,7 @@ class _MainDrawerState extends State<MainDrawer> {
                         width: 220,
                         height: 220,
                         child: Image.network(
-                          userProvider.user["picture"],
+                          userProvider.user?.picture ?? "",
                         ),
                       ),
                     ),
@@ -166,7 +166,7 @@ class _MainDrawerState extends State<MainDrawer> {
         ),
         const SizedBox(height: 20),
         Text(
-          (userProvider.user)['name'],
+          (userProvider.user?.name ?? ''),
           style: Theme.of(context).textTheme.headlineLarge,
         ),
         const SizedBox(height: 20),
