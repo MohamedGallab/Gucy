@@ -19,8 +19,8 @@ class PostsProvider with ChangeNotifier {
     FirebaseFirestore.instance.collection('posts').snapshots().listen(
       (QuerySnapshot snapshot) {
         _posts = snapshot.docs.map((doc) {
-          var postData = doc.data() as Map<String, dynamic>;
-          var post = PostData.fromJson(postData);
+          Map<String, dynamic> postData = doc.data() as Map<String, dynamic>;
+          PostData post = PostData.fromJson(postData);
           post.id = doc.id;
           return post;
         }).toList();
@@ -103,18 +103,21 @@ class PostsProvider with ChangeNotifier {
   Future<void> loadCommentsForPost(String postId) async {
     try {
       // Fetch comments for the post from Firestore
-      var postIndex = _posts.indexWhere((post) => post.id == postId);
+      int postIndex = _posts.indexWhere((post) => post.id == postId);
       if (postIndex != -1) {
-        var commentsSnapshot = await FirebaseFirestore.instance
-            .collection('posts')
-            .doc(postId)
-            .collection('comments')
-            .get();
+        QuerySnapshot<Map<String, dynamic>> commentsSnapshot =
+            await FirebaseFirestore.instance
+                .collection('posts')
+                .doc(postId)
+                .collection('comments')
+                .get();
 
         // Map comments data to CommentData objects
-        var comments = commentsSnapshot.docs
-            .map((commentDoc) => CommentData.fromJson(commentDoc.data()))
-            .toList();
+        List<CommentData> comments = commentsSnapshot.docs.map((commentDoc) {
+          CommentData comment = CommentData.fromJson(commentDoc.data());
+          comment.id = commentDoc.id;
+          return comment;
+        }).toList();
 
         // Populate the comments for the post
         _posts[postIndex].comments = comments;
@@ -128,8 +131,7 @@ class PostsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addCommentToPost(
-      String postId, String commentBody, UserData currentUser) async {
+  Future<void> addCommentToPost(String postId, CommentData comment) async {
     try {
       // Add the comment to Firestore
       await FirebaseFirestore.instance
@@ -137,11 +139,11 @@ class PostsProvider with ChangeNotifier {
           .doc(postId)
           .collection('comments')
           .add({
-        'body': commentBody,
-        'user': currentUser.toJson(),
-        'createdAt': FieldValue.serverTimestamp(),
-        'likes': [],
-        'dislikes': [],
+        'body': comment.body,
+        'user': comment.user.toJson(),
+        'createdAt': comment.createdAt,
+        'likes': comment.likes,
+        'dislikes': comment.dislikes,
       });
 
       // Notify listeners that the posts list has changed
@@ -151,10 +153,10 @@ class PostsProvider with ChangeNotifier {
       print('Error adding comment to post: $e');
     }
   }
-  
+
   Future<DocumentReference> addPost(PostData post) {
-      var postJson = post.toJson();
-      postJson.removeWhere((key, value) => key == "comments");
-      return FirebaseFirestore.instance.collection('posts').add(postJson);
-    }
+    Map<String, dynamic> postJson = post.toJson();
+    postJson.removeWhere((key, value) => key == "comments");
+    return FirebaseFirestore.instance.collection('posts').add(postJson);
+  }
 }

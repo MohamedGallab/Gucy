@@ -49,6 +49,55 @@ class _PostState extends State<Post> {
     liked = widget.postData.likes.contains(userProvider.user?.uid);
     disliked = widget.postData.dislikes.contains(userProvider.user?.uid);
 
+    Widget _buildGucyMeter() {
+      if (widget.postData.score <= 85) {
+        return LinearProgressIndicator(
+          value: widget.postData.score / 100,
+          minHeight: 5,
+        );
+      }
+
+      return Align(
+        alignment: Alignment.center,
+        child: Transform.rotate(
+          angle: math.pi / 10.0,
+          child: badges.Badge(
+            position: badges.BadgePosition.topEnd(top: -85, end: 0),
+            showBadge: true,
+            badgeContent: Text("GUICY!"),
+            badgeAnimation: badges.BadgeAnimation.scale(
+              animationDuration: Duration(seconds: 3),
+              colorChangeAnimationDuration: Duration(seconds: 1),
+              loopAnimation: true,
+              curve: Curves.easeOutCirc,
+              colorChangeAnimationCurve: Curves.easeInCubic,
+            ),
+            badgeStyle: badges.BadgeStyle(
+              shape: badges.BadgeShape.square,
+              padding: EdgeInsets.all(5),
+              borderRadius: BorderRadius.circular(4),
+              badgeGradient: badges.BadgeGradient.linear(
+                colors: [
+                  Theme.of(context).colorScheme.onPrimary,
+                  Theme.of(context).colorScheme.onTertiary,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              elevation: 0,
+            ),
+            child: Transform.rotate(
+              angle: -math.pi / 10.0,
+              child: LinearProgressIndicator(
+                value: widget.postData.score / 100,
+                minHeight: 5,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Consumer<PostsProvider>(builder: (context, postsProvider, child) {
       return GestureDetector(
         onTap: () {
@@ -90,59 +139,18 @@ class _PostState extends State<Post> {
               SizedBox(height: 10),
               Text(widget.postData.title,
                   style: Theme.of(context).textTheme.titleLarge),
-              SizedBox(height: 10),
-              Wrap(
-                spacing: 8,
-                alignment: WrapAlignment.start, // Align from the beginning
-                children: widget.postData.tags.map((tag) {
-                  return Flare(tag: tag);
-                }).toList(),
-              ),
-              SizedBox(height: 10),
-              if (widget.postData.type == "confession")
-                Align(
-                  alignment: Alignment.center,
-                  child: Transform.rotate(
-                    angle: math.pi / 10.0,
-                    child: badges.Badge(
-                      position: badges.BadgePosition.topEnd(top: -85, end: -20),
-                      showBadge: true,
-                      badgeContent: Text("GUICYYY!!!"),
-                      badgeAnimation: badges.BadgeAnimation.scale(
-                        animationDuration: Duration(seconds: 3),
-                        colorChangeAnimationDuration: Duration(seconds: 1),
-                        loopAnimation: true,
-                        curve: Curves.easeOutCirc,
-                        colorChangeAnimationCurve: Curves.easeInCubic,
-                      ),
-                      badgeStyle: badges.BadgeStyle(
-                        shape: badges.BadgeShape.square,
-                        badgeColor: Colors.blue,
-                        padding: EdgeInsets.all(5),
-                        borderRadius: BorderRadius.circular(4),
-                        badgeGradient: badges.BadgeGradient.linear(
-                          colors: [
-                            const Color.fromARGB(255, 159, 33, 243),
-                            const Color.fromARGB(255, 255, 59, 121)
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        elevation: 0,
-                      ),
-                      child: FractionallySizedBox(
-                        widthFactor: 0.8,
-                        child: Transform.rotate(
-                          angle: -math.pi / 10.0,
-                          child: LinearProgressIndicator(
-                            value: widget.postData.score / 100,
-                            minHeight: 5,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+              if (widget.postData.tags.length > 0) SizedBox(height: 10),
+              if (widget.postData.tags.length > 0)
+                Wrap(
+                  spacing: 8,
+                  alignment: WrapAlignment.start,
+                  children: widget.postData.tags.map((tag) {
+                    return Flare(tag: tag);
+                  }).toList(),
                 ),
+              if (widget.postData.tags.length > 0) SizedBox(height: 10),
+              // GUCY METER
+              if (widget.postData.type == "confession") _buildGucyMeter(),
               if (widget.postData.type != "confession" &&
                   widget.postData.picture != "")
                 Image.network(
