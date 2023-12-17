@@ -5,7 +5,6 @@ import '../models/post_data.dart';
 import '../models/user_data.dart';
 
 class PostsProvider with ChangeNotifier {
-
   late List<PostData> _posts;
 
   PostsProvider() {
@@ -151,10 +150,11 @@ class PostsProvider with ChangeNotifier {
       // Handle errors if needed
       print('Error adding comment to post: $e');
     }
-    
-  Future<DocumentReference> addPost(PostData post) {
-    var postJson = post.toJson();
-    postJson.removeWhere((key, value) => key == "comments");
-    return FirebaseFirestore.instance.collection('posts').add(postJson);
+
+    Future<DocumentReference> addPost(PostData post) {
+      var postJson = post.toJson();
+      postJson.removeWhere((key, value) => key == "comments");
+      return FirebaseFirestore.instance.collection('posts').add(postJson);
+    }
   }
 }
