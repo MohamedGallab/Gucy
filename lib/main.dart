@@ -45,7 +45,7 @@ class _MainAppState extends State<MainApp> {
           return '/';
         }
 
-        return '/homepage';
+        return '/mainScaffold';
       },
       routes: [
         GoRoute(
@@ -53,7 +53,7 @@ class _MainAppState extends State<MainApp> {
           builder: (context, state) => const LoginPage(),
         ),
         GoRoute(
-          path: '/homepage',
+          path: '/mainScaffold',
           builder: (context, state) => const MainScaffold(),
         )
       ],

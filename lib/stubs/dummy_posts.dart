@@ -22,6 +22,7 @@ final List<PostData> dummyPosts = [
       picture: "",
       comments: [
         CommentData(
+          id: 'comment1',
           user: UserData(
             eventPermission: 'Read',
             name: 'John Doe',
@@ -35,6 +36,7 @@ final List<PostData> dummyPosts = [
           dislikes: [],
         ),
         CommentData(
+          id: 'comment2',
           user: UserData(
             eventPermission: 'Write',
             name: 'Alice Smith',
@@ -48,6 +50,7 @@ final List<PostData> dummyPosts = [
           dislikes: [],
         ),
         CommentData(
+          id: 'comment3',
           user: UserData(
             eventPermission: 'Write',
             name: 'Alice Smith',
@@ -61,6 +64,7 @@ final List<PostData> dummyPosts = [
           dislikes: [],
         ),
         CommentData(
+          id: 'comment4',
           user: UserData(
             eventPermission: 'Write',
             name: 'Alice Smith',
@@ -74,6 +78,7 @@ final List<PostData> dummyPosts = [
           dislikes: [],
         ),
         CommentData(
+          id: 'comment5',
           user: UserData(
             eventPermission: 'Write',
             name: 'Alice Smith',
