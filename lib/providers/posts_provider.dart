@@ -154,6 +154,90 @@ class PostsProvider with ChangeNotifier {
     }
   }
 
+  Future<void> addLikeToComment(
+      String postId, String commentId, UserData currentUser) async {
+    try {
+      // Update the likes list for the comment in Firestore
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .doc(commentId)
+          .update({
+        'likes': FieldValue.arrayUnion([currentUser.uid]),
+      });
+
+      // Notify listeners that the posts list has changed
+      notifyListeners();
+    } catch (e) {
+      // Handle errors if needed
+      print('Error adding like to comment: $e');
+    }
+  }
+
+  Future<void> removeLikeFromComment(
+      String postId, String commentId, UserData currentUser) async {
+    try {
+      // Update the likes list for the comment in Firestore
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .doc(commentId)
+          .update({
+        'likes': FieldValue.arrayRemove([currentUser.uid]),
+      });
+
+      // Notify listeners that the posts list has changed
+      notifyListeners();
+    } catch (e) {
+      // Handle errors if needed
+      print('Error removing like from comment: $e');
+    }
+  }
+
+  Future<void> addDislikeToComment(
+      String postId, String commentId, UserData currentUser) async {
+    try {
+      // Update the dislikes list for the comment in Firestore
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .doc(commentId)
+          .update({
+        'dislikes': FieldValue.arrayUnion([currentUser.uid]),
+      });
+
+      // Notify listeners that the posts list has changed
+      notifyListeners();
+    } catch (e) {
+      // Handle errors if needed
+      print('Error adding dislike to comment: $e');
+    }
+  }
+
+  Future<void> removeDislikeFromComment(
+      String postId, String commentId, UserData currentUser) async {
+    try {
+      // Update the dislikes list for the comment in Firestore
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .doc(commentId)
+          .update({
+        'dislikes': FieldValue.arrayRemove([currentUser.uid]),
+      });
+
+      // Notify listeners that the posts list has changed
+      notifyListeners();
+    } catch (e) {
+      // Handle errors if needed
+      print('Error removing dislike from comment: $e');
+    }
+  }
+
   Future<DocumentReference> addPost(PostData post) {
     Map<String, dynamic> postJson = post.toJson();
     postJson.removeWhere((key, value) => key == "comments");
