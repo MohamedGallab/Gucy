@@ -47,11 +47,20 @@ class UserProvider extends ChangeNotifier {
         "score": 0,
         "eventPermission": (email.contains("student")) ? "None" : "All"
       };
-      await db.collection("users").doc(userCredential.user!.uid).set(user);
-      _email = userCredential.user!.email!;
-
-      _user = UserData.fromJson(user);
-      notifyListeners();
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .snapshots()
+          .listen(
+        (DocumentSnapshot snapshot) {
+          if (snapshot.exists) {
+            final data = snapshot.data() as Map<String, dynamic>;
+            _user = UserData.fromJson(data);
+            _email = userCredential.user!.email!;
+            notifyListeners();
+          }
+        },
+      );
       return "success";
     } on FirebaseAuthException catch (e) {
       return e.code;
@@ -65,16 +74,20 @@ class UserProvider extends ChangeNotifier {
         email: email,
         password: password,
       );
-      var docRef = db.collection("users").doc(userCredential.user!.uid);
-      await docRef.get().then(
-        (DocumentSnapshot doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          _user = UserData.fromJson(data);
-          _email = userCredential.user!.email!;
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .snapshots()
+          .listen(
+        (DocumentSnapshot snapshot) {
+          if (snapshot.exists) {
+            final data = snapshot.data() as Map<String, dynamic>;
+            _user = UserData.fromJson(data);
+            _email = userCredential.user!.email!;
+            notifyListeners();
+          }
         },
       );
-
-      notifyListeners();
       return "success";
     } on FirebaseAuthException catch (e) {
       return e.code;
