@@ -49,6 +49,7 @@ class PostData {
           : [],
     );
   }
+  
   Map<String, dynamic> toJson() {
     return {
       'user': user.toJson(),

@@ -8,7 +8,7 @@ class CommentData {
   final DateTime createdAt;
   final List<String> likes;
   final List<String> dislikes;
-  final String id;
+  late final String id;
 
   CommentData({
     required this.body,
@@ -16,7 +16,6 @@ class CommentData {
     required this.createdAt,
     required this.likes,
     required this.dislikes,
-    required this.id,
   });
 
   factory CommentData.fromJson(Map<String, dynamic> json) {
@@ -26,7 +25,6 @@ class CommentData {
       createdAt: (json['createdAt'] as Timestamp).toDate(),
       likes: List<String>.from(json['likes']),
       dislikes: List<String>.from(json['dislikes']),
-      id: json['id'],
     );
   }
 
