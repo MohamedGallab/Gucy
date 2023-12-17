@@ -1,32 +1,37 @@
 class Review {
-  final String user;
-  //final String image;
+  final String userId;
+  final String userName;
+  final String image;
   final double rating;
   final String body;
 
   Review({
-    required this.user,
+    required this.userId,
+    required this.userName,
+    required this.image,
     //required this.image,
     required this.rating,
     required this.body,
   });
 
   Map<String, dynamic> toJson() =>
-      {'user': user, 
-      //'image': image,
-       'rating': rating,
-        'body': body};
+      {'userId': userId, 
+      'userName': userName, 
+      'image': image, 
+      'rating': rating,
+      'body': body};
 
   static Review fromJson(Map<String, dynamic> json) => Review(
-        user: json['user'],
-        //image: json['image'],
+        userId: json['userId'],
+        userName: json['userName'],
+        image: json['image'],
         rating: json['rating'].toDouble(),
         body: json['body'],
       );
 }
 
 class Staff {
-  String? id;
+  final String id;
   final String image;
   final String desc;
   final String name;
@@ -46,6 +51,7 @@ class Staff {
   }
 
   Staff({
+    required this.id,
     required this.image,
     required this.desc,
     required this.name,
@@ -56,6 +62,7 @@ class Staff {
   });
 
   Map<String, dynamic> toJson() => {
+        'id':id,
         'image': image,
         'desc': desc,
         'name': name,
@@ -67,6 +74,7 @@ class Staff {
       };
 
   static Staff fromJson(Map<String, dynamic> json) => Staff(
+        id:json['id'],
         image: json['image'],
         desc: json['desc'],
         name: json['name'],

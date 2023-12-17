@@ -142,8 +142,9 @@ class _StaffPageState extends State<StaffPage> {
           List<Review> reviews = reviewsData.map((review) {
             return Review.fromJson(review);
           }).toList();
-
+          
           Staff staff = Staff(
+              id:document.id,
               image: staffData['image'],
               desc: staffData['desc'],
               name: staffData['name'],

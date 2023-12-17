@@ -99,6 +99,7 @@ class _OutletPageState extends State<OutletPage> {
         }).toList();
 
         Outlet outlet = Outlet(
+          id:document.id,
           image: outletData['image'],
           desc: outletData['desc'],
           name: outletData['name'],

@@ -1,21 +1,28 @@
 class Review {
-  final String user;
+  final String userId;
+  final String userName;
   final String image;
   final double rating;
   final String body;
 
   Review({
-    required this.user,
+    required this.userId,
+    required this.userName,
     required this.image,
     required this.rating,
     required this.body,
   });
 
   Map<String, dynamic> toJson() =>
-      {'user': user, 'image': image, 'rating': rating, 'body': body};
+      {'userId': userId, 
+      'userName': userName, 
+      'image': image, 
+      'rating': rating,
+      'body': body};
 
   static Review fromJson(Map<String, dynamic> json) => Review(
-        user: json['user'],
+        userId: json['userId'],
+        userName: json['userName'],
         image: json['image'],
         rating: json['rating'].toDouble(),
         body: json['body'],
@@ -23,7 +30,7 @@ class Review {
 }
 
 class Outlet {
-  String? id;
+  final String id;
   final String image;
   final String desc;
   final String name;
@@ -42,15 +49,16 @@ class Outlet {
   }
 
   Outlet({
+    required this.id,
     required this.image,
     required this.desc,
     required this.name,
-    
     required this.reviews,
     required this.location,
   });
 
   Map<String, dynamic> toJson() => {
+        'id':id,
         'image': image,
         'desc': desc,
         'name': name,
@@ -61,10 +69,10 @@ class Outlet {
       };
 
   static Outlet fromJson(Map<String, dynamic> json) => Outlet(
+        id:json['id'],
         image: json['image'],
         desc: json['desc'],
         name: json['name'],
-        
         reviews: (json['reviews'] as List)
             .map((reviewJson) => Review.fromJson(reviewJson))
             .toList(),

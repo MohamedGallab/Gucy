@@ -3,6 +3,8 @@ import 'package:gucy/pages/staff_page.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../models/staff_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:gucy/providers/user_provider.dart';
 
 class StaffProfilePage extends StatefulWidget {
   final Staff staff;
@@ -18,7 +20,7 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
   double _userRating = 0.0;
   List<Review> _reviews = [];
   bool _isAddingReview = false;
-
+  bool hasReview = true;
   @override
   void initState() {
     super.initState();
@@ -27,20 +29,33 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(
+      context,
+    );
+    for (int i = 0; i < widget.staff.reviews.length; i++) {
+      if (widget.staff.reviews[i].userId == userProvider.user?.uid) {
+        setState(() {
+          hasReview = false;
+        });
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.staff.name),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print(MediaQuery.of(context).viewInsets.bottom);
-          setState(() {
-            _isAddingReview = true;
-            showNewReview(context);
-          });
-        },
-        child: Icon(Icons.add),
-      ),
+      //hasReview
+      floatingActionButton: hasReview
+          ? FloatingActionButton(
+              onPressed: () {
+                print(MediaQuery.of(context).viewInsets.bottom);
+                setState(() {
+                  _isAddingReview = true;
+                  showNewReview(context);
+                });
+              },
+              child: Icon(Icons.add),
+            )
+          : null,
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -85,11 +100,11 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
                     ),
                   ],
                 ),
-                Icon(
-                  Icons.more_vert,
-                  //color: Theme.of(context).colorScheme.primary,
-                  size: 25,
-                ),
+                // Icon(
+                //   Icons.more_vert,
+                //   //color: Theme.of(context).colorScheme.primary,
+                //   size: 25,
+                // ),
               ],
             ),
 
@@ -125,7 +140,7 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
                   //SizedBox(height: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: _buildReviewsList(),
+                    children: _buildReviewsList(userProvider),
                   ),
                 ],
               ),
@@ -154,49 +169,181 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
     );
   }
 
-  List<Widget> _buildReviewsList() {
-    return _reviews.map((review) {
-      return Padding(
-          padding: EdgeInsets.only(bottom: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image.network(
-                      "https://cdn-icons-png.flaticon.com/512/147/147142.png"),
+  // Future<void> getDocumentById(String documentId) async {
+  //   try {
+  //     // Reference to the Firestore collection
+  //     CollectionReference staffCollection =
+  //         FirebaseFirestore.instance.collection('users');
+
+  //     // Get a specific document by ID
+  //     DocumentSnapshot documentSnapshot =
+  //         await staffCollection.doc(documentId).get();
+
+  //     // Check if the document exists
+  //     if (documentSnapshot.exists) {
+  //       // Access the data from the document
+  //       Map<String, dynamic> data =
+  //           documentSnapshot.data() as Map<String, dynamic>;
+
+  //       // Print or use the data as needed
+  //       print("Document data: $data");
+  //     } else {
+  //       print("Document does not exist");
+  //     }
+  //   } catch (error) {
+  //     print("Error getting document: $error");
+  //   }
+  // }
+
+  List<Widget> _buildReviewsList(userProvider) {
+    List<Widget> widgets = [];
+    for (int i = 0; i < _reviews.length; i++) {
+      if (userProvider.user?.uid == _reviews[i].userId) {
+        setState(() {
+          hasReview = false;
+          print("has review?" + hasReview.toString());
+        });
+        widgets.insert(
+            0,
+            Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network(_reviews[i].image),
+                      ),
+                    ),
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(children: [
+                            SizedBox(width: 10),
+                            Container(
+                              width: 150,
+                              child: Text(
+                                "You",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 20),
+                              ),
+                            ),
+                            //SizedBox(width: 110),
+                            Container(
+                              child: _buildRatingStars(_reviews[i].rating),
+                            ),
+                            Container(
+                                width: 20,
+                                child: IconButton(
+                                    icon: Icon(Icons.clear),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onErrorContainer,
+                                    onPressed: () {
+                                      setState(() {
+                                        _showDeleteConfirmationDialog(context);
+                                      });
+                                    })),
+                          ]),
+                          Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: SizedBox(
+                                  width: 300,
+                                  child: Text(
+                                    _reviews[i].body,
+                                  ))),
+                        ])
+                  ],
+                )));
+      } else {
+        widgets.add(Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 60,
+                  height: 60,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image.network(_reviews[i].image),
+                  ),
                 ),
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [
-                  SizedBox(width: 10),
-                  Container(
-                    width:150,
-                    child:
-                  Text(
-                    review.user,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),),
-                  //SizedBox(width: 110),
-                  Container(
-                    child:
-                  _buildRatingStars(review.rating),
-                  )
-                ]),
-                Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: SizedBox(
-                    width: 300,
-                    child:Text(
-                      review.body,
-                    ))),
-              ])
-            ],
-          ));
-    }).toList();
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(children: [
+                    SizedBox(width: 10),
+                    Container(
+                      width: 150,
+                      child: Text(
+                        _reviews[i].userName.length>12?_reviews[i].userName.substring(0, 10)+"..":_reviews[i].userName,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                    ),
+                    //SizedBox(width: 110),
+                    Container(
+                      child: _buildRatingStars(_reviews[i].rating),
+                    )
+                  ]),
+                  Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: SizedBox(
+                          width: 300,
+                          child: Text(
+                            _reviews[i].body,
+                          ))),
+                ])
+              ],
+            )));
+      }
+    }
+    return widgets;
+    // return _reviews.map((review) {
+    //   return Padding(
+    //       padding: EdgeInsets.only(bottom: 10),
+    //       child: Row(
+    //         crossAxisAlignment: CrossAxisAlignment.start,
+    //         children: [
+    //           Container(
+    //             width: 60,
+    //             height: 60,
+    //             child: ClipRRect(
+    //               borderRadius: BorderRadius.circular(50),
+    //               child: Image.network(review.image),
+    //             ),
+    //           ),
+    //           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    //             Row(children: [
+    //               SizedBox(width: 10),
+    //               Container(
+    //                 width: 150,
+    //                 child: Text(
+    //                   userProvider.user?.uid == review.userId
+    //                       ? review.userName + "*"
+    //                       : review.userName,
+    //                   style:
+    //                       TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+    //                 ),
+    //               ),
+    //               //SizedBox(width: 110),
+    //               Container(
+    //                 child: _buildRatingStars(review.rating),
+    //               )
+    //             ]),
+    //             Padding(
+    //                 padding: EdgeInsets.only(left: 10),
+    //                 child: SizedBox(
+    //                     width: 300,
+    //                     child: Text(
+    //                       review.body,
+    //                     ))),
+    //           ])
+    //         ],
+    //       ));
+    // }).toList();
   }
 
   void showNewReview(BuildContext ctx) {
@@ -204,133 +351,127 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
         context: ctx,
         isScrollControlled: true,
         builder: (sheetContext) {
-          return 
-          Padding(
-          padding: EdgeInsets.only(bottom:MediaQuery.of(context).viewInsets.bottom),
-          child:Container(
-            height: 400,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 30),
-                Text(
-                  'What is your rating?',
-                  style: TextStyle(fontSize: 25),
-                  textAlign: TextAlign.center,
+          final userProvider = Provider.of<UserProvider>(
+            context,
+          );
+          print(hasReview);
+          return Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Container(
+                height: 400,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 30),
+                    Text(
+                      'What is your rating?',
+                      style: TextStyle(fontSize: 25),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 10),
+                    RatingBar.builder(
+                      initialRating: _userRating,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 50,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      onRatingUpdate: (rating) {
+                        setState(() {
+                          _userRating = rating;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Please share your opinion',
+                      style: TextStyle(fontSize: 25),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 10),
+                    TextField(
+                      controller: _reviewController,
+                      decoration: InputDecoration(
+                        hintText: 'Write your review here...',
+                        border: OutlineInputBorder(),
+                      ),
+                      minLines: 3,
+                      maxLines: null,
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        _addReview(userProvider);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Submit Review'),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 10),
-                RatingBar.builder(
-                  initialRating: _userRating,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemSize: 50,
-                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                  ),
-                  onRatingUpdate: (rating) {
-                    setState(() {
-                      _userRating = rating;
-                    });
-                  },
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Please share your opinion',
-                  style: TextStyle(fontSize: 25),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: _reviewController,
-                  decoration: InputDecoration(
-                    hintText: 'Write your review here...',
-                    border: OutlineInputBorder(),
-                  ),
-                  minLines: 3,
-                  maxLines: null,
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    _addReview();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Submit Review'),
-                ),
-              ],
-            ),
-          ));
+              ));
         });
   }
 
-  // void _addReview() {
-  //   if (_reviewController.text.isNotEmpty) {
-  //     setState(() {
-  //       _reviews.add(
-  //         Review(
-  //           //image:"https://cdn-icons-png.flaticon.com/512/147/147142.png",
-  //           user: 'User X', // Replace with the actual user's name or ID
-  //           rating: _userRating,
-  //           body: _reviewController.text,
-  //         ),
-  //       );
-  //       _reviewController.clear();
-  //       _userRating = 0.0;
-  //       _isAddingReview = false; // Close review form after submitting
-  //     });
-  //   }
-  // }
+  void _addReview(userProvider) async {
+    if (_reviewController.text.isNotEmpty) {
+      setState(() {
+        hasReview = false;
+      });
+      print("review not created");
+      // Create a reference to the 'outlets' collection in Firestore
+      CollectionReference staffCollection =
+          FirebaseFirestore.instance.collection('staff');
+      // Create a new review object
+      Review newReview = Review(
+        image: userProvider.user?.picture == "" ||
+                userProvider.user?.picture == null
+            ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            : userProvider.user?.picture,
+        userId: userProvider.user?.uid as String,
+        userName: userProvider.user?.name as String,
+        rating: _userRating,
+        body: _reviewController.text,
+      );
 
+      // Add the new review data to Firestore
+      print("review created");
+      QuerySnapshot querySnapshot = await staffCollection
+          .where('name', isEqualTo: widget.staff.name)
+          .get();
 
- void _addReview() async {
-  if (_reviewController.text.isNotEmpty) {
-    // Create a reference to the 'outlets' collection in Firestore
-    CollectionReference staffCollection =FirebaseFirestore.instance.collection('staff');
+      if (querySnapshot.docs.isNotEmpty) {
+        // Get the first document reference if it exists
+        DocumentReference staffDocRef = querySnapshot.docs[0].reference;
 
-    // Create a new review object
-    Review newReview = Review(
-      // image:
-      //     'https://images.unsplash.com/photo-1504735217152-b768bcab5ebc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=0ec8291c3fd2f774a365c8651210a18b',
-      user: 'User 111', // Replace with the actual user's name or ID
-      rating: _userRating,
-      body: _reviewController.text,
-    );
+        try {
+          // Update the reviews array of the found outlet document
+          await staffDocRef.update({
+            'reviews': FieldValue.arrayUnion([newReview.toJson()])
+          });
 
-    // Add the new review data to Firestore
-    print(widget.staff.id);
-    QuerySnapshot querySnapshot = await staffCollection.where('name', isEqualTo: widget.staff.name).get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      // Get the first document reference if it exists
-      DocumentReference staffDocRef = querySnapshot.docs[0].reference;
-
-      try {
-        // Update the reviews array of the found outlet document
-        await staffDocRef.update({
-          'reviews': FieldValue.arrayUnion([newReview.toJson()])
-        });
-
-        setState(() {
-          _reviews.add(newReview);
-          _reviewController.clear();
-          _userRating = 0.0;
-          _isAddingReview = false;
-        });
-      } catch (e) {
-        print('Error adding review: $e');
-        // Handle the error as needed
+          setState(() {
+            _reviews.add(newReview);
+            _reviewController.clear();
+            _userRating = 0.0;
+            _isAddingReview = false;
+          });
+        } catch (e) {
+          print('Error adding review: $e');
+          // Handle the error as needed
+        }
+      } else {
+        print('Outlet document not found');
+        // Handle the case where the outlet document doesn't exist
       }
-    } else {
-      print('Outlet document not found');
-      // Handle the case where the outlet document doesn't exist
     }
-
   }
-}
+
   @override
   void dispose() {
     _reviewController.dispose();
@@ -367,5 +508,64 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
     }
 
     return Row(children: stars);
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final userProvider = Provider.of<UserProvider>(
+          context,
+        );
+        return AlertDialog(
+          title: Text('Delete Confirmation'),
+          content: Text('Are you sure you want to delete this item?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Perform delete action here
+                // Add your delete logic here
+                //widget.staff
+                setState(() {
+                  hasReview = true;
+                  deleteReview(userProvider);
+                });
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> deleteReview(userProvider) async {
+    try {
+      List newList = [];
+      for (int i = 0; i < _reviews.length; i++) {
+        if (_reviews[i].userId == userProvider.user?.uid) {
+          _reviews.removeAt(i);
+        } else {
+          newList.add(_reviews[i].toJson());
+        }
+      }
+      await FirebaseFirestore.instance
+          .collection('staff')
+          .doc(widget.staff.id)
+          .update({'reviews': newList});
+      print('Review deleted successfully!');
+    } catch (e) {
+      print('Error deleting review: $e');
+    }
   }
 }
