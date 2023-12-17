@@ -20,7 +20,9 @@ class PostsProvider with ChangeNotifier {
       (QuerySnapshot snapshot) {
         _posts = snapshot.docs.map((doc) {
           var postData = doc.data() as Map<String, dynamic>;
-          return PostData.fromJson(postData);
+          var post = PostData.fromJson(postData);
+          post.id = doc.id;
+          return post;
         }).toList();
         notifyListeners();
       },

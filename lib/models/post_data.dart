@@ -3,7 +3,7 @@ import 'package:gucy/models/comment_data.dart';
 import 'package:gucy/models/user_data.dart';
 
 class PostData {
-  final String id;
+  late final String id;
   final UserData user;
   final DateTime createdAt;
   final String title;
@@ -17,7 +17,6 @@ class PostData {
   List<CommentData> comments;
 
   PostData({
-    required this.id,
     required this.user,
     required this.createdAt,
     required this.title,
@@ -33,7 +32,6 @@ class PostData {
 
   factory PostData.fromJson(Map<String, dynamic> json) {
     return PostData(
-      id: json['id'],
       user: UserData.fromJson(json['user'] ?? {}),
       createdAt: (json['createdAt'] as Timestamp).toDate(),
       title: json['title'],

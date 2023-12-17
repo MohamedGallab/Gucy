@@ -4,7 +4,6 @@ import '../models/user_data.dart';
 
 final List<PostData> dummyPosts = [
   PostData(
-      id: 'post1',
       user: UserData(
           name: 'Hana Tamer',
           score: 120,
@@ -96,7 +95,6 @@ final List<PostData> dummyPosts = [
         // Add more dummy comments as needed
       ]),
   PostData(
-      id: 'post2',
       user: UserData(
           name: 'Ali Omar',
           score: 120,
