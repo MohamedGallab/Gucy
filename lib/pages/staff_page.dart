@@ -309,7 +309,7 @@ class _StaffPageState extends State<StaffPage> {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          staff.location,
+                          staff.office,
                           textAlign: TextAlign.right,
                           style: TextStyle(
                               //color: Theme.of(context).colorScheme.primary,
