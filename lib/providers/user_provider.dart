@@ -25,12 +25,7 @@ class UserProvider extends ChangeNotifier {
         var docRef = db.collection("users").doc(user.uid);
         await docRef.get().then((DocumentSnapshot doc) {
           final data = doc.data() as Map<String, dynamic>;
-          _user = UserData(
-              eventPermission: data["eventPermission"],
-              name: data["name"],
-              picture: data["picture"],
-              score: data["score"],
-              uid: data["uid"]);
+          _user = UserData.fromJson(data);
           _email = user.email!;
         });
       }
