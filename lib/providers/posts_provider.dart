@@ -9,7 +9,8 @@ class PostsProvider with ChangeNotifier {
     // if (!_loggedIn) {
     //   throw Exception('Must be logged in');
     // }
-
-    return FirebaseFirestore.instance.collection('posts').add(post.toJson());
+    var postJson = post.toJson();
+    postJson.removeWhere((key, value) => key == "comments");
+    return FirebaseFirestore.instance.collection('posts').add(postJson);
   }
 }

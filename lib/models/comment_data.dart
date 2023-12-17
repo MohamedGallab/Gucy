@@ -29,7 +29,7 @@ class CommentData {
     return {
       'body': body,
       'user': user.toJson(), // Convert user data to JSON
-      'createdAt': createdAt.toIso8601String(),
+      'createdAt': createdAt.toUtc(),
       'likes': likes,
       'dislikes': dislikes,
     };
