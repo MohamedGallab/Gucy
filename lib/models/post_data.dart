@@ -49,4 +49,19 @@ class PostData {
           : [],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'user': user.toJson(),
+      'createdAt': createdAt.toUtc(),
+      'title': title,
+      'body': body,
+      'tags': tags,
+      'likes': likes,
+      'dislikes': dislikes,
+      'score': score,
+      'type': type,
+      'picture': picture,
+      'comments': comments.map((comment) => comment.toJson()).toList(),
+    };
+  }
 }

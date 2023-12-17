@@ -29,4 +29,14 @@ class CommentData {
       id: json['id'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'body': body,
+      'user': user.toJson(), // Convert user data to JSON
+      'createdAt': createdAt.toUtc(),
+      'likes': likes,
+      'dislikes': dislikes,
+    };
+  }
 }
