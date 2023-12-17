@@ -241,7 +241,7 @@ class _ContactsPageState extends State<ContactsPage> {
                   Row(
                     children: [
                      
-                      SizedBox(width: 10),
+                      SizedBox(width: 20),
                       //rest
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,19 +251,24 @@ class _ContactsPageState extends State<ContactsPage> {
                             contact.name,
                             style: TextStyle(
                                 //color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 fontSize: 20),
                           ),
-                          SizedBox(height: 5),
-                    Text(
-                     contact.isEmergency ? 'Emergency contact' : 'Normal contact',
-                       style: TextStyle(
-                         color: contact.isEmergency ? Colors.red : Colors.green,
-                         fontSize: 12,
-                       ),
-                
+                          SizedBox(height: 2),
+                          Text(
+                          contact.isEmergency ? 'Emergency contact' : 'Normal contact',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: contact.isEmergency ? Color.fromARGB(255, 183, 32, 21) : Color.fromARGB(255, 6, 145, 64)
+                            ),
                           ),
-                        
+                          Text(
+                            contact.phoneNumber,
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -278,15 +283,15 @@ class _ContactsPageState extends State<ContactsPage> {
                           size: 25,
                         ),
                         SizedBox(width: 5),
-                        Text(
-                          contact.phoneNumber,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              //color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15),
-                          //style: TextStyle(color: Colors.white),
-                        ),
+                        // Text(
+                        //   contact.phoneNumber,
+                        //   textAlign: TextAlign.right,
+                        //   style: TextStyle(
+                        //       //color: Theme.of(context).colorScheme.primary,
+                        //       fontWeight: FontWeight.w500,
+                        //       fontSize: 15),
+                        //   //style: TextStyle(color: Colors.white),
+                        // ),
                         SizedBox(width: 20)
                       ],
                     ),
