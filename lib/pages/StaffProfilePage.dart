@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gucy/pages/staff_page.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import '../models/staff_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StaffProfilePage extends StatefulWidget {
   final Staff staff;
@@ -171,12 +173,18 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
                   SizedBox(width: 10),
+                  Container(
+                    width:150,
+                    child:
                   Text(
                     review.user,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                  SizedBox(width: 110),
+                  ),),
+                  //SizedBox(width: 110),
+                  Container(
+                    child:
                   _buildRatingStars(review.rating),
+                  )
                 ]),
                 Padding(
                     padding: EdgeInsets.only(left: 10),
@@ -184,8 +192,6 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
                     width: 300,
                     child:Text(
                       review.body,
-                      //"asasd asdasd asdf asdasd as das d asd as das d asd asd sad as d asd asd"
-                      //style: TextStyle(fontWeight: FontWeight.bold),
                     ))),
               ])
             ],
@@ -261,23 +267,70 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
         });
   }
 
-  void _addReview() {
-    if (_reviewController.text.isNotEmpty) {
-      setState(() {
-        _reviews.add(
-          Review(
-            user: 'User X', // Replace with the actual user's name or ID
-            rating: _userRating,
-            body: _reviewController.text,
-          ),
-        );
-        _reviewController.clear();
-        _userRating = 0.0;
-        _isAddingReview = false; // Close review form after submitting
-      });
-    }
-  }
+  // void _addReview() {
+  //   if (_reviewController.text.isNotEmpty) {
+  //     setState(() {
+  //       _reviews.add(
+  //         Review(
+  //           //image:"https://cdn-icons-png.flaticon.com/512/147/147142.png",
+  //           user: 'User X', // Replace with the actual user's name or ID
+  //           rating: _userRating,
+  //           body: _reviewController.text,
+  //         ),
+  //       );
+  //       _reviewController.clear();
+  //       _userRating = 0.0;
+  //       _isAddingReview = false; // Close review form after submitting
+  //     });
+  //   }
+  // }
 
+
+ void _addReview() async {
+  if (_reviewController.text.isNotEmpty) {
+    // Create a reference to the 'outlets' collection in Firestore
+    CollectionReference staffCollection =FirebaseFirestore.instance.collection('staff');
+
+    // Create a new review object
+    Review newReview = Review(
+      // image:
+      //     'https://images.unsplash.com/photo-1504735217152-b768bcab5ebc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=0ec8291c3fd2f774a365c8651210a18b',
+      user: 'User 111', // Replace with the actual user's name or ID
+      rating: _userRating,
+      body: _reviewController.text,
+    );
+
+    // Add the new review data to Firestore
+    print(widget.staff.id);
+    QuerySnapshot querySnapshot = await staffCollection.where('name', isEqualTo: widget.staff.name).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Get the first document reference if it exists
+      DocumentReference staffDocRef = querySnapshot.docs[0].reference;
+
+      try {
+        // Update the reviews array of the found outlet document
+        await staffDocRef.update({
+          'reviews': FieldValue.arrayUnion([newReview.toJson()])
+        });
+
+        setState(() {
+          _reviews.add(newReview);
+          _reviewController.clear();
+          _userRating = 0.0;
+          _isAddingReview = false;
+        });
+      } catch (e) {
+        print('Error adding review: $e');
+        // Handle the error as needed
+      }
+    } else {
+      print('Outlet document not found');
+      // Handle the case where the outlet document doesn't exist
+    }
+
+  }
+}
   @override
   void dispose() {
     _reviewController.dispose();

@@ -1,49 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'StaffProfilePage.dart';
-
-class Staff {
-  final String image;
-  final String desc;
-  final String name;
-  final String office;
-  final double rating;
-  final String title;
-  final String location;
-  final String number;
-  final List<Review> reviews;
-
-  Staff({
-    required this.image,
-    required this.desc,
-    required this.name,
-    required this.office,
-    required this.rating,
-    required this.title,
-    required this.location,
-    required this.number,
-    required this.reviews,
-  });
-}
-
-class Review {
-  final String user;
-  final double rating;
-  final String body;
-
-  Review({
-    required this.user,
-    required this.rating,
-    required this.body,
-  });
-}
-
-// void main() => runApp(
-//       MaterialApp(
-//         debugShowCheckedModeBanner: false,
-//         home: OutletPage(),
-//       ),
-//     );
+import '../models/staff_data.dart';
 
 class StaffPage extends StatefulWidget {
   const StaffPage({Key? key}) : super(key: key);
@@ -53,109 +11,157 @@ class StaffPage extends StatefulWidget {
 }
 
 class _StaffPageState extends State<StaffPage> {
-  List<Staff> StaffList = [
-    Staff(
-      image:
-          'https://i1.rgstatic.net/ii/profile.image/1139601779490817-1648713645310_Q512/Milad-Ghantous-2.jpg',
-      desc: 'This is Dr Milad Michel, Faculty of MET. I teach CO, DSD, Microprocessors, and Mobile dev. It is my pleasure to be one of the first professors on this great app!',
-      name: 'Milad Ghantous',
-      office: 'Office 1',
-      rating: 4.5,
-      title: "Professor (MET)",
-      location: 'C7.213',
-      number: '1234567890',
-      reviews: [
-        Review(
-          user: 'User 1',
-          rating: 4.0,
-          body: 'This Professor is fire ngl .. Best grades so far!',
-        ),
-        Review(
-          user: 'User 2',
-          rating: 2.5,
-          body: 'There is no way I\'m passing his courses',
-        ),
-      ],
-    ),
-    Staff(
-      image:
-          'https://media.licdn.com/dms/image/C4D03AQFA_7Nbpec-5w/profile-displayphoto-shrink_400_400/0/1649660429265?e=2147483647&v=beta&t=jMdrDeMNlQq2t904n5NZ3LbqFxAGsXy3iEn2hyOuiUI',
-      desc: 'Description for Haytham',
-      name: 'Haytham Ismail ',
-      office: 'Office 1',
-      rating: 3.5,
-      title: "Professor (MET)",
-      location: 'C7.218',
-      number: '1234567890',
-      reviews: [
-        Review(
-          user: 'User 1',
-          rating: 4.0,
-          body: 'Review 1',
-        ),
-        Review(
-          user: 'User 2',
-          rating: 5.0,
-          body: 'Review 2',
-        ),
-      ],
-    ),
-    Staff(
-      image:
-          'https://pbs.twimg.com/media/E2K9OQbXsAEmQfZ.jpg',
-      desc: 'Description for Ayman',
-      name: 'Mohamed Ayman',
-      office: 'Office 1',
-      rating: 3.0,
-      title: "Teaching Assistant (MET)",
-      location: 'C2.213',
-      number: '1234567890',
-      reviews: [
-        Review(
-          user: 'User 1',
-          rating: 3.0,
-          body: 'Review 1',
-        ),
-        Review(
-          user: 'User 2',
-          rating: 5.0,
-          body: 'Review 2',
-        ),
-      ],
-    ),
-    Staff(
-      image:
-          'https://images.unsplash.com/photo-1504735217152-b768bcab5ebc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=0ec8291c3fd2f774a365c8651210a18b',
-      desc: 'Description for Mariam',
-      name: 'Mariam Essam',
-      office: 'Office 1',
-      rating: 5,
-      title: "Professor (ARCH)",
-      location: 'D3.113',
-      number: '1234567890',
-      reviews: [
-        Review(
-          user: 'User 1',
-          rating: 5.0,
-          body: 'Review 1',
-        ),
-        Review(
-          user: 'User 2',
-          rating: 5.0,
-          body: 'Review 2',
-        ),
-      ],
-    ),
-  ];
+  // List<Staff> StaffList = [
+  //   Staff(
+  //     image:
+  //         'https://i1.rgstatic.net/ii/profile.image/1139601779490817-1648713645310_Q512/Milad-Ghantous-2.jpg',
+  //     desc: 'This is Dr Milad Michel, Faculty of MET. I teach CO, DSD, Microprocessors, and Mobile dev. It is my pleasure to be one of the first professors on this great app!',
+  //     name: 'Milad Ghantous',
+  //     office: 'Office 1',
+  //     rating: 4.5,
+  //     title: "Professor (MET)",
+  //     location: 'C7.213',
+  //     number: '1234567890',
+  //     reviews: [
+  //       Review(
+  //         user: 'User 1',
+  //         rating: 4.0,
+  //         body: 'This Professor is fire ngl .. Best grades so far!',
+  //       ),
+  //       Review(
+  //         user: 'User 2',
+  //         rating: 2.5,
+  //         body: 'There is no way I\'m passing his courses',
+  //       ),
+  //     ],
+  //   ),
+  //   Staff(
+  //     image:
+  //         'https://media.licdn.com/dms/image/C4D03AQFA_7Nbpec-5w/profile-displayphoto-shrink_400_400/0/1649660429265?e=2147483647&v=beta&t=jMdrDeMNlQq2t904n5NZ3LbqFxAGsXy3iEn2hyOuiUI',
+  //     desc: 'Description for Haytham',
+  //     name: 'Haytham Ismail ',
+  //     office: 'Office 1',
+  //     rating: 3.5,
+  //     title: "Professor (MET)",
+  //     location: 'C7.218',
+  //     number: '1234567890',
+  //     reviews: [
+  //       Review(
+  //         user: 'User 1',
+  //         rating: 4.0,
+  //         body: 'Review 1',
+  //       ),
+  //       Review(
+  //         user: 'User 2',
+  //         rating: 5.0,
+  //         body: 'Review 2',
+  //       ),
+  //     ],
+  //   ),
+  //   Staff(
+  //     image:
+  //         'https://pbs.twimg.com/media/E2K9OQbXsAEmQfZ.jpg',
+  //     desc: 'Description for Ayman',
+  //     name: 'Mohamed Ayman',
+  //     office: 'Office 1',
+  //     rating: 3.0,
+  //     title: "Teaching Assistant (MET)",
+  //     location: 'C2.213',
+  //     number: '1234567890',
+  //     reviews: [
+  //       Review(
+  //         user: 'User 1',
+  //         rating: 3.0,
+  //         body: 'Review 1',
+  //       ),
+  //       Review(
+  //         user: 'User 2',
+  //         rating: 5.0,
+  //         body: 'Review 2',
+  //       ),
+  //     ],
+  //   ),
+  //   Staff(
+  //     image:
+  //         'https://images.unsplash.com/photo-1504735217152-b768bcab5ebc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=0ec8291c3fd2f774a365c8651210a18b',
+  //     desc: 'Description for Mariam',
+  //     name: 'Mariam Essam',
+  //     office: 'Office 1',
+  //     rating: 5,
+  //     title: "Professor (ARCH)",
+  //     location: 'D3.113',
+  //     number: '1234567890',
+  //     reviews: [
+  //       Review(
+  //         user: 'User 1',
+  //         rating: 5.0,
+  //         body: 'Review 1',
+  //       ),
+  //       Review(
+  //         user: 'User 2',
+  //         rating: 5.0,
+  //         body: 'Review 2',
+  //       ),
+  //     ],
+  //   ),
+  // ];
 
+  List<Staff> StaffList = [];
   List<Staff> filteredList = [];
-
+  bool loading = true;
   @override
   void initState() {
     super.initState();
+    loadUsers();
+  }
+
+  Future<void> loadUsers() async {
+    List<Staff> tempStaff = await getStaff();
     setState(() {
+      StaffList = tempStaff;
       filteredList = StaffList;
+      loading = false;
     });
+  }
+
+  Future<List<Staff>> getStaff() async {
+    try {
+      print("Fetching from DB 1");
+      CollectionReference staffCollection =
+          FirebaseFirestore.instance.collection('staff');
+      QuerySnapshot staffSnapshot = await staffCollection.get();
+      print("Fetching from DB 2");
+      List<Staff> allStaff = [];
+      if (staffSnapshot.docs.isNotEmpty) {
+        for (QueryDocumentSnapshot document in staffSnapshot.docs) {
+          print(document.data());
+          Map<String, dynamic> staffData =
+              document.data() as Map<String, dynamic>;
+          List<dynamic> reviewsData = staffData['reviews'] ?? [];
+          print(reviewsData);
+          List<Review> reviews = reviewsData.map((review) {
+            return Review.fromJson(review);
+          }).toList();
+
+          Staff staff = Staff(
+              image: staffData['image'],
+              desc: staffData['desc'],
+              name: staffData['name'],
+              reviews: reviews,
+              location: staffData['location'],
+              office: staffData['office'],
+              title: staffData['title']);
+          print(staff.name);
+          allStaff.add(staff);
+        }
+      }
+      print("ALL staff size: " + allStaff.length.toString());
+      return allStaff;
+    } catch (e) {
+      // Handle any potential errors during data fetching
+      print('Error fetching Staff: $e');
+      throw e; // Re-throw the error to propagate it to the calling code
+    }
   }
 
   onSearch(String search) {
@@ -243,7 +249,7 @@ class _StaffPageState extends State<StaffPage> {
             child: InkWell(
               onTap: () {
                 print("Staff clicked: ${staff.name}");
-                      Navigator.push(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => StaffProfilePage(staff: staff),

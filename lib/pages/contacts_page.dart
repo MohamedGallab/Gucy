@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:gucy/models/contacts_data.dart';
+import 'package:gucy/pages/contact_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Contact {
@@ -29,28 +31,34 @@ class ContactsPage extends StatefulWidget {
 }
 
 class _ContactsPageState extends State<ContactsPage> {
-  List<Contact> contactsList = [
-    Contact(name: 'Clinic', phoneNumber: '+201286597707', isEmergency: true),
-    Contact(name: 'Hotline', phoneNumber: '9876543210', isEmergency: false),
-    Contact(name: 'Bus number', phoneNumber: '5555555555', isEmergency: false),
-    Contact(name: 'Gym number', phoneNumber: '7777777777', isEmergency: false),
-    Contact(name: 'Examination office', phoneNumber: '8888888888', isEmergency: false),
-    // Contact(name: 'Eva', phoneNumber: '9999999999', isEmergency: false),
-    // Contact(name: 'Frank', phoneNumber: '7777777777', isEmergency: true),
-    // Contact(name: 'Grace', phoneNumber: '4444444444', isEmergency: false),
-    // Contact(name: 'Hannah', phoneNumber: '6666666666', isEmergency: true),
-    // Contact(name: 'Ian', phoneNumber: '5555555555', isEmergency: false),
-  ];
+  List<Contacts> contactsList = [];
+  bool loading =true;
+  
+  List<Contacts> filteredList = [];
 
-  List<Contact> filteredList = [];
-
-  @override
+   @override
   void initState() {
     super.initState();
+    loadUsers();
+    // setState(() {
+    //   //loading = false;
+    // });
+    
+    
+  }
+
+  Future<void> loadUsers() async {
+    List<Contacts> tempUsers = await getUsers();
     setState(() {
+      contactsList = tempUsers;
       filteredList = contactsList;
+      loading=false;
     });
   }
+
+  Future<List<Contacts>> getUsers() async {
+    return await getemergencyNums();
+}
 
   onSearch(String search) {
     setState(() {
@@ -93,9 +101,13 @@ class _ContactsPageState extends State<ContactsPage> {
           ),
         ),
         Expanded(
-          child: Container(
+          child: loading
+      ? Center(
+          child: CircularProgressIndicator(), // Show loading indicator
+        )
+      :  Container(
             //color: Colors.grey.shade900,
-            child: filteredList.isNotEmpty
+            child: filteredList.isNotEmpty 
                 ? ListView.builder(
                     itemCount: filteredList.length,
                     itemBuilder: (context, index) {
@@ -114,7 +126,7 @@ class _ContactsPageState extends State<ContactsPage> {
     );
   }
 
-  Widget contactComponent({required Contact contact}) {
+  Widget contactComponent({required Contacts contact}) {
   // return GestureDetector(
   //   onTap: () {
   //     print("Contact clicked: ${contact.name}");
