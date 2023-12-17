@@ -47,20 +47,13 @@ class UserProvider extends ChangeNotifier {
         "score": 0,
         "eventPermission": (email.contains("student")) ? "None" : "All"
       };
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .snapshots()
-          .listen(
-        (DocumentSnapshot snapshot) {
-          if (snapshot.exists) {
-            final data = snapshot.data() as Map<String, dynamic>;
-            _user = UserData.fromJson(data);
-            _email = userCredential.user!.email!;
-            notifyListeners();
-          }
-        },
-      );
+      
+      await db.collection("users").doc(userCredential.user!.uid).set(user);
+      _email = userCredential.user!.email!;
+
+      _user = UserData.fromJson(user);
+      notifyListeners();
+
       return "success";
     } on FirebaseAuthException catch (e) {
       return e.code;
