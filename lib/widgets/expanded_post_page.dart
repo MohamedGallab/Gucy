@@ -36,13 +36,17 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
         body: Column(
           children: [
             Post(postData: postData, isClickable: false),
-            SizedBox(height: 16.0),
+            Text(
+              '${postData.comments.length} Comments',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            SizedBox(height: 10.0),
             Expanded(
               child: ListView.builder(
                 itemCount: postData.comments.length,
                 itemBuilder: (context, index) {
                   final comment = postData.comments[index];
-                  return Comment(commentData: comment);
+                  return Comment(commentData: comment, postId: widget.postId);
                 },
               ),
             ),

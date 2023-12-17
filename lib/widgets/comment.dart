@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/comment_data.dart';
 import '../providers/posts_provider.dart';
+import '../providers/user_provider.dart';
 
 class Comment extends StatefulWidget {
   final CommentData commentData;
+  final String postId;
 
   const Comment({
     Key? key,
     required this.commentData,
+    required this.postId,
   }) : super(key: key);
 
   @override
@@ -35,6 +38,12 @@ class _CommentState extends State<Comment> {
 
   @override
   Widget build(BuildContext context) {
+    late UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+        
+    liked = widget.commentData.likes.contains(userProvider.user?.uid);
+    disliked = widget.commentData.dislikes.contains(userProvider.user?.uid);
+
     return Consumer<PostsProvider>(builder: (context, postsProvider, child) {
       return Container(
         margin: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
@@ -74,9 +83,24 @@ class _CommentState extends State<Comment> {
                       icon:
                           Icon(liked ? Icons.thumb_up : Icons.thumb_up_off_alt),
                       onPressed: () {
-                        setState(() {
-                          liked = !liked;
-                        });
+                        if (liked) {
+                          postsProvider.removeLikeFromComment(
+                              widget.postId,
+                              widget.commentData.id,
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .user!);
+                        } else {
+                          postsProvider.addLikeToComment(
+                              widget.postId,
+                              widget.commentData.id,
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .user!);
+                          postsProvider.removeDislikeFromComment(
+                              widget.postId,
+                              widget.commentData.id,
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .user!);
+                        }
                       },
                     ),
                     Text(widget.commentData.likes.length.toString()),
@@ -89,11 +113,27 @@ class _CommentState extends State<Comment> {
                           ? Icons.thumb_down
                           : Icons.thumb_down_off_alt),
                       onPressed: () {
-                        setState(() {
-                          disliked = !disliked;
-                        });
+                        if (disliked) {
+                          postsProvider.removeDislikeFromComment(
+                              widget.postId,
+                              widget.commentData.id,
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .user!);
+                        } else {
+                          postsProvider.addDislikeToComment(
+                              widget.postId,
+                              widget.commentData.id,
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .user!);
+                          postsProvider.removeLikeFromComment(
+                              widget.postId,
+                              widget.commentData.id,
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .user!);
+                        }
                       },
                     ),
+                    Text(widget.commentData.dislikes.length.toString()),
                     // Text(widget.commentData.dislikesList.length.toString()),
                   ],
                 ),
