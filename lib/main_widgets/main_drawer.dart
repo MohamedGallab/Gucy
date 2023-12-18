@@ -3,6 +3,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gucy/pages/create_post_page.dart';
+import 'package:gucy/pages/post_pages/my_posts_page.dart';
+import 'package:gucy/providers/analytics_provider.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
@@ -111,6 +114,7 @@ class _MainDrawerState extends State<MainDrawer> {
       );
     }
 
+    final analyticsProvider = Provider.of<AnalyticsProvider>(context);
     return Container(
       margin: const EdgeInsets.only(top: 80.0),
       child: Column(
@@ -163,15 +167,26 @@ class _MainDrawerState extends State<MainDrawer> {
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           const SizedBox(height: 20),
-          SizedBox(
-            width: 250,
-            child: TextField(
-              controller: controller,
-              readOnly: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email',
-              ),
+          TextButton(
+            onPressed: () {
+              analyticsProvider.changeAction(
+                  'Viewing My Posts', userProvider.user!.uid);
+              analyticsProvider.changePage('My Posts', userProvider.user!.uid);
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => MyPostsPage()));
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 5),
+                  child: Text(
+                    'My Posts',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 20),
@@ -183,10 +198,6 @@ class _MainDrawerState extends State<MainDrawer> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.cancel_outlined,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
                 Container(
                   margin: const EdgeInsets.only(left: 5),
                   child: Text(
@@ -202,7 +213,8 @@ class _MainDrawerState extends State<MainDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ColorPickerPage(themeMode: (ThemeMode x) {})),
+                      builder: (context) =>
+                          ColorPickerPage(themeMode: (ThemeMode x) {})),
                 );
               },
               child: Text("Change Color")),
