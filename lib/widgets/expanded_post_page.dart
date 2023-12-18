@@ -23,35 +23,47 @@ class ExpandedPostPage extends StatefulWidget {
 class _ExpandedPostPageState extends State<ExpandedPostPage> {
   TextEditingController commentController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  late Future<List<CommentData>> _comments;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<PostsProvider>(builder: (context, postsProvider, _) {
       PostData postData = postsProvider.getPostById(widget.postId);
-      postsProvider.loadCommentsForPost(widget.postId);
+      _comments = postsProvider.loadCommentsForPost(widget.postId);
+
       return Scaffold(
         appBar: AppBar(
           title: Text('Post Details'),
         ),
-        body: Column(
-          children: [
-            Post(postData: postData, isClickable: false),
-            Text(
-              '${postData.comments.length} Comments',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            SizedBox(height: 10.0),
-            Expanded(
-              child: ListView.builder(
-                itemCount: postData.comments.length,
-                itemBuilder: (context, index) {
-                  final comment = postData.comments[index];
-                  return Comment(commentData: comment, postId: widget.postId);
-                },
-              ),
-            ),
-          ],
-        ),
+        body: FutureBuilder<List<CommentData>>(
+            future: _comments,
+            builder: (BuildContext context,
+                AsyncSnapshot<List<CommentData>> snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: [
+                    Post(postData: postData, isClickable: false),
+                    Text(
+                      '${snapshot.data!.length} Comments',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    SizedBox(height: 10.0),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final comment = snapshot.data![index];
+                          return Comment(
+                              commentData: comment, postId: widget.postId);
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }),
         floatingActionButton: FloatingActionButton.extended(
             onPressed: () => {
                   showModalBottomSheet<void>(
@@ -85,6 +97,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                               ElevatedButton(
                                 child: const Text('Submit Comment'),
                                 onPressed: () {
+                                  commentController.text =
+                                      commentController.text.trim();
                                   // Validate the form
                                   if (_formKey.currentState!.validate()) {
                                     // Form is valid, process the comment or perform any other action
@@ -103,6 +117,8 @@ class _ExpandedPostPageState extends State<ExpandedPostPage> {
                                       widget.postId,
                                       commentData,
                                     );
+
+                                    commentController.clear();
                                     Navigator.pop(context);
                                   }
                                 },
