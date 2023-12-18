@@ -278,7 +278,9 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
                     Container(
                       width: 150,
                       child: Text(
-                        _reviews[i].userName.length>12?_reviews[i].userName.substring(0, 10)+"..":_reviews[i].userName,
+                        _reviews[i].userName.length > 12
+                            ? _reviews[i].userName.substring(0, 10) + ".."
+                            : _reviews[i].userName,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
@@ -552,13 +554,16 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
   Future<void> deleteReview(userProvider) async {
     try {
       List newList = [];
+      int remove = -1;
       for (int i = 0; i < _reviews.length; i++) {
         if (_reviews[i].userId == userProvider.user?.uid) {
-          _reviews.removeAt(i);
+          remove = i;
         } else {
           newList.add(_reviews[i].toJson());
         }
       }
+      if(remove>-1)
+        _reviews.removeAt(remove);
       await FirebaseFirestore.instance
           .collection('staff')
           .doc(widget.staff.id)
