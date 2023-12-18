@@ -1,6 +1,7 @@
 // user_provider.dart
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gucy/models/user_data.dart';
@@ -105,6 +106,21 @@ class UserProvider extends ChangeNotifier {
       _user = user;
 
       notifyListeners();
+      return "success";
+    } on FirebaseException catch (e) {
+      return e.code;
+    }
+  }
+
+  Future<String> setToken(FirebaseMessaging fbm) async {
+    try {
+      final token = await fbm.getToken();
+      await db.collection('users').doc(_user?.uid).set(
+        {'token': token},
+        SetOptions(
+            merge:
+                true), // Use merge: true to add the field if it doesn't exist
+      );
       return "success";
     } on FirebaseException catch (e) {
       return e.code;
