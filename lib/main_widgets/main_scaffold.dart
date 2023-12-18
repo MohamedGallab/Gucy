@@ -189,8 +189,9 @@ class _MainScaffoldState extends State<MainScaffold>
           StaffPage(),
           OutletPage(),
         ][_currentPageIndex],
-        floatingActionButton: (_currentPageIndex == 0 &&
-                _currentInnerPageIndex != 0)
+        floatingActionButton: ((_currentPageIndex == 0 &&
+                    _currentInnerPageIndex != 0) ||
+                (_currentPageIndex == 2))
             ? FloatingActionButton(
                 onPressed: () async {
                   if ((_currentPageIndex == 0 && _currentInnerPageIndex == 1)) {
@@ -265,9 +266,7 @@ class _MainScaffoldState extends State<MainScaffold>
                         "Adding Question", userProvider.user!.uid);
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => CreatePostPage("question")));
-                  }else if (_currentPageIndex == 2) {
-                    analyticsProvider.changeAction(
-                        "Adding Question", userProvider.user!.uid);
+                  } else if (_currentPageIndex == 2) {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ContactsPage()));
                   }
