@@ -6,7 +6,6 @@ const List<List<Tab>> tabBars = [
     Tab(text: 'Confessions'),
     Tab(text: 'Events'),
     Tab(text: 'Lost & Found'),
-    Tab(text: 'My Posts'),
     Tab(text: 'Questions'),
   ],
 ];

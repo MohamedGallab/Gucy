@@ -15,7 +15,6 @@ List<List<Widget>> tabBarViews = [
     ConfessionsPage(),
     EventsPage(),
     LostAndFoundPage(),
-    MyPostsPage(),
     QuestionsPage(),
   ],
   [

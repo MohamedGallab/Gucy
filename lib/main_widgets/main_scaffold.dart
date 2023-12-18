@@ -82,9 +82,11 @@ class _MainScaffoldState extends State<MainScaffold>
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollInfo) {
         if (scrollInfo is ScrollStartNotification) {
-          analyticsProvider.setScrolling(true, userProvider.user!.uid);
+          analyticsProvider.setScrolling(true,
+              tabBars[0][_currentInnerPageIndex].text!, userProvider.user!.uid);
         } else if (scrollInfo is ScrollEndNotification) {
-          analyticsProvider.setScrolling(false, userProvider.user!.uid);
+          analyticsProvider.setScrolling(false,
+              tabBars[0][_currentInnerPageIndex].text!, userProvider.user!.uid);
         }
         return false;
       },
@@ -93,8 +95,8 @@ class _MainScaffoldState extends State<MainScaffold>
           if (isOpened) {
             setState(() {
               if ((_currentPageIndex == 0 && _currentInnerPageIndex == 0)) {
-                actionBeforeDrawer = "Viewing All";
-                pageBeforeDrawer = 'All';
+                actionBeforeDrawer = "Viewing Home";
+                pageBeforeDrawer = 'Home';
               } else if ((_currentPageIndex == 0 &&
                   _currentInnerPageIndex == 1)) {
                 actionBeforeDrawer = "Viewing Confessions";
@@ -142,9 +144,9 @@ class _MainScaffoldState extends State<MainScaffold>
                       if ((_currentPageIndex == 0 &&
                           _currentInnerPageIndex == 0)) {
                         analyticsProvider.changeAction(
-                            "Viewing All", userProvider.user!.uid);
+                            "Viewing Home", userProvider.user!.uid);
                         analyticsProvider.changePage(
-                            'All', userProvider.user!.uid);
+                            'Home', userProvider.user!.uid);
                       } else if ((_currentPageIndex == 0 &&
                           _currentInnerPageIndex == 1)) {
                         analyticsProvider.changeAction(
@@ -186,7 +188,8 @@ class _MainScaffoldState extends State<MainScaffold>
           StaffPage(),
           OutletPage(),
         ][_currentPageIndex],
-        floatingActionButton: (_currentPageIndex == 0 && _currentPageIndex != 0)
+        floatingActionButton: (_currentPageIndex == 0 &&
+                _currentInnerPageIndex != 0)
             ? FloatingActionButton(
                 onPressed: () async {
                   if ((_currentPageIndex == 0 && _currentInnerPageIndex == 1)) {
@@ -196,7 +199,7 @@ class _MainScaffoldState extends State<MainScaffold>
                         builder: (context) => CreatePostPage("confession")));
                   } else if (_currentPageIndex == 0 &&
                       _currentInnerPageIndex == 2) {
-                    if (userProvider.user?.eventPermission != "All" &&
+                    if (userProvider.user?.eventPermission != "Home" &&
                         userProvider.user?.eventPermission != "accepted") {
                       await showDialog<void>(
                         context: context,
@@ -275,8 +278,8 @@ class _MainScaffoldState extends State<MainScaffold>
 
             if ((_currentPageIndex == 0 && _currentInnerPageIndex == 0)) {
               analyticsProvider.changeAction(
-                  "Viewing All", userProvider.user!.uid);
-              analyticsProvider.changePage('All', userProvider.user!.uid);
+                  "Viewing Home", userProvider.user!.uid);
+              analyticsProvider.changePage('Home', userProvider.user!.uid);
             } else if ((_currentPageIndex == 0 &&
                 _currentInnerPageIndex == 1)) {
               analyticsProvider.changeAction(

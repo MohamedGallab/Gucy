@@ -79,7 +79,7 @@ class AnalyticsProvider with ChangeNotifier {
 
   DateTime? lastScrollingTime = DateTime.now();
   DateTime? lastNonScrollingTime = DateTime.now();
-  Future<void> setScrolling(bool isScrolling, String iod) async {
+  Future<void> setScrolling(bool isScrolling, String page, String iod) async {
     if (isScrolling) {
       var timeSpentNotScrolling =
           DateTime.now().difference(lastNonScrollingTime!).inSeconds;
@@ -88,7 +88,7 @@ class AnalyticsProvider with ChangeNotifier {
 
       await query.get().then((querySnapshot) => {
             querySnapshot.docs.forEach((doc) => doc.reference.update({
-                  "Time Spent Not Scrolling":
+                  "Time Spent Not Scrolling in $page":
                       FieldValue.increment(timeSpentNotScrolling)
                 }))
           });
@@ -101,7 +101,7 @@ class AnalyticsProvider with ChangeNotifier {
 
       await query.get().then((querySnapshot) => {
             querySnapshot.docs.forEach((doc) => doc.reference.update({
-                  "Time Spent Scrolling":
+                  "Time Spent Scrolling in $page":
                       FieldValue.increment(timeSpentScrolling)
                 }))
           });
