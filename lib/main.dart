@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -38,6 +37,8 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
+  bool isScrolling = false; // Variable to track scrolling state
+
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
@@ -67,7 +68,27 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
     }
   }
 
+  void handleScrollStart() {
+    // Function to execute when scrolling starts
+    setState(() {
+      isScrolling = true;
+    });
+    print("Scrolling started");
+    // Add your code here
+  }
+
+  void handleScrollEnd() {
+    // Function to execute when scrolling stops
+    setState(() {
+      isScrolling = false;
+    });
+    print("Scrolling stopped");
+    // Add your code here
+  }
+
   Widget build(BuildContext context) {
+    final analyticsProvider = Provider.of<AnalyticsProvider>(context);
+    final userP = Provider.of<UserProvider>(context);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -76,7 +97,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
         final userProvider = Provider.of<UserProvider>(context);
         if (!userProvider.isAuthenticated) {
           return '/';
-        } else {}
+        }
 
         return '/mainScaffold';
       },
@@ -87,7 +108,19 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
         ),
         GoRoute(
           path: '/mainScaffold',
-          builder: (context, state) => const MainScaffold(),
+          builder: (context, state) {
+            return NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollInfo) {
+                if (scrollInfo is ScrollStartNotification) {
+                  analyticsProvider.setScrolling(true, userP.user!.uid);
+                } else if (scrollInfo is ScrollEndNotification) {
+                  analyticsProvider.setScrolling(false, userP.user!.uid);
+                }
+                return false;
+              },
+              child: const MainScaffold(),
+            );
+          },
         )
       ],
     );

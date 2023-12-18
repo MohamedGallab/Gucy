@@ -76,4 +76,14 @@ class AnalyticsProvider with ChangeNotifier {
               .forEach((doc) => doc.reference.update({"Action": action}))
         });
   }
+
+  Future<void> setScrolling(bool isScrolling, String iod) async {
+    final collectionRef = db.collection("analytics");
+    final query = collectionRef.where("uid", isEqualTo: iod);
+
+    await query.get().then((querySnapshot) => {
+          querySnapshot.docs.forEach(
+              (doc) => doc.reference.update({"Scrolling": isScrolling}))
+        });
+  }
 }
