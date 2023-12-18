@@ -16,7 +16,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  Future<void> initState() async {
+  void initState() {
+    _loadNotificationSettings();
+    super.initState();
+    Provider.of<PostsProvider>(context, listen: false).loadPosts();
+  }
+
+  Future<void> _loadNotificationSettings() async {
     final fbm = FirebaseMessaging.instance;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> notificationTypes = [
@@ -26,6 +32,7 @@ class _HomePageState extends State<HomePage> {
       'Question',
       'Mentions',
     ];
+    
     fbm.requestPermission();
     for (var type in notificationTypes) {
       if (prefs.getBool(type) ?? true) {
@@ -38,9 +45,6 @@ class _HomePageState extends State<HomePage> {
         }
       }
     }
-
-    super.initState();
-    Provider.of<PostsProvider>(context, listen: false).loadPosts();
   }
 
   @override
