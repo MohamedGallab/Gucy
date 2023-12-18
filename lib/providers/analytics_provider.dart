@@ -77,13 +77,35 @@ class AnalyticsProvider with ChangeNotifier {
         });
   }
 
+  DateTime? lastScrollingTime = DateTime.now();
+  DateTime? lastNonScrollingTime = DateTime.now();
   Future<void> setScrolling(bool isScrolling, String iod) async {
-    final collectionRef = db.collection("analytics");
-    final query = collectionRef.where("uid", isEqualTo: iod);
+    if (isScrolling) {
+      var timeSpentNotScrolling =
+          DateTime.now().difference(lastNonScrollingTime!).inSeconds;
+      final collectionRef = db.collection("analytics");
+      final query = collectionRef.where("uid", isEqualTo: iod);
 
-    await query.get().then((querySnapshot) => {
-          querySnapshot.docs.forEach(
-              (doc) => doc.reference.update({"Scrolling": isScrolling}))
-        });
+      await query.get().then((querySnapshot) => {
+            querySnapshot.docs.forEach((doc) => doc.reference.update({
+                  "Time Spent Not Scrolling":
+                      FieldValue.increment(timeSpentNotScrolling)
+                }))
+          });
+      lastScrollingTime = DateTime.now();
+    } else {
+      var timeSpentScrolling =
+          DateTime.now().difference(lastScrollingTime!).inSeconds;
+      final collectionRef = db.collection("analytics");
+      final query = collectionRef.where("uid", isEqualTo: iod);
+
+      await query.get().then((querySnapshot) => {
+            querySnapshot.docs.forEach((doc) => doc.reference.update({
+                  "Time Spent Scrolling":
+                      FieldValue.increment(timeSpentScrolling)
+                }))
+          });
+      lastNonScrollingTime = DateTime.now();
+    }
   }
 }
