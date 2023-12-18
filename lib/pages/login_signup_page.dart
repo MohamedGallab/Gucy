@@ -298,6 +298,7 @@ class _LoginPageState extends State<LoginPage>
                                 moveToNextField(_passwordFocusNode,
                                     _confirmPasswordFocusNode);
                               } else {
+                                FocusScope.of(context).unfocus();
                                 onLoginSignUpClick();
                               }
                             },
@@ -319,6 +320,7 @@ class _LoginPageState extends State<LoginPage>
                             child: TextField(
                               focusNode: _confirmPasswordFocusNode,
                               onEditingComplete: () async {
+                                FocusScope.of(context).unfocus();
                                 onLoginSignUpClick();
                               },
                               controller: confirmPasswordController,

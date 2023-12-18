@@ -59,6 +59,7 @@ class UserProvider extends ChangeNotifier {
         "Questions": 0,
         "None": 0,
         "Other": 0,
+        "Action": "Viewing Confessions"
       };
       await db.collection("analytics").doc().set(analytics);
       _email = userCredential.user!.email!;

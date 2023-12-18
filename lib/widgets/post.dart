@@ -105,7 +105,7 @@ class _PostState extends State<Post> {
       return GestureDetector(
         onTap: () {
           analyticsProvider.clickPost(
-              "${widget.postData.type} Clicked", userProvider.user!.uid);
+              "${widget.postData.type}Clicked", userProvider.user!.uid);
           if (widget.isClickable) {
             Navigator.push(
               context,
