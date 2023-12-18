@@ -63,9 +63,8 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
       analyticsProvider.changeAction('NotInsideApp', userProvider.user!.uid);
       analyticsProvider.changePage('None', userProvider.user!.uid);
     } else {
-      analyticsProvider.changeAction(
-          'Viewing Confessions', userProvider.user!.uid);
-      analyticsProvider.changePage('Confessions', userProvider.user!.uid);
+      analyticsProvider.changeAction('Viewing All', userProvider.user!.uid);
+      analyticsProvider.changePage('All', userProvider.user!.uid);
     }
   }
 

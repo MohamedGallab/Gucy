@@ -52,13 +52,6 @@ class UserProvider extends ChangeNotifier {
 
       Map<String, dynamic> analytics = {
         "uid": userCredential.user!.uid,
-        "Confessions": 0,
-        "Events": 0,
-        "Lost and Found": 0,
-        "Questions": 0,
-        "None": 0,
-        "Other": 0,
-        "Action": "Viewing Confessions"
       };
       await db.collection("analytics").doc().set(analytics);
       _email = userCredential.user!.email!;
