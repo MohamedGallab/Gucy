@@ -248,17 +248,38 @@ class PostsProvider with ChangeNotifier {
   Future<void> addCommentToPost(String postId, CommentData comment) async {
     try {
       // Add the comment to Firestore
-      await FirebaseFirestore.instance
-          .collection('posts')
-          .doc(postId)
-          .collection('comments')
-          .add({
+      var commentJson = {
         'body': comment.body,
         'user': comment.user.toJson(),
         'createdAt': comment.createdAt,
         'likes': comment.likes,
         'dislikes': comment.dislikes,
-      });
+      };
+      RegExp regex = RegExp(r'@(\w+)\s+(\w+)');
+      String commentBody = comment.body;
+      Iterable<RegExpMatch> matches = regex.allMatches(commentBody);
+      if (matches.isNotEmpty) {
+        String fullName =
+            "${matches.first.group(1) ?? ""} ${matches.first.group(2) ?? ""}";
+
+        // Perform Firestore query to get user data
+        QuerySnapshot userQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('name', isEqualTo: fullName)
+            .get();
+
+        // Check if user exists
+        if (userQuery.docs.isNotEmpty) {
+          // Assuming that the user's token is stored in the 'token' field
+          String taggedToken = userQuery.docs.first['token'];
+          commentJson['tagged'] = taggedToken;
+        }
+      }
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .add(commentJson);
 
       // Notify listeners that the posts list has changed
       notifyListeners();
@@ -352,9 +373,33 @@ class PostsProvider with ChangeNotifier {
     }
   }
 
-  Future<DocumentReference> addPost(PostData post) {
+  Future<DocumentReference> addPost(PostData post) async {
     Map<String, dynamic> postJson = post.toJson();
     postJson.removeWhere((key, value) => key == "comments");
+    RegExp regex = RegExp(r'@(\w+)\s+(\w+)');
+    String postBody = postJson['body'];
+    Iterable<RegExpMatch> matches = regex.allMatches(postBody);
+    if (matches.isNotEmpty) {
+      String fullName =
+          "${matches.first.group(1) ?? ""} ${matches.first.group(2) ?? ""}";
+
+      // Perform Firestore query to get user data
+      QuerySnapshot userQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where('name', isEqualTo: fullName)
+          .get();
+
+      // Check if user exists
+      if (userQuery.docs.isNotEmpty) {
+        // Assuming that the user's token is stored in the 'token' field
+        String taggedToken = userQuery.docs.first['token'];
+
+        // Update postJson with the 'tagged' field
+        postJson['tagged'] = taggedToken;
+      }
+    }
+
+    // Add post to Firestore
     return FirebaseFirestore.instance.collection('posts').add(postJson);
   }
 }

@@ -93,8 +93,13 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
       ],
     );
     return MaterialApp.router(
-      theme: ThemeData(useMaterial3: true),
-      darkTheme: ThemeData.dark(useMaterial3: true),
+      theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFB10080))),
+      darkTheme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Color.fromARGB(255, 4, 199, 14), brightness: Brightness.dark)),
       routerConfig: _router,
     );
   }
