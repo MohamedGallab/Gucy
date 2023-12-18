@@ -21,14 +21,13 @@ class NavBar extends StatelessWidget {
           label: 'Home',
         ),
         NavigationDestination(
-          icon: Badge(child: Icon(Icons.notifications_sharp)),
+          selectedIcon: Icon(Icons.school),
+          icon: Icon(Icons.school_outlined),
           label: 'Academics',
         ),
         NavigationDestination(
-          icon: Badge(
-            label: Text('2'),
-            child: Icon(Icons.messenger_sharp),
-          ),
+          selectedIcon: Icon(Icons.store),
+          icon: Icon(Icons.store_outlined),
           label: 'Facilities',
         ),
       ],

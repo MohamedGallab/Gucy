@@ -535,13 +535,16 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
   Future<void> deleteReview(userProvider) async {
     try {
       List newList = [];
+      int remove = -1;
       for (int i = 0; i < _reviews.length; i++) {
         if (_reviews[i].userId == userProvider.user?.uid) {
-          _reviews.removeAt(i);
+          remove = i;
         } else {
           newList.add(_reviews[i].toJson());
         }
       }
+      if(remove>-1)
+        _reviews.removeAt(remove);
       await FirebaseFirestore.instance
           .collection('outlets')
           .doc(widget.outlet.id)

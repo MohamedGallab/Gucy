@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../pages/color_picker.dart';
+
 class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key});
 
@@ -195,6 +197,15 @@ class _MainDrawerState extends State<MainDrawer> {
               ],
             ),
           ),
+          TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ColorPickerPage(themeMode: (ThemeMode x) {})),
+                );
+              },
+              child: Text("Change Color")),
         ],
       ),
     );
