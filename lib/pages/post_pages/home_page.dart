@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:gucy/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/posts_provider.dart';
@@ -17,7 +18,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     final fbm = FirebaseMessaging.instance;
     fbm.requestPermission();
-    fbm.subscribeToTopic("newPost");
+    //fbm.subscribeToTopic("newPost");
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.setToken(fbm);
     super.initState();
     Provider.of<PostsProvider>(context, listen: false).loadPosts();
   }
