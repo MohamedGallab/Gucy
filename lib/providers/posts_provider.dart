@@ -121,34 +121,30 @@ class PostsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> loadCommentsForPost(String postId) async {
+  Future<List<CommentData>> loadCommentsForPost(String postId) async {
     try {
-      // Fetch comments for the post from Firestore
-      int postIndex = _posts.indexWhere((post) => post.id == postId);
-      if (postIndex != -1) {
-        QuerySnapshot<Map<String, dynamic>> commentsSnapshot =
-            await FirebaseFirestore.instance
-                .collection('posts')
-                .doc(postId)
-                .collection('comments')
-                .get();
+      QuerySnapshot<Map<String, dynamic>> commentsSnapshot =
+          await FirebaseFirestore.instance
+              .collection('posts')
+              .doc(postId)
+              .collection('comments')
+              .get();
 
-        // Map comments data to CommentData objects
-        List<CommentData> comments = commentsSnapshot.docs.map((commentDoc) {
-          CommentData comment = CommentData.fromJson(commentDoc.data());
-          comment.id = commentDoc.id;
-          return comment;
-        }).toList();
+      // Map comments data to CommentData objects
+      List<CommentData> comments = commentsSnapshot.docs.map((commentDoc) {
+        CommentData comment = CommentData.fromJson(commentDoc.data());
+        comment.id = commentDoc.id;
+        return comment;
+      }).toList();
 
-        // Populate the comments for the post
-        _posts[postIndex].comments = comments;
+      // Notify listeners that the posts list has changed
+      notifyListeners();
 
-        // Notify listeners that the posts list has changed
-        notifyListeners();
-      }
+      return comments;
     } catch (e) {
       // Handle errors if needed
       print('Error loading comments for post: $e');
+      return [];
     }
   }
 
