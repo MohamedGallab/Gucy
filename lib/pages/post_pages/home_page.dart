@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../providers/posts_provider.dart';
 import '../../widgets/post.dart';
@@ -15,15 +16,29 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  void initState() {
+  Future<void> initState() async {
     final fbm = FirebaseMessaging.instance;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> notificationTypes = [
+      'Confession',
+      'Lost and Found',
+      'Event',
+      'Question',
+      'Mentions',
+    ];
     fbm.requestPermission();
-    fbm.subscribeToTopic("new Confession");
-    fbm.subscribeToTopic("new Lost and Found");
-    fbm.subscribeToTopic("new Event");
-    fbm.subscribeToTopic("new Question");
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    userProvider.setToken(fbm);
+    for (var type in notificationTypes) {
+      if (prefs.getBool(type) ?? true) {
+        if (type == "Mentions") {
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
+          userProvider.setToken(fbm);
+        } else {
+          fbm.subscribeToTopic("new $type");
+        }
+      }
+    }
+
     super.initState();
     Provider.of<PostsProvider>(context, listen: false).loadPosts();
   }
