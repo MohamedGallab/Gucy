@@ -13,6 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../pages/color_picker.dart';
+import '../pages/notifications_settings_page.dart';
 
 class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key});
@@ -215,6 +216,15 @@ class _MainDrawerState extends State<MainDrawer> {
                 );
               },
               child: Text("Change Color")),
+          TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationsSettingsPage()),
+                );
+              },
+              child: Text("Notification Settings")),
         ],
       ),
     );
