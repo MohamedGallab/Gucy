@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 class AnalyticsProvider with ChangeNotifier {
   FirebaseFirestore db = FirebaseFirestore.instance;
   String currentPage = "Confessions";
-  DateTime? lastPageEntryTime;
+  DateTime? lastPageEntryTime = DateTime.now();
 
   Future<void> changePage(String newPage, String uid) async {
     print(newPage + "NEW");
@@ -21,9 +21,7 @@ class AnalyticsProvider with ChangeNotifier {
   }
 
   Future<void> _updateTimeSpentOnPageForUser(String uid) async {
-    var timeSpent = DateTime.now()
-        .difference(lastPageEntryTime ?? new DateTime(0))
-        .inSeconds;
+    var timeSpent = DateTime.now().difference(lastPageEntryTime!).inSeconds;
     final collectionRef = db.collection("analytics");
 
     final query = collectionRef.where("uid", isEqualTo: uid);
@@ -35,9 +33,7 @@ class AnalyticsProvider with ChangeNotifier {
 
   Future<void> _updateTimeSpentOnPage() async {
     if (lastPageEntryTime == null) return;
-    var timeSpent = DateTime.now()
-        .difference(lastPageEntryTime ?? new DateTime(0))
-        .inSeconds;
+    var timeSpent = DateTime.now().difference(lastPageEntryTime!).inSeconds;
     await db
         .collection('analytics')
         .doc('Global Analytics')
@@ -54,6 +50,8 @@ class AnalyticsProvider with ChangeNotifier {
     final collectionRef = db.collection("analytics");
 
     final query = collectionRef.where("uid", isEqualTo: uid);
+    print(post);
+
     await query.get().then((querySnapshot) => {
           querySnapshot.docs.forEach(
               (doc) => doc.reference.update({post: FieldValue.increment(1)}))
@@ -66,6 +64,16 @@ class AnalyticsProvider with ChangeNotifier {
     await db
         .collection('analytics')
         .doc('Global Analytics')
-        .update({currentPage: FieldValue.increment(1)});
+        .update({post: FieldValue.increment(1)});
+  }
+
+  Future<void> changeAction(String action, String uid) async {
+    final collectionRef = db.collection("analytics");
+    final query = collectionRef.where("uid", isEqualTo: uid);
+
+    await query.get().then((querySnapshot) => {
+          querySnapshot.docs
+              .forEach((doc) => doc.reference.update({"Action": action}))
+        });
   }
 }

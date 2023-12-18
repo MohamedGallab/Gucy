@@ -8,6 +8,7 @@ import 'package:gucy/models/flairs.dart';
 import 'package:gucy/models/post_data.dart';
 import 'package:gucy/models/user_data.dart';
 import 'package:gucy/pages/preview_post_page.dart';
+import 'package:gucy/providers/analytics_provider.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
@@ -124,8 +125,30 @@ class _CreatePostPageState extends State<CreatePostPage> {
       );
     }
 
+    final analyticsProvider = Provider.of<AnalyticsProvider>(context);
     return PopScope(
       onPopInvoked: (e) async {
+        switch (widget.type) {
+          case "confession":
+            analyticsProvider.changeAction(
+                "Viewing Confessions", userProvider.user!.uid);
+            break;
+          case "event":
+            analyticsProvider.changeAction(
+                "Viewing Events", userProvider.user!.uid);
+            break;
+          case "question":
+            analyticsProvider.changeAction(
+                "Viewing Questions", userProvider.user!.uid);
+            break;
+          case "lost and found":
+            analyticsProvider.changeAction(
+                "Viewing Lost and Found", userProvider.user!.uid);
+            break;
+          default:
+            analyticsProvider.changeAction(
+                "Viewing Other", userProvider.user!.uid);
+        }
         if (!willPost) await deleteImage();
       },
       child: Scaffold(
