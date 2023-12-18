@@ -249,7 +249,7 @@ class _LoginPageState extends State<LoginPage>
                 },
                 child: Opacity(
                   opacity: 1, // Fade effect based on animation value
-                  child: Image.asset('assets/logo.png', height: 250),
+                  child: Image.asset('assets/icon/icon.png', height: 250),
                 ),
               ),
               if (!isAnimating)

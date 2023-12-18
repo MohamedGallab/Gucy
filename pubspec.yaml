@@ -38,16 +38,16 @@ dev_dependencies:
   flutter_rating_bar: ^4.0.1
 
 flutter_native_splash:
-  color: "#ffffff"
-  image: assets/logo.png
+  background_image: "assets/icon/icon-background.png"
+  image: "assets/icon/icon.png"
   android: true
   ios: true
-  image_size: "300x300"
 
 flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/icon/
 
 flutter_launcher_icons:
   android: "launcher_icon"
