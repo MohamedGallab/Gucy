@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/contacts_data.dart';
-// import 'package:gucians/database/database_references.dart';
 
 Future<List<Contacts>> getemergencyNums() async {
   CollectionReference emegencyNumbersCollection =

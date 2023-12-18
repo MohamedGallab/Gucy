@@ -57,7 +57,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.detached;
 
-    final userProvider = Provider.of<UserProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
     final analyticsProvider = Provider.of<AnalyticsProvider>(context);
     if (isBackground) {
       analyticsProvider.changeAction('NotInsideApp', userProvider.user!.uid);
@@ -74,7 +74,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
     ]);
     final _router = GoRouter(
       redirect: (context, state) {
-        final userProvider = Provider.of<UserProvider>(context);
+        final userProvider = Provider.of<UserProvider>(context, listen: true);
         if (!userProvider.isAuthenticated) {
           return '/';
         } else {}

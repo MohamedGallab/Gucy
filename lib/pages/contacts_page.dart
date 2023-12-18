@@ -32,19 +32,17 @@ class ContactsPage extends StatefulWidget {
 
 class _ContactsPageState extends State<ContactsPage> {
   List<Contacts> contactsList = [];
-  bool loading =true;
-  
+  bool loading = true;
+
   List<Contacts> filteredList = [];
 
-   @override
+  @override
   void initState() {
     super.initState();
     loadUsers();
     // setState(() {
     //   //loading = false;
     // });
-    
-    
   }
 
   Future<void> loadUsers() async {
@@ -52,13 +50,13 @@ class _ContactsPageState extends State<ContactsPage> {
     setState(() {
       contactsList = tempUsers;
       filteredList = contactsList;
-      loading=false;
+      loading = false;
     });
   }
 
   Future<List<Contacts>> getUsers() async {
     return await getemergencyNums();
-}
+  }
 
   onSearch(String search) {
     setState(() {
@@ -71,138 +69,137 @@ class _ContactsPageState extends State<ContactsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          //color: Colors.grey.shade900,
-          child: TextField(
-            onChanged: (value) => onSearch(value),
-           // style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              filled: true,
-              //fillColor: Colors.grey[850],
-              contentPadding: EdgeInsets.all(0),
-              prefixIcon: Icon(
-                Icons.search,
-                // color: Colors.grey.shade500
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(50),
-                borderSide: BorderSide.none,
-              ),
-              hintStyle: TextStyle(
-                fontSize: 14,
-                //color: Colors.grey.shade500,
-              ),
-              hintText: "Search Contacts",
-            ),
-          ),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Emergency Contacts'),
         ),
-        Expanded(
-          child: loading
-      ? Center(
-          child: CircularProgressIndicator(), // Show loading indicator
-        )
-      :  Container(
-            //color: Colors.grey.shade900,
-            child: filteredList.isNotEmpty 
-                ? ListView.builder(
-                    itemCount: filteredList.length,
-                    itemBuilder: (context, index) {
-                      return contactComponent(contact: filteredList[index]);
-                    },
-                  )
-                : Center(
-                    child: Text(
-                      "No contacts found",
-                      //style: TextStyle(color: Colors.white),
-                    ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: TextField(
+                onChanged: (value) => onSearch(value),
+                decoration: InputDecoration(
+                  filled: true,
+                  contentPadding: EdgeInsets.all(0),
+                  prefixIcon: Icon(
+                    Icons.search,
                   ),
-          ),
-        ),
-      ],
-    );
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide.none,
+                  ),
+                  hintStyle: TextStyle(
+                    fontSize: 14,
+                  ),
+                  hintText: "Search Contacts",
+                ),
+              ),
+            ),
+            Expanded(
+              child: loading
+                  ? Center(
+                      child:
+                          CircularProgressIndicator(), // Show loading indicator
+                    )
+                  : Container(
+                      child: filteredList.isNotEmpty
+                          ? ListView.builder(
+                              itemCount: filteredList.length,
+                              itemBuilder: (context, index) {
+                                return contactComponent(
+                                    contact: filteredList[index]);
+                              },
+                            )
+                          : Center(
+                              child: Text(
+                                "No contacts found",
+                              ),
+                            ),
+                    ),
+            ),
+          ],
+        ));
   }
 
   Widget contactComponent({required Contacts contact}) {
-  // return GestureDetector(
-  //   onTap: () {
-  //     print("Contact clicked: ${contact.name}");
-  //     // Add code here to perform actions when tapped
-  //   },
-  //   child:
-  //   return Container(
-  //     margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-  //     padding: EdgeInsets.all(10),
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(10),
-  //       //border: Border.all(color: Colors.grey),
-  //     ),
-  //     child: Material(
-  //       //color: Colors.transparent, // Required for tap effect
-  //       child: InkWell(
-  //         onTap: () async {
-  //       if (contact.isEmergency) {
-  //       try {
-  //         await FlutterPhoneDirectCaller.callNumber(contact.phoneNumber);
-  //       } catch (e) {
-  //         print('Error calling phone number: $e');
-  //         // Handle the error as needed
-  //       }
-  //     } else {
-  //       // Handle normal contact action here (e.g., open dialer)
-  //       // You can implement your desired action for normal contacts here
-  //        try {
-  //         String temp =contact.phoneNumber;
-  //         Uri phoneno = Uri.parse('tel:$temp');
-  //         await launchUrl(phoneno);
-  //       } catch (e) {
-  //         print('Error calling phone number: $e');
-  //         // Handle the error as needed
-  //       }
-  //     }
-  //         },
-  //         borderRadius: BorderRadius.circular(10),
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Text(
-  //                   contact.name,
-  //                   style: TextStyle(
-  //                    // color: Colors.white,
-  //                     fontWeight: FontWeight.bold,
-  //                   ),
-  //                 ),
-  //                 SizedBox(height: 5),
-  //                  Text(
-  //                     contact.isEmergency ? 'Emergency contact' : 'Normal contact',
-  //                     style: TextStyle(
-  //                       color: contact.isEmergency ? Colors.red : Colors.green,
-  //                       fontSize: 12,
-  //                     ),
-                
-  //                 ),
-  //               ],
-  //             ),
-  //             SizedBox(width: 10),
-  //             Text(
-  //               contact.phoneNumber,
-  //               style: TextStyle(
-  //                 //color: Colors.grey,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   // ),
-  // );
-  return Container(
+    // return GestureDetector(
+    //   onTap: () {
+    //     print("Contact clicked: ${contact.name}");
+    //     // Add code here to perform actions when tapped
+    //   },
+    //   child:
+    //   return Container(
+    //     margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    //     padding: EdgeInsets.all(10),
+    //     decoration: BoxDecoration(
+    //       borderRadius: BorderRadius.circular(10),
+    //       //border: Border.all(color: Colors.grey),
+    //     ),
+    //     child: Material(
+    //       //color: Colors.transparent, // Required for tap effect
+    //       child: InkWell(
+    //         onTap: () async {
+    //       if (contact.isEmergency) {
+    //       try {
+    //         await FlutterPhoneDirectCaller.callNumber(contact.phoneNumber);
+    //       } catch (e) {
+    //         print('Error calling phone number: $e');
+    //         // Handle the error as needed
+    //       }
+    //     } else {
+    //       // Handle normal contact action here (e.g., open dialer)
+    //       // You can implement your desired action for normal contacts here
+    //        try {
+    //         String temp =contact.phoneNumber;
+    //         Uri phoneno = Uri.parse('tel:$temp');
+    //         await launchUrl(phoneno);
+    //       } catch (e) {
+    //         print('Error calling phone number: $e');
+    //         // Handle the error as needed
+    //       }
+    //     }
+    //         },
+    //         borderRadius: BorderRadius.circular(10),
+    //         child: Row(
+    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //           children: [
+    //             Column(
+    //               crossAxisAlignment: CrossAxisAlignment.start,
+    //               children: [
+    //                 Text(
+    //                   contact.name,
+    //                   style: TextStyle(
+    //                    // color: Colors.white,
+    //                     fontWeight: FontWeight.bold,
+    //                   ),
+    //                 ),
+    //                 SizedBox(height: 5),
+    //                  Text(
+    //                     contact.isEmergency ? 'Emergency contact' : 'Normal contact',
+    //                     style: TextStyle(
+    //                       color: contact.isEmergency ? Colors.red : Colors.green,
+    //                       fontSize: 12,
+    //                     ),
+
+    //                 ),
+    //               ],
+    //             ),
+    //             SizedBox(width: 10),
+    //             Text(
+    //               contact.phoneNumber,
+    //               style: TextStyle(
+    //                 //color: Colors.grey,
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   // ),
+    // );
+    return Container(
         //margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         //padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -213,26 +210,27 @@ class _ContactsPageState extends State<ContactsPage> {
           Material(
             //color: Colors.transparent, // Required for tap effect
             child: InkWell(
-           onTap: () async {
-         if (contact.isEmergency) {
-         try {
-          await FlutterPhoneDirectCaller.callNumber(contact.phoneNumber);
-         } catch (e) {
-           print('Error calling phone number: $e');
-           // Handle the error as needed
-         }
-       } else {
-         // Handle normal contact action here (e.g., open dialer)
-         // You can implement your desired action for normal contacts here
-          try {
-           String temp =contact.phoneNumber;
-           Uri phoneno = Uri.parse('tel:$temp');
-           await launchUrl(phoneno);
-         } catch (e) {
-           print('Error calling phone number: $e');
-           // Handle the error as needed
-        }
-       }
+              onTap: () async {
+                if (contact.isEmergency) {
+                  try {
+                    await FlutterPhoneDirectCaller.callNumber(
+                        contact.phoneNumber);
+                  } catch (e) {
+                    print('Error calling phone number: $e');
+                    // Handle the error as needed
+                  }
+                } else {
+                  // Handle normal contact action here (e.g., open dialer)
+                  // You can implement your desired action for normal contacts here
+                  try {
+                    String temp = contact.phoneNumber;
+                    Uri phoneno = Uri.parse('tel:$temp');
+                    await launchUrl(phoneno);
+                  } catch (e) {
+                    print('Error calling phone number: $e');
+                    // Handle the error as needed
+                  }
+                }
               },
               borderRadius: BorderRadius.circular(10),
               child: Row(
@@ -240,13 +238,11 @@ class _ContactsPageState extends State<ContactsPage> {
                 children: [
                   Row(
                     children: [
-                     
                       SizedBox(width: 20),
                       //rest
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                         
                           Text(
                             contact.name,
                             style: TextStyle(
@@ -256,11 +252,14 @@ class _ContactsPageState extends State<ContactsPage> {
                           ),
                           SizedBox(height: 2),
                           Text(
-                          contact.isEmergency ? 'Emergency contact' : 'Normal contact',
+                            contact.isEmergency
+                                ? 'Emergency contact'
+                                : 'Normal contact',
                             style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: contact.isEmergency ? Color.fromARGB(255, 183, 32, 21) : Color.fromARGB(255, 6, 145, 64)
-                            ),
+                                fontWeight: FontWeight.w600,
+                                color: contact.isEmergency
+                                    ? Color.fromARGB(255, 183, 32, 21)
+                                    : Color.fromARGB(255, 6, 145, 64)),
                           ),
                           Text(
                             contact.phoneNumber,
@@ -302,6 +301,5 @@ class _ContactsPageState extends State<ContactsPage> {
           ),
           Divider()
         ]));
-}
-
+  }
 }

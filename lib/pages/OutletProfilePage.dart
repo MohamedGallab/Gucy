@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gucy/pages/outlets_page.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gucy/models/outlets_data.dart';
@@ -22,7 +21,6 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
   TextEditingController _reviewController = TextEditingController();
   double _userRating = 0.0;
   List<Review> _reviews = [];
-  bool _isAddingReview = false;
   bool hasReview = true;
 
   @override
@@ -48,7 +46,7 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(
-      context,
+      context,listen: false
     );
     for (int i = 0; i < widget.outlet.reviews.length; i++) {
       if (widget.outlet.reviews[i].userId == userProvider.user?.uid) {
@@ -66,7 +64,6 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
               onPressed: () {
                 print(MediaQuery.of(context).viewInsets.bottom);
                 setState(() {
-                  _isAddingReview = true;
                   showNewReview(context);
                 });
               },
@@ -335,7 +332,7 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
         isScrollControlled: true,
         builder: (sheetContext) {
           final userProvider = Provider.of<UserProvider>(
-            context,
+            context,listen: false
           );
           print(hasReview);
           return Padding(
@@ -442,7 +439,6 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
             _reviews.add(newReview);
             _reviewController.clear();
             _userRating = 0.0;
-            _isAddingReview = false;
           });
         } catch (e) {
           print('Error adding review: $e');
@@ -498,7 +494,7 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
       context: context,
       builder: (BuildContext context) {
         final userProvider = Provider.of<UserProvider>(
-          context,
+          context,listen: false
         );
         return AlertDialog(
           title: Text('Delete Confirmation'),

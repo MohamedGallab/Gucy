@@ -43,7 +43,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
   final storage = FirebaseStorage.instance;
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     Future<void> uploadImage(XFile imageFile) async {
       try {
