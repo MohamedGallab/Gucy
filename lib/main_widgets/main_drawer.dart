@@ -3,7 +3,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gucy/pages/create_post_page.dart';
 import 'package:gucy/pages/post_pages/my_posts_page.dart';
 import 'package:gucy/providers/analytics_provider.dart';
 import 'package:gucy/providers/user_provider.dart';
