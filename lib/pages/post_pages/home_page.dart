@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> notificationTypes = [
       'Confession',
-      'Lost and Found',
+      'LostAndFound',
       'Event',
       'Question',
       'Mentions',

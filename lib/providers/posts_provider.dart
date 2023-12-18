@@ -44,7 +44,7 @@ class PostsProvider with ChangeNotifier {
   void loadConfessions() {
     FirebaseFirestore.instance
         .collection('posts')
-        .where('type', isEqualTo: 'confession')
+        .where('type', isEqualTo: 'Confession')
         .snapshots()
         .listen(
       (QuerySnapshot snapshot) {
@@ -66,7 +66,7 @@ class PostsProvider with ChangeNotifier {
   void loadQuestions() {
     FirebaseFirestore.instance
         .collection('posts')
-        .where('type', isEqualTo: 'question')
+        .where('type', isEqualTo: 'Question')
         .snapshots()
         .listen(
       (QuerySnapshot snapshot) {
@@ -88,7 +88,7 @@ class PostsProvider with ChangeNotifier {
   void loadLostAndFound() {
     FirebaseFirestore.instance
         .collection('posts')
-        .where('type', isEqualTo: 'lost and found')
+        .where('type', isEqualTo: 'LostAndFound')
         .snapshots()
         .listen(
       (QuerySnapshot snapshot) {
@@ -110,7 +110,7 @@ class PostsProvider with ChangeNotifier {
   void loadEvents() {
     FirebaseFirestore.instance
         .collection('posts')
-        .where('type', isEqualTo: 'event')
+        .where('type', isEqualTo: 'Event')
         .snapshots()
         .listen(
       (QuerySnapshot snapshot) {

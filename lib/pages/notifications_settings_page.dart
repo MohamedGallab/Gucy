@@ -16,7 +16,7 @@ class _NotificationsSettingsPageState extends State<NotificationsSettingsPage> {
   // Sample list of notification types
   List<String> notificationTypes = [
     'Confession',
-    'Lost and Found',
+    'LostAndFound',
     'Event',
     'Question',
     'Mentions',
