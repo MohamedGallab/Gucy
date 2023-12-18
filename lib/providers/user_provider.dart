@@ -1,14 +1,17 @@
-// user_provider.dart
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:gucy/models/user_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider extends ChangeNotifier {
   UserData? _user = null;
   FirebaseFirestore db = FirebaseFirestore.instance;
   String _email = "";
+
+  late Brightness brightness = Brightness.light;
+  late Color chosenColor = Colors.orange;
 
   UserData? get user => _user;
   String get email => _email;
@@ -16,6 +19,7 @@ class UserProvider extends ChangeNotifier {
   bool get isAuthenticated => _user != null;
 
   UserProvider() {
+    loadUserPrefs();
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       _email = "";
       if (user == null) {
@@ -30,6 +34,29 @@ class UserProvider extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  Future<void> loadUserPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    bool isDarkMode = prefs.getBool('isDarkMode') ?? false;
+    brightness = isDarkMode ? Brightness.dark : Brightness.light;
+    int colorValue = prefs.getInt('chosenColor') ?? Color.fromARGB(255, 17, 186, 76).value;
+    chosenColor = Color(colorValue);
+
+    notifyListeners();
+  }
+
+  Future<void> saveUserPreferences({
+    required bool isDarkMode,
+    required Color chosenColor,
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setBool('isDarkMode', isDarkMode);
+    await prefs.setInt('chosenColor', chosenColor.value);
+
+    notifyListeners();
   }
 
   Future<String> registerUser(String email, String password) async {

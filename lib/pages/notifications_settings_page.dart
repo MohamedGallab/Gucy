@@ -5,7 +5,7 @@ class NotificationsSettingsPage extends StatefulWidget {
   const NotificationsSettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<NotificationsSettingsPage> createState() =>
+  _NotificationsSettingsPageState createState() =>
       _NotificationsSettingsPageState();
 }
 
