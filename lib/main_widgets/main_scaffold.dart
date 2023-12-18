@@ -83,6 +83,8 @@ class _MainScaffoldState extends State<MainScaffold>
       appBar: AppBar(
           title: const Text('Gucy'),
           bottom: TabBar(
+            
+            isScrollable: true,
             controller: tabControllers[_currentPageIndex],
             tabs: tabBars[_currentPageIndex],
             onTap: (value) => setState(() {
