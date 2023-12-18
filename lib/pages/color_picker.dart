@@ -1,5 +1,7 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:gucy/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ColorPickerPage extends StatefulWidget {
   const ColorPickerPage({super.key, required this.themeMode});
@@ -83,6 +85,9 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
                   setState(() {
                     dialogPickerColor = colorBeforeDialog;
                   });
+                  Provider.of<UserProvider>(context, listen: false)
+                      .saveUserPreferences(
+                          isDarkMode: isDark, chosenColor: dialogPickerColor);
                 }
               },
             ),
@@ -98,6 +103,9 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
                 isDark = value;
                 widget.themeMode(isDark ? ThemeMode.dark : ThemeMode.light);
               });
+              Provider.of<UserProvider>(context, listen: false)
+                  .saveUserPreferences(
+                      isDarkMode: isDark, chosenColor: dialogPickerColor);
             },
           )
         ],
@@ -108,8 +116,11 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
   Future<bool> colorPickerDialog() async {
     return ColorPicker(
       color: dialogPickerColor,
-      onColorChanged: (Color color) =>
-          setState(() => dialogPickerColor = color),
+      onColorChanged: (Color color) => setState(() {
+        dialogPickerColor = color;
+        Provider.of<UserProvider>(context, listen: false).saveUserPreferences(
+            isDarkMode: isDark, chosenColor: dialogPickerColor);
+      }),
       width: 40,
       height: 40,
       borderRadius: 4,
