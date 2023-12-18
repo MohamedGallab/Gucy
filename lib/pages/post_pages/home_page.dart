@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     final fbm = FirebaseMessaging.instance;
     fbm.requestPermission();
+    fbm.subscribeToTopic("newPost");
     super.initState();
   }
 
