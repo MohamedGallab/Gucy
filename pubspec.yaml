@@ -29,6 +29,7 @@ dependencies:
   firebase_messaging: ^14.7.9
   flex_color_picker: ^3.3.0
   shared_preferences: ^2.2.2
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -37,13 +38,32 @@ dev_dependencies:
   flutter_rating_bar: ^4.0.1
 
 flutter_native_splash:
-  color: "#ffffff"
-  image: assets/logo.png
+  background_image: "assets/icon/icon-background.png"
+  image: "assets/icon/icon.png"
   android: true
   ios: true
-  image_size: "300x300"
 
 flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/icon/
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
+  adaptive_icon_background: "assets/icon/icon-background.png"
+  adaptive_icon_foreground: "assets/icon/icon.png" # android min sdk min:16, default 21
+  # web:
+  #   generate: true
+  #   image_path: "path/to/image.png"
+  #   background_color: "#hexcode"
+  #   theme_color: "#hexcode"
+  # windows:
+  #   generate: true
+  #   image_path: "path/to/image.png"
+  #   icon_size: 48 # min:48, max:256, default: 48
+  # macos:
+  #   generate: true
+  #   image_path: "path/to/image.png"
