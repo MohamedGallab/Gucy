@@ -96,9 +96,9 @@ class _NotificationsSettingsPageState extends State<NotificationsSettingsPage> {
                         }
                       } else {
                         if (value) {
-                          fbm.subscribeToTopic("new $notificationType");
+                          fbm.subscribeToTopic("new$notificationType");
                         } else {
-                          fbm.unsubscribeFromTopic("new $notificationType");
+                          fbm.unsubscribeFromTopic("new$notificationType");
                         }
                       }
 

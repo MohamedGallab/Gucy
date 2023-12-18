@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
       'Question',
       'Mentions',
     ];
-    
+
     fbm.requestPermission();
     for (var type in notificationTypes) {
       if (prefs.getBool(type) ?? true) {
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
               Provider.of<UserProvider>(context, listen: false);
           userProvider.setToken(fbm);
         } else {
-          fbm.subscribeToTopic("new $type");
+          fbm.subscribeToTopic("new$type");
         }
       }
     }
