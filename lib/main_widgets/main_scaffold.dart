@@ -92,20 +92,30 @@ class _MainScaffoldState extends State<MainScaffold>
               _currentInnerPageIndex = value;
 
               if ((_currentPageIndex == 0 && _currentInnerPageIndex == 0)) {
+                analyticsProvider.changeAction(
+                    "Viewing Confessions", userProvider.user!.uid);
                 analyticsProvider.changePage(
                     'Confessions', userProvider.user!.uid);
               } else if (_currentPageIndex == 0 &&
                   _currentInnerPageIndex == 1) {
+                analyticsProvider.changeAction(
+                    "Viewing Events", userProvider.user!.uid);
                 analyticsProvider.changePage('Events', userProvider.user!.uid);
               } else if (_currentPageIndex == 0 &&
                   _currentInnerPageIndex == 2) {
+                analyticsProvider.changeAction(
+                    "Viewing Lost and Found", userProvider.user!.uid);
                 analyticsProvider.changePage(
                     'Lost and Found', userProvider.user!.uid);
               } else if (_currentPageIndex == 1 &&
                   _currentInnerPageIndex == 1) {
+                analyticsProvider.changeAction(
+                    "Viewing Questions", userProvider.user!.uid);
                 analyticsProvider.changePage(
                     'Questions', userProvider.user!.uid);
               } else {
+                analyticsProvider.changeAction(
+                    "Viewing Other", userProvider.user!.uid);
                 analyticsProvider.changePage('Other', userProvider.user!.uid);
               }
             }),
@@ -119,6 +129,8 @@ class _MainScaffoldState extends State<MainScaffold>
           ? FloatingActionButton(
               onPressed: () async {
                 if ((_currentPageIndex == 0 && _currentInnerPageIndex == 0)) {
+                  analyticsProvider.changeAction(
+                      "Adding Confession", userProvider.user!.uid);
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => CreatePostPage("confession")));
                 } else if (_currentPageIndex == 0 &&
@@ -169,15 +181,21 @@ class _MainScaffoldState extends State<MainScaffold>
                       },
                     );
                   } else {
+                    analyticsProvider.changeAction(
+                        "Adding Event", userProvider.user!.uid);
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => CreatePostPage("event")));
                   }
                 } else if (_currentPageIndex == 0 &&
                     _currentInnerPageIndex == 2) {
+                  analyticsProvider.changeAction(
+                      "Adding Lost and Found", userProvider.user!.uid);
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => CreatePostPage("lost and found")));
                 } else if (_currentPageIndex == 1 &&
                     _currentInnerPageIndex == 1) {
+                  analyticsProvider.changeAction(
+                      "Adding Question", userProvider.user!.uid);
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => CreatePostPage("question")));
                 }
@@ -194,15 +212,25 @@ class _MainScaffoldState extends State<MainScaffold>
           });
 
           if ((_currentPageIndex == 0 && _currentInnerPageIndex == 0)) {
+            analyticsProvider.changeAction(
+                "Viewing Confessions", userProvider.user!.uid);
             analyticsProvider.changePage('Confessions', userProvider.user!.uid);
           } else if (_currentPageIndex == 0 && _currentInnerPageIndex == 1) {
+            analyticsProvider.changeAction(
+                "Viewing Events", userProvider.user!.uid);
             analyticsProvider.changePage('Events', userProvider.user!.uid);
           } else if (_currentPageIndex == 0 && _currentInnerPageIndex == 2) {
+            analyticsProvider.changeAction(
+                "Viewing Lost and Found", userProvider.user!.uid);
             analyticsProvider.changePage(
                 'Lost and Found', userProvider.user!.uid);
           } else if (_currentPageIndex == 1 && _currentInnerPageIndex == 1) {
+            analyticsProvider.changeAction(
+                "Viewing Questions", userProvider.user!.uid);
             analyticsProvider.changePage('Questions', userProvider.user!.uid);
           } else {
+            analyticsProvider.changeAction(
+                "Viewing Other", userProvider.user!.uid);
             analyticsProvider.changePage('Other', userProvider.user!.uid);
           }
         },
