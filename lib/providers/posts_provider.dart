@@ -5,11 +5,10 @@ import '../models/post_data.dart';
 import '../models/user_data.dart';
 
 class PostsProvider with ChangeNotifier {
-  late List<PostData> _posts;
+  List<PostData> _posts = [];
+  List<PostData> _confessions = [];
 
   PostsProvider() {
-    // Initialize the posts list or any other setup
-    _posts = [];
     _loadPosts();
   }
 
@@ -19,6 +18,28 @@ class PostsProvider with ChangeNotifier {
     FirebaseFirestore.instance.collection('posts').snapshots().listen(
       (QuerySnapshot snapshot) {
         _posts = snapshot.docs.map((doc) {
+          Map<String, dynamic> postData = doc.data() as Map<String, dynamic>;
+          PostData post = PostData.fromJson(postData);
+          post.id = doc.id;
+          return post;
+        }).toList();
+        notifyListeners();
+      },
+      onError: (error) {
+        // Handle errors if needed
+        print('Error fetching posts: $error');
+      },
+    );
+  }
+
+  void _loadConfessions() {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .where('type', isEqualTo: 'confession')
+        .snapshots()
+        .listen(
+      (QuerySnapshot snapshot) {
+        _confessions = snapshot.docs.map((doc) {
           Map<String, dynamic> postData = doc.data() as Map<String, dynamic>;
           PostData post = PostData.fromJson(postData);
           post.id = doc.id;
