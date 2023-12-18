@@ -163,8 +163,8 @@ class _PostState extends State<Post> {
                   height: 300,
                   width: double.infinity,
                 ),
-              Text(widget.postData.body),
               const SizedBox(height: 10),
+              Text(widget.postData.body),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -215,7 +215,20 @@ class _PostState extends State<Post> {
                   ),
                   IconButton(
                     icon: Icon(Icons.comment),
-                    onPressed: () {},
+                    onPressed: () {
+                      analyticsProvider.clickPost(
+                          "${widget.postData.type}Clicked",
+                          userProvider.user!.uid);
+                      if (widget.isClickable) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ExpandedPostPage(postId: widget.postData.id),
+                          ),
+                        );
+                      }
+                    },
                   ),
                   IconButton(
                     icon: Icon(Icons.share),
