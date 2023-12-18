@@ -430,7 +430,7 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
       Review newReview = Review(
         image: userProvider.user?.picture == "" ||
                 userProvider.user?.picture == null
-            ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            ? "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/768px-Windows_10_Default_Profile_Picture.svg.png?20221210150350"
             : userProvider.user?.picture,
         userId: userProvider.user?.uid as String,
         userName: userProvider.user?.name as String,

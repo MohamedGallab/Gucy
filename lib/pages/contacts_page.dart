@@ -7,12 +7,12 @@ import 'package:url_launcher/url_launcher.dart';
 class Contact {
   final String name;
   final String phoneNumber;
-  final bool isEmergency;
+  //final bool isEmergency;
 
   Contact({
     required this.name,
     required this.phoneNumber,
-    required this.isEmergency,
+    //required this.isEmergency,
   });
 }
 
@@ -211,26 +211,26 @@ class _ContactsPageState extends State<ContactsPage> {
             //color: Colors.transparent, // Required for tap effect
             child: InkWell(
               onTap: () async {
-                if (contact.isEmergency) {
-                  try {
-                    await FlutterPhoneDirectCaller.callNumber(
-                        contact.phoneNumber);
-                  } catch (e) {
-                    print('Error calling phone number: $e');
-                    // Handle the error as needed
-                  }
-                } else {
-                  // Handle normal contact action here (e.g., open dialer)
-                  // You can implement your desired action for normal contacts here
-                  try {
-                    String temp = contact.phoneNumber;
-                    Uri phoneno = Uri.parse('tel:$temp');
-                    await launchUrl(phoneno);
-                  } catch (e) {
-                    print('Error calling phone number: $e');
-                    // Handle the error as needed
-                  }
+                try {
+                  await FlutterPhoneDirectCaller.callNumber(
+                      contact.phoneNumber);
+                } catch (e) {
+                  print('Error calling phone number: $e');
+                  // Handle the error as needed
                 }
+                //Indirect call
+                // else {
+                //   // Handle normal contact action here (e.g., open dialer)
+                //   // You can implement your desired action for normal contacts here
+                //   try {
+                //     String temp = contact.phoneNumber;
+                //     Uri phoneno = Uri.parse('tel:$temp');
+                //     await launchUrl(phoneno);
+                //   } catch (e) {
+                //     print('Error calling phone number: $e');
+                //     // Handle the error as needed
+                //   }
+                // }
               },
               borderRadius: BorderRadius.circular(10),
               child: Row(
@@ -252,14 +252,10 @@ class _ContactsPageState extends State<ContactsPage> {
                           ),
                           SizedBox(height: 2),
                           Text(
-                            contact.isEmergency
-                                ? 'Emergency contact'
-                                : 'Normal contact',
+                            'Emergency contact',
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                color: contact.isEmergency
-                                    ? Color.fromARGB(255, 183, 32, 21)
-                                    : Color.fromARGB(255, 6, 145, 64)),
+                                color: Color.fromARGB(255, 183, 32, 21)),
                           ),
                           Text(
                             contact.phoneNumber,
