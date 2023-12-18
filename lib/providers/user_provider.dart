@@ -120,6 +120,17 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+  Future<String> removeToken() async {
+    try {
+      await db.collection('users').doc(_user?.uid).update(
+        {'token': ""},
+      );
+      return "success";
+    } on FirebaseException catch (e) {
+      return e.code;
+    }
+  }
+
   Future<void> logoutUser() async {
     await FirebaseAuth.instance.signOut();
     _user = null;

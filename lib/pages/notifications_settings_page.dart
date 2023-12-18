@@ -1,4 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:gucy/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationsSettingsPage extends StatefulWidget {
@@ -12,10 +15,10 @@ class NotificationsSettingsPage extends StatefulWidget {
 class _NotificationsSettingsPageState extends State<NotificationsSettingsPage> {
   // Sample list of notification types
   List<String> notificationTypes = [
-    'Confessions',
+    'Confession',
     'Lost and Found',
     'Event',
-    'Questions',
+    'Question',
     'Mentions',
   ];
 
@@ -49,19 +52,20 @@ class _NotificationsSettingsPageState extends State<NotificationsSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final fbm = FirebaseMessaging.instance;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications Settings'),
+        title: const Text('Notifications Settings'),
       ),
       body: FutureBuilder<void>(
         future: _prefsLoaded,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return Center(
+            return const Center(
               child: Text('Error loading preferences'),
             );
           } else {
@@ -81,6 +85,22 @@ class _NotificationsSettingsPageState extends State<NotificationsSettingsPage> {
 
                       // Save toggle state to shared preferences
                       _saveNotificationSettings();
+
+                      if (notificationType == "Mentions") {
+                        final userProvider =
+                            Provider.of<UserProvider>(context, listen: false);
+                        if (value) {
+                          userProvider.setToken(fbm);
+                        } else {
+                          userProvider.removeToken();
+                        }
+                      } else {
+                        if (value) {
+                          fbm.subscribeToTopic("new $notificationType");
+                        } else {
+                          fbm.unsubscribeFromTopic("new $notificationType");
+                        }
+                      }
 
                       // Perform other actions based on toggle state change
                       // For example, update user preferences or send API requests
