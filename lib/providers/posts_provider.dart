@@ -88,7 +88,7 @@ class PostsProvider with ChangeNotifier {
   void loadLostAndFound() {
     FirebaseFirestore.instance
         .collection('posts')
-        .where('type', isEqualTo: 'lostAndFound')
+        .where('type', isEqualTo: 'lost and found')
         .snapshots()
         .listen(
       (QuerySnapshot snapshot) {
