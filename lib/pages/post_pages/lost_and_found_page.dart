@@ -13,13 +13,19 @@ class LostAndFoundPage extends StatefulWidget {
 
 class _LostAndFoundPageState extends State<LostAndFoundPage> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<PostsProvider>(context, listen: false).loadLostAndFound();
+  }
+  
+  @override
   Widget build(BuildContext context) {
     return Consumer<PostsProvider>(
       builder: (context, postsProvider, _) {
         return ListView.builder(
-          itemCount: postsProvider.posts.length,
+          itemCount: postsProvider.lostAndFound.length,
           itemBuilder: (context, index) {
-            return Post(postData: postsProvider.posts[index]);
+            return Post(postData: postsProvider.lostAndFound[index]);
           },
         );
       },

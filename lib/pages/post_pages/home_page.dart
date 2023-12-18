@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
     fbm.requestPermission();
     fbm.subscribeToTopic("newPost");
     super.initState();
+    Provider.of<PostsProvider>(context, listen: false).loadPosts();
   }
 
   @override
