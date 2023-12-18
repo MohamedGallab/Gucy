@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gucy/providers/analytics_provider.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:gucy/widgets/flare.dart';
 import 'package:badges/badges.dart' as badges;
@@ -46,6 +47,8 @@ class _PostState extends State<Post> {
   Widget build(BuildContext context) {
     late UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
+    final analyticsProvider =
+        Provider.of<AnalyticsProvider>(context, listen: false);
     liked = widget.postData.likes.contains(userProvider.user?.uid);
     disliked = widget.postData.dislikes.contains(userProvider.user?.uid);
 
@@ -101,6 +104,8 @@ class _PostState extends State<Post> {
     return Consumer<PostsProvider>(builder: (context, postsProvider, child) {
       return GestureDetector(
         onTap: () {
+          analyticsProvider.clickPost(
+              "${widget.postData.type} Clicked", userProvider.user!.uid);
           if (widget.isClickable) {
             Navigator.push(
               context,

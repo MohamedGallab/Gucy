@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gucy/main_widgets/main_drawer.dart';
 import 'package:gucy/pages/create_post_page.dart';
+import 'package:gucy/providers/analytics_provider.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:provider/provider.dart';
-
 import 'nav_bar.dart';
 import 'tab_bar_views.dart';
 import 'tab_bars.dart';
@@ -40,6 +40,8 @@ class _MainScaffoldState extends State<MainScaffold>
 
   Future<void> _requestPermission(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final analyticsProvider =
+        Provider.of<AnalyticsProvider>(context, listen: false);
     if (userProvider.user?.eventPermission == 'None') {
       userProvider.user?.eventPermission = 'requested';
       showDialog(
@@ -76,6 +78,8 @@ class _MainScaffoldState extends State<MainScaffold>
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: true);
+    final analyticsProvider =
+        Provider.of<AnalyticsProvider>(context, listen: true);
     return Scaffold(
       drawer: const Drawer(
         child: MainDrawer(),
@@ -87,6 +91,24 @@ class _MainScaffoldState extends State<MainScaffold>
             tabs: tabBars[_currentPageIndex],
             onTap: (value) => setState(() {
               _currentInnerPageIndex = value;
+
+              if ((_currentPageIndex == 0 && _currentInnerPageIndex == 0)) {
+                analyticsProvider.changePage(
+                    'Confessions', userProvider.user!.uid);
+              } else if (_currentPageIndex == 0 &&
+                  _currentInnerPageIndex == 1) {
+                analyticsProvider.changePage('Events', userProvider.user!.uid);
+              } else if (_currentPageIndex == 0 &&
+                  _currentInnerPageIndex == 2) {
+                analyticsProvider.changePage(
+                    'Lost and Found', userProvider.user!.uid);
+              } else if (_currentPageIndex == 1 &&
+                  _currentInnerPageIndex == 1) {
+                analyticsProvider.changePage(
+                    'Questions', userProvider.user!.uid);
+              } else {
+                analyticsProvider.changePage('Other', userProvider.user!.uid);
+              }
             }),
           )),
       body: TabBarView(
@@ -166,11 +188,24 @@ class _MainScaffoldState extends State<MainScaffold>
           : null,
       bottomNavigationBar: NavBar(
         currentPageIndex: _currentPageIndex,
-        onDestinationSelected: (int index) {
+        onDestinationSelected: (int index) async {
           setState(() {
             _currentPageIndex = index;
             _currentInnerPageIndex = tabControllers[_currentPageIndex].index;
           });
+
+          if ((_currentPageIndex == 0 && _currentInnerPageIndex == 0)) {
+            analyticsProvider.changePage('Confessions', userProvider.user!.uid);
+          } else if (_currentPageIndex == 0 && _currentInnerPageIndex == 1) {
+            analyticsProvider.changePage('Events', userProvider.user!.uid);
+          } else if (_currentPageIndex == 0 && _currentInnerPageIndex == 2) {
+            analyticsProvider.changePage(
+                'Lost and Found', userProvider.user!.uid);
+          } else if (_currentPageIndex == 1 && _currentInnerPageIndex == 1) {
+            analyticsProvider.changePage('Questions', userProvider.user!.uid);
+          } else {
+            analyticsProvider.changePage('Other', userProvider.user!.uid);
+          }
         },
       ),
     );

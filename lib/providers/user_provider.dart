@@ -47,8 +47,20 @@ class UserProvider extends ChangeNotifier {
         "score": 0,
         "eventPermission": (email.contains("student")) ? "None" : "All"
       };
-      
+
       await db.collection("users").doc(userCredential.user!.uid).set(user);
+      _email = userCredential.user!.email!;
+
+      Map<String, dynamic> analytics = {
+        "uid": userCredential.user!.uid,
+        "Confessions": 0,
+        "Events": 0,
+        "Lost and Found": 0,
+        "Questions": 0,
+        "None": 0,
+        "Other": 0,
+      };
+      await db.collection("analytics").doc().set(analytics);
       _email = userCredential.user!.email!;
 
       _user = UserData.fromJson(user);
