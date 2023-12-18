@@ -40,8 +40,6 @@ class _MainScaffoldState extends State<MainScaffold>
 
   Future<void> _requestPermission(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final analyticsProvider =
-        Provider.of<AnalyticsProvider>(context, listen: false);
     if (userProvider.user?.eventPermission == 'None') {
       userProvider.user?.eventPermission = 'requested';
       showDialog(
@@ -87,7 +85,6 @@ class _MainScaffoldState extends State<MainScaffold>
       appBar: AppBar(
           title: const Text('Gucy'),
           bottom: TabBar(
-            
             isScrollable: true,
             controller: tabControllers[_currentPageIndex],
             tabs: tabBars[_currentPageIndex],

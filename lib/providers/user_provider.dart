@@ -23,11 +23,10 @@ class UserProvider extends ChangeNotifier {
         _email = "";
       } else {
         var docRef = db.collection("users").doc(user.uid);
-        await docRef.get().then((DocumentSnapshot doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          _user = UserData.fromJson(data);
-          _email = user.email!;
-        });
+        DocumentSnapshot doc = await docRef.get();
+        final data = doc.data() as Map<String, dynamic>;
+        _user = UserData.fromJson(data);
+        _email = user.email!;
       }
       notifyListeners();
     });
