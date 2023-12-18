@@ -28,9 +28,7 @@ class _MainDrawerState extends State<MainDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(
-      context,
-    );
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
 
     Future<void> uploadImage(XFile imageFile) async {
       try {

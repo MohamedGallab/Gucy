@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gucy/pages/staff_page.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../models/staff_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,7 +18,6 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
   TextEditingController _reviewController = TextEditingController();
   double _userRating = 0.0;
   List<Review> _reviews = [];
-  bool _isAddingReview = false;
   bool hasReview = true;
   @override
   void initState() {
@@ -30,7 +28,7 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(
-      context,
+      context,listen: false
     );
     for (int i = 0; i < widget.staff.reviews.length; i++) {
       if (widget.staff.reviews[i].userId == userProvider.user?.uid) {
@@ -49,7 +47,6 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
               onPressed: () {
                 print(MediaQuery.of(context).viewInsets.bottom);
                 setState(() {
-                  _isAddingReview = true;
                   showNewReview(context);
                 });
               },
@@ -354,7 +351,7 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
         isScrollControlled: true,
         builder: (sheetContext) {
           final userProvider = Provider.of<UserProvider>(
-            context,
+            context,listen: false
           );
           print(hasReview);
           return Padding(
@@ -461,7 +458,6 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
             _reviews.add(newReview);
             _reviewController.clear();
             _userRating = 0.0;
-            _isAddingReview = false;
           });
         } catch (e) {
           print('Error adding review: $e');
@@ -517,7 +513,7 @@ class _StaffProfilePageState extends State<StaffProfilePage> {
       context: context,
       builder: (BuildContext context) {
         final userProvider = Provider.of<UserProvider>(
-          context,
+          context,listen: false
         );
         return AlertDialog(
           title: Text('Delete Confirmation'),

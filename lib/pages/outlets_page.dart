@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gucy/models/contacts_data.dart';
 import 'package:gucy/models/outlets_data.dart';
 import 'package:gucy/pages/OutletProfilePage.dart';
-import 'package:gucy/pages/outlet_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/outlets_data.dart';
 
 // class Outlet {
 //   final String image;

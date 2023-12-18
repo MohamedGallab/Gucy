@@ -271,7 +271,9 @@ class _MainScaffoldState extends State<MainScaffold>
                         builder: (context) => ContactsPage()));
                   }
                 },
-                child: const Icon(Icons.edit),
+                child: _currentPageIndex == 2
+                    ? const Icon(Icons.call)
+                    : const Icon(Icons.edit),
               )
             : null,
         bottomNavigationBar: NavBar(
