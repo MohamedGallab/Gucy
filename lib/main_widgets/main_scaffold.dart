@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gucy/main_widgets/main_drawer.dart';
+import 'package:gucy/pages/contacts_page.dart';
 import 'package:gucy/pages/create_post_page.dart';
 import 'package:gucy/providers/analytics_provider.dart';
 import 'package:gucy/providers/user_provider.dart';
@@ -195,6 +196,7 @@ class _MainScaffoldState extends State<MainScaffold>
                   if ((_currentPageIndex == 0 && _currentInnerPageIndex == 1)) {
                     analyticsProvider.changeAction(
                         "Adding Confession", userProvider.user!.uid);
+
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => CreatePostPage("confession")));
                   } else if (_currentPageIndex == 0 &&
@@ -263,6 +265,11 @@ class _MainScaffoldState extends State<MainScaffold>
                         "Adding Question", userProvider.user!.uid);
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => CreatePostPage("question")));
+                  }else if (_currentPageIndex == 2) {
+                    analyticsProvider.changeAction(
+                        "Adding Question", userProvider.user!.uid);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ContactsPage()));
                   }
                 },
                 child: const Icon(Icons.edit),
