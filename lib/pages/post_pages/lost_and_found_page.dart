@@ -1,23 +1,17 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/posts_provider.dart';
-import '../widgets/post.dart';
+import '../../providers/posts_provider.dart';
+import '../../widgets/post.dart';
 
-class HomePage extends StatefulWidget {
+class LostAndFoundPage extends StatefulWidget {
+  const LostAndFoundPage({super.key});
+
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<LostAndFoundPage> createState() => _LostAndFoundPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    final fbm = FirebaseMessaging.instance;
-    fbm.requestPermission();
-    super.initState();
-  }
-
+class _LostAndFoundPageState extends State<LostAndFoundPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<PostsProvider>(
