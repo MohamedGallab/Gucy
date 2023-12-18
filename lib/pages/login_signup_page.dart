@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage>
         return;
       }
       RegExp emailRegex = RegExp(
-        r'^[a-zA-Z]+[.][a-zA-Z]+@(student\.)?guc\.edu\.eg$',
+        r'^[a-zA-Z]+[.][a-zA-Z]+@(student\.)?(admin\.)?guc\.edu\.eg$',
       );
       if (password != confirmPassword && state == "signup") {
         confirmPasswordError = 'Passwords do not match!';
