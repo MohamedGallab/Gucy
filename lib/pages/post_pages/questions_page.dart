@@ -13,13 +13,19 @@ class QuestionsPage extends StatefulWidget {
 
 class _QuestionsPageState extends State<QuestionsPage> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<PostsProvider>(context, listen: false).loadQuestions();
+  }
+  
+  @override
   Widget build(BuildContext context) {
     return Consumer<PostsProvider>(
       builder: (context, postsProvider, _) {
         return ListView.builder(
-          itemCount: postsProvider.posts.length,
+          itemCount: postsProvider.questions.length,
           itemBuilder: (context, index) {
-            return Post(postData: postsProvider.posts[index]);
+            return Post(postData: postsProvider.questions[index]);
           },
         );
       },

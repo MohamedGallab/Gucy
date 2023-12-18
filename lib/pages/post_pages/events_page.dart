@@ -13,13 +13,19 @@ class EventsPage extends StatefulWidget {
 
 class _EventsPageState extends State<EventsPage> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<PostsProvider>(context, listen: false).loadEvents();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<PostsProvider>(
       builder: (context, postsProvider, _) {
         return ListView.builder(
-          itemCount: postsProvider.posts.length,
+          itemCount: postsProvider.events.length,
           itemBuilder: (context, index) {
-            return Post(postData: postsProvider.posts[index]);
+            return Post(postData: postsProvider.events[index]);
           },
         );
       },

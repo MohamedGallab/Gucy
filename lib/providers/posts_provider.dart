@@ -7,14 +7,23 @@ import '../models/user_data.dart';
 class PostsProvider with ChangeNotifier {
   List<PostData> _posts = [];
   List<PostData> _confessions = [];
+  List<PostData> _questions = [];
+  List<PostData> _lostAndFound = [];
+  List<PostData> _events = [];
+  List<PostData> _myPosts = [];
 
   PostsProvider() {
-    _loadPosts();
+    loadPosts();
   }
 
   List<PostData> get posts => _posts;
+  List<PostData> get confessions => _confessions;
+  List<PostData> get questions => _questions;
+  List<PostData> get lostAndFound => _lostAndFound;
+  List<PostData> get events => _events;
+  List<PostData> get myPosts => _myPosts;
 
-  void _loadPosts() {
+  void loadPosts() {
     FirebaseFirestore.instance.collection('posts').snapshots().listen(
       (QuerySnapshot snapshot) {
         _posts = snapshot.docs.map((doc) {
@@ -32,7 +41,7 @@ class PostsProvider with ChangeNotifier {
     );
   }
 
-  void _loadConfessions() {
+  void loadConfessions() {
     FirebaseFirestore.instance
         .collection('posts')
         .where('type', isEqualTo: 'confession')
@@ -40,6 +49,94 @@ class PostsProvider with ChangeNotifier {
         .listen(
       (QuerySnapshot snapshot) {
         _confessions = snapshot.docs.map((doc) {
+          Map<String, dynamic> postData = doc.data() as Map<String, dynamic>;
+          PostData post = PostData.fromJson(postData);
+          post.id = doc.id;
+          return post;
+        }).toList();
+        notifyListeners();
+      },
+      onError: (error) {
+        // Handle errors if needed
+        print('Error fetching posts: $error');
+      },
+    );
+  }
+
+  void loadQuestions() {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .where('type', isEqualTo: 'question')
+        .snapshots()
+        .listen(
+      (QuerySnapshot snapshot) {
+        _questions = snapshot.docs.map((doc) {
+          Map<String, dynamic> postData = doc.data() as Map<String, dynamic>;
+          PostData post = PostData.fromJson(postData);
+          post.id = doc.id;
+          return post;
+        }).toList();
+        notifyListeners();
+      },
+      onError: (error) {
+        // Handle errors if needed
+        print('Error fetching posts: $error');
+      },
+    );
+  }
+
+  void loadLostAndFound() {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .where('type', isEqualTo: 'lostAndFound')
+        .snapshots()
+        .listen(
+      (QuerySnapshot snapshot) {
+        _lostAndFound = snapshot.docs.map((doc) {
+          Map<String, dynamic> postData = doc.data() as Map<String, dynamic>;
+          PostData post = PostData.fromJson(postData);
+          post.id = doc.id;
+          return post;
+        }).toList();
+        notifyListeners();
+      },
+      onError: (error) {
+        // Handle errors if needed
+        print('Error fetching posts: $error');
+      },
+    );
+  }
+
+  void loadEvents() {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .where('type', isEqualTo: 'event')
+        .snapshots()
+        .listen(
+      (QuerySnapshot snapshot) {
+        _events = snapshot.docs.map((doc) {
+          Map<String, dynamic> postData = doc.data() as Map<String, dynamic>;
+          PostData post = PostData.fromJson(postData);
+          post.id = doc.id;
+          return post;
+        }).toList();
+        notifyListeners();
+      },
+      onError: (error) {
+        // Handle errors if needed
+        print('Error fetching posts: $error');
+      },
+    );
+  }
+
+  void loadMyPosts(String uid) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .where('user.uid', isEqualTo: uid)
+        .snapshots()
+        .listen(
+      (QuerySnapshot snapshot) {
+        _myPosts = snapshot.docs.map((doc) {
           Map<String, dynamic> postData = doc.data() as Map<String, dynamic>;
           PostData post = PostData.fromJson(postData);
           post.id = doc.id;
