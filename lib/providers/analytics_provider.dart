@@ -76,4 +76,36 @@ class AnalyticsProvider with ChangeNotifier {
               .forEach((doc) => doc.reference.update({"Action": action}))
         });
   }
+
+  DateTime? lastScrollingTime = DateTime.now();
+  DateTime? lastNonScrollingTime = DateTime.now();
+  Future<void> setScrolling(bool isScrolling, String page, String iod) async {
+    if (isScrolling) {
+      var timeSpentNotScrolling =
+          DateTime.now().difference(lastNonScrollingTime!).inSeconds;
+      final collectionRef = db.collection("analytics");
+      final query = collectionRef.where("uid", isEqualTo: iod);
+
+      await query.get().then((querySnapshot) => {
+            querySnapshot.docs.forEach((doc) => doc.reference.update({
+                  "Time Spent Not Scrolling in $page":
+                      FieldValue.increment(timeSpentNotScrolling)
+                }))
+          });
+      lastScrollingTime = DateTime.now();
+    } else {
+      var timeSpentScrolling =
+          DateTime.now().difference(lastScrollingTime!).inSeconds;
+      final collectionRef = db.collection("analytics");
+      final query = collectionRef.where("uid", isEqualTo: iod);
+
+      await query.get().then((querySnapshot) => {
+            querySnapshot.docs.forEach((doc) => doc.reference.update({
+                  "Time Spent Scrolling in $page":
+                      FieldValue.increment(timeSpentScrolling)
+                }))
+          });
+      lastNonScrollingTime = DateTime.now();
+    }
+  }
 }

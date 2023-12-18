@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -61,9 +60,11 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
     final userProvider = Provider.of<UserProvider>(context);
     final analyticsProvider = Provider.of<AnalyticsProvider>(context);
     if (isBackground) {
+      analyticsProvider.changeAction('NotInsideApp', userProvider.user!.uid);
       analyticsProvider.changePage('None', userProvider.user!.uid);
     } else {
-      analyticsProvider.changePage('Confessions', userProvider.user!.uid);
+      analyticsProvider.changeAction('Viewing All', userProvider.user!.uid);
+      analyticsProvider.changePage('All', userProvider.user!.uid);
     }
   }
 
