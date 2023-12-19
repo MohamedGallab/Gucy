@@ -97,7 +97,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   }
 
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context, listen: true);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -105,7 +105,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
 
     final _router = GoRouter(
       redirect: (context, state) {
-        if (!Provider.of<UserProvider>(context, listen: true).isAuthenticated) {
+        if (!Provider.of<UserProvider>(context, listen: false).isAuthenticated) {
           return '/';
         } else {}
 

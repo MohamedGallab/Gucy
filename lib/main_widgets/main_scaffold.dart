@@ -95,7 +95,7 @@ class _MainScaffoldState extends State<MainScaffold>
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context, listen: true);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     final analyticsProvider =
         Provider.of<AnalyticsProvider>(context, listen: true);
     return Scaffold(
