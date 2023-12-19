@@ -40,7 +40,7 @@ class _CommentState extends State<Comment> {
   Widget build(BuildContext context) {
     late UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
-        
+
     liked = widget.commentData.likes.contains(userProvider.user?.uid);
     disliked = widget.commentData.dislikes.contains(userProvider.user?.uid);
 
@@ -53,8 +53,9 @@ class _CommentState extends State<Comment> {
             Row(
               children: <Widget>[
                 CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(widget.commentData.user.picture),
+                  backgroundImage: widget.commentData.user.picture == ""
+                      ? null
+                      : NetworkImage(widget.commentData.user.picture),
                 ),
                 SizedBox(width: 15),
                 Column(
