@@ -13,16 +13,12 @@ class UserProvider extends ChangeNotifier {
   FirebaseFirestore db = FirebaseFirestore.instance;
   String _email = "";
 
-  late Brightness brightness = Brightness.light;
-  late Color chosenColor = Colors.orange;
-
   UserData? get user => _user;
   String get email => _email;
 
   bool get isAuthenticated => _user != null;
 
   UserProvider() {
-    loadUserPrefs();
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       _email = "";
       if (user == null) {
@@ -52,33 +48,6 @@ class UserProvider extends ChangeNotifier {
 
       notifyListeners();
     });
-  }
-
-  Future<void> loadUserPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    bool isDarkMode = prefs.getBool('isDarkMode') ?? false;
-    brightness = isDarkMode ? Brightness.dark : Brightness.light;
-    int colorValue =
-        prefs.getInt('chosenColor') ?? Color.fromARGB(255, 17, 186, 76).value;
-    chosenColor = Color(colorValue);
-
-    notifyListeners();
-  }
-
-  Future<void> saveUserPreferences({
-    required bool isDarkMode,
-    required Color chosenColor,
-  }) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    await prefs.setBool('isDarkMode', isDarkMode);
-    await prefs.setInt('chosenColor', chosenColor.value);
-
-    brightness = isDarkMode ? Brightness.dark : Brightness.light;
-    this.chosenColor = chosenColor;
-
-    notifyListeners();
   }
 
   Future<String> registerUser(String email, String password) async {

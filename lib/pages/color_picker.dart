@@ -1,6 +1,7 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gucy/main.dart';
+import 'package:gucy/providers/color_provider.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:restart_app/restart_app.dart';
@@ -50,10 +51,10 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
     isDark = false;
 
     setState(() {
-      isDark = Provider.of<UserProvider>(context, listen: false).brightness ==
+      isDark = Provider.of<ColorProvider>(context, listen: false).brightness ==
           Brightness.dark;
       dialogPickerColor =
-          Provider.of<UserProvider>(context, listen: false).chosenColor;
+          Provider.of<ColorProvider>(context, listen: false).chosenColor;
     });
 
     super.initState();
@@ -95,7 +96,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
                   setState(() {
                     dialogPickerColor = colorBeforeDialog;
                   });
-                  Provider.of<UserProvider>(context, listen: true)
+                  Provider.of<ColorProvider>(context, listen: false)
                       .saveUserPreferences(
                           isDarkMode: isDark, chosenColor: dialogPickerColor);
                 }
@@ -114,7 +115,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
                 isDark = value;
                 widget.themeMode(isDark ? ThemeMode.dark : ThemeMode.light);
               });
-              Provider.of<UserProvider>(context, listen: false)
+              Provider.of<ColorProvider>(context, listen: true)
                   .saveUserPreferences(
                       isDarkMode: isDark, chosenColor: dialogPickerColor);
               RestartWidget.restartApp(context);
@@ -129,7 +130,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
     return ColorPicker(
       color: dialogPickerColor,
       onColorChangeEnd: (Color color) {
-        Provider.of<UserProvider>(context, listen: false).saveUserPreferences(
+        Provider.of<ColorProvider>(context, listen: true).saveUserPreferences(
             isDarkMode: isDark, chosenColor: dialogPickerColor);
       },
       onColorChanged: (Color color) => setState(() {

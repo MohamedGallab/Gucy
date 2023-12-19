@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:gucy/main_widgets/main_scaffold.dart';
 import 'package:gucy/pages/login_signup_page.dart';
 import 'package:gucy/providers/analytics_provider.dart';
+import 'package:gucy/providers/color_provider.dart';
 import 'package:gucy/providers/posts_provider.dart';
 import 'package:gucy/widgets/post.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => PostsProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => AnalyticsProvider()),
+        ChangeNotifierProvider(create: (context) => ColorProvider()),
       ],
       child: RestartWidget(
         child: MainApp(),
@@ -86,7 +88,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.detached;
 
-    final userProvider = Provider.of<UserProvider>(context, listen: true);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     final analyticsProvider = Provider.of<AnalyticsProvider>(context);
     if (isBackground) {
       analyticsProvider.changeAction('NotInsideApp', userProvider.user!.uid);
@@ -99,7 +101,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
 
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-
+    final colorProvider = Provider.of<ColorProvider>(context, listen: true);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -139,8 +141,8 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-              seedColor: userProvider.chosenColor,
-              brightness: userProvider.brightness)),
+              seedColor: colorProvider.chosenColor,
+              brightness: colorProvider.brightness)),
       routerConfig: _router,
     );
   }
