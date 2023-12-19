@@ -63,8 +63,6 @@ class _MainDrawerState extends State<MainDrawer> {
       } catch (e) {}
     }
 
-    final TextEditingController controller =
-        TextEditingController(text: userProvider.email);
     void showImageOptions() {
       showModalBottomSheet(
         context: context,

@@ -5,7 +5,7 @@ import '../../providers/posts_provider.dart';
 import '../../widgets/post.dart';
 
 class EventsPage extends StatefulWidget {
-  const EventsPage({super.key});
+  const EventsPage({super.key, required String sortingCriteria});
 
   @override
   State<EventsPage> createState() => _EventsPageState();

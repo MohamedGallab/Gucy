@@ -1,43 +1,7 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
-
-
-void main() => runApp(const ColorPickerDemo());
-
-class ColorPickerDemo extends StatefulWidget {
-  const ColorPickerDemo({super.key});
-
-  @override
-  State<ColorPickerDemo> createState() => _ColorPickerDemoState();
-}
-
-class _ColorPickerDemoState extends State<ColorPickerDemo> {
-  late ThemeMode themeMode;
-
-  @override
-  void initState() {
-    super.initState();
-    themeMode = ThemeMode.light;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'ColorPicker',
-      theme: ThemeData(useMaterial3: true),
-      darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
-      themeMode: themeMode,
-      home: ColorPickerPage(
-        themeMode: (ThemeMode mode) {
-          setState(() {
-            themeMode = mode;
-          });
-        },
-      ),
-    );
-  }
-}
+import 'package:gucy/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ColorPickerPage extends StatefulWidget {
   const ColorPickerPage({super.key, required this.themeMode});
@@ -82,6 +46,14 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
     dialogPickerColor = Colors.red;
     dialogSelectColor = const Color(0xFFA239CA);
     isDark = false;
+
+    setState(() {
+      isDark = Provider.of<UserProvider>(context, listen: false).brightness ==
+          Brightness.dark;
+      dialogPickerColor =
+          Provider.of<UserProvider>(context, listen: false).chosenColor;
+    });
+
     super.initState();
   }
 
@@ -121,127 +93,11 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
                   setState(() {
                     dialogPickerColor = colorBeforeDialog;
                   });
+                  Provider.of<UserProvider>(context, listen: true)
+                      .saveUserPreferences(
+                          isDarkMode: isDark, chosenColor: dialogPickerColor);
                 }
               },
-            ),
-          ),
-          ListTile(
-            title: const Text('Click to select a new color from a dialog '
-                'that uses custom open/close animation. The color is only '
-                'modified after dialog is closed with OK'),
-            subtitle: Text(
-              // ignore: lines_longer_than_80_chars
-              '${ColorTools.materialNameAndCode(dialogSelectColor, colorSwatchNameMap: colorsNameMap)} '
-              'aka ${ColorTools.nameThatColor(dialogSelectColor)}',
-            ),
-            trailing: ColorIndicator(
-                width: 40,
-                height: 40,
-                borderRadius: 0,
-                color: dialogSelectColor,
-                elevation: 1,
-                onSelectFocus: false,
-                onSelect: () async {
-                  // Wait for the dialog to return color selection result.
-                  final Color newColor = await showColorPickerDialog(
-                    // The dialog needs a context, we pass it in.
-                    context,
-                    // We use the dialogSelectColor, as its starting color.
-                    dialogSelectColor,
-                    title: Text('ColorPicker',
-                        style: Theme.of(context).textTheme.titleLarge),
-                    width: 40,
-                    height: 40,
-                    spacing: 0,
-                    runSpacing: 0,
-                    borderRadius: 0,
-                    wheelDiameter: 165,
-                    enableOpacity: true,
-                    showColorCode: true,
-                    colorCodeHasColor: true,
-                    pickersEnabled: <ColorPickerType, bool>{
-                      ColorPickerType.wheel: true,
-                    },
-                    copyPasteBehavior: const ColorPickerCopyPasteBehavior(
-                      copyButton: true,
-                      pasteButton: true,
-                      longPressMenu: true,
-                    ),
-                    actionButtons: const ColorPickerActionButtons(
-                      okButton: true,
-                      closeButton: true,
-                      dialogActionButtons: false,
-                    ),
-                    transitionBuilder: (BuildContext context,
-                        Animation<double> a1,
-                        Animation<double> a2,
-                        Widget widget) {
-                      final double curvedValue =
-                          Curves.easeInOutBack.transform(a1.value) - 1.0;
-                      return Transform(
-                        transform: Matrix4.translationValues(
-                            0.0, curvedValue * 200, 0.0),
-                        child: Opacity(
-                          opacity: a1.value,
-                          child: widget,
-                        ),
-                      );
-                    },
-                    transitionDuration: const Duration(milliseconds: 400),
-                    constraints: const BoxConstraints(
-                        minHeight: 480, minWidth: 320, maxWidth: 320),
-                  );
-                  // We update the dialogSelectColor, to the returned result
-                  // color. If the dialog was dismissed it actually returns
-                  // the color we started with. The extra update for that
-                  // below does not really matter, but if you want you can
-                  // check if they are equal and skip the update below.
-                  setState(() {
-                    dialogSelectColor = newColor;
-                  });
-                }),
-          ),
-
-          // Show the selected color.
-          ListTile(
-            title: const Text('Select color below to change this color'),
-            subtitle:
-                Text('${ColorTools.materialNameAndCode(screenPickerColor)} '
-                    'aka ${ColorTools.nameThatColor(screenPickerColor)}'),
-            trailing: ColorIndicator(
-              width: 44,
-              height: 44,
-              borderRadius: 22,
-              color: screenPickerColor,
-            ),
-          ),
-
-          // Show the color picker in sized box in a raised card.
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(6),
-              child: Card(
-                elevation: 2,
-                child: ColorPicker(
-                  // Use the screenPickerColor as start color.
-                  color: screenPickerColor,
-                  // Update the screenPickerColor using the callback.
-                  onColorChanged: (Color color) =>
-                      setState(() => screenPickerColor = color),
-                  width: 44,
-                  height: 44,
-                  borderRadius: 22,
-                  heading: Text(
-                    'Select color',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  subheading: Text(
-                    'Select color shade',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-              ),
             ),
           ),
 
@@ -255,6 +111,9 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
                 isDark = value;
                 widget.themeMode(isDark ? ThemeMode.dark : ThemeMode.light);
               });
+              Provider.of<UserProvider>(context, listen: false)
+                  .saveUserPreferences(
+                      isDarkMode: isDark, chosenColor: dialogPickerColor);
             },
           )
         ],
@@ -265,8 +124,13 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
   Future<bool> colorPickerDialog() async {
     return ColorPicker(
       color: dialogPickerColor,
-      onColorChanged: (Color color) =>
-          setState(() => dialogPickerColor = color),
+      onColorChangeEnd: (Color color) {
+        Provider.of<UserProvider>(context, listen: false).saveUserPreferences(
+            isDarkMode: isDark, chosenColor: dialogPickerColor);
+      },
+      onColorChanged: (Color color) => setState(() {
+        dialogPickerColor = color;
+      }),
       width: 40,
       height: 40,
       borderRadius: 4,

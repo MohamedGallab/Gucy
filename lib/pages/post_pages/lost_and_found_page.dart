@@ -5,7 +5,7 @@ import '../../providers/posts_provider.dart';
 import '../../widgets/post.dart';
 
 class LostAndFoundPage extends StatefulWidget {
-  const LostAndFoundPage({super.key});
+  const LostAndFoundPage({super.key, required String sortingCriteria});
 
   @override
   State<LostAndFoundPage> createState() => _LostAndFoundPageState();

@@ -69,13 +69,15 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   }
 
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+
     final _router = GoRouter(
       redirect: (context, state) {
-        final userProvider = Provider.of<UserProvider>(context, listen: true);
-        if (!userProvider.isAuthenticated) {
+        if (!Provider.of<UserProvider>(context, listen: true).isAuthenticated) {
           return '/';
         } else {}
 
@@ -95,11 +97,9 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
     return MaterialApp.router(
       theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFB10080))),
-      darkTheme: ThemeData(
-          useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-              seedColor: Color.fromARGB(255, 4, 199, 14), brightness: Brightness.dark)),
+              seedColor: userProvider.chosenColor,
+              brightness: userProvider.brightness)),
       routerConfig: _router,
     );
   }
