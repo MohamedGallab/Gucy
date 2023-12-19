@@ -15,6 +15,14 @@ class MyPostsPage extends StatefulWidget {
 
 class _MyPostsPageState extends State<MyPostsPage> {
   @override
+  void initState() {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    super.initState();
+    Provider.of<PostsProvider>(context, listen: false)
+        .loadMyPosts(userProvider.user!.uid);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final analyticsProvider =
@@ -32,9 +40,9 @@ class _MyPostsPageState extends State<MyPostsPage> {
         body: Consumer<PostsProvider>(
           builder: (context, postsProvider, _) {
             return ListView.builder(
-              itemCount: postsProvider.posts.length,
+              itemCount: postsProvider.myPosts.length,
               itemBuilder: (context, index) {
-                return Post(postData: postsProvider.posts[index]);
+                return Post(postData: postsProvider.myPosts[index]);
               },
             );
           },
