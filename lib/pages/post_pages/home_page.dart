@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../providers/posts_provider.dart';
 import '../../widgets/post.dart';
@@ -16,13 +17,34 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    final fbm = FirebaseMessaging.instance;
-    fbm.requestPermission();
-    //fbm.subscribeToTopic("newPost");
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    userProvider.setToken(fbm);
+    _loadNotificationSettings();
     super.initState();
     Provider.of<PostsProvider>(context, listen: false).loadPosts();
+  }
+
+  Future<void> _loadNotificationSettings() async {
+    final fbm = FirebaseMessaging.instance;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> notificationTypes = [
+      'Confession',
+      'LostAndFound',
+      'Event',
+      'Question',
+      'Mentions',
+    ];
+
+    fbm.requestPermission();
+    for (var type in notificationTypes) {
+      if (prefs.getBool(type) ?? true) {
+        if (type == "Mentions") {
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
+          userProvider.setToken(fbm);
+        } else {
+          fbm.subscribeToTopic("new$type");
+        }
+      }
+    }
   }
 
   @override

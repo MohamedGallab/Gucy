@@ -22,7 +22,7 @@ class _MainScaffoldState extends State<MainScaffold>
     with TickerProviderStateMixin {
   int _currentPageIndex = 0;
   int _currentInnerPageIndex = 0;
-  var tabController;
+  late TabController tabController;
 
   @override
   void initState() {
@@ -199,7 +199,7 @@ class _MainScaffoldState extends State<MainScaffold>
                         "Adding Confession", userProvider.user!.uid);
 
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CreatePostPage("confession")));
+                        builder: (context) => CreatePostPage("Confession")));
                   } else if (_currentPageIndex == 0 &&
                       _currentInnerPageIndex == 2) {
                     if (userProvider.user?.eventPermission != "Home" &&
@@ -251,7 +251,7 @@ class _MainScaffoldState extends State<MainScaffold>
                       analyticsProvider.changeAction(
                           "Adding Event", userProvider.user!.uid);
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CreatePostPage("event")));
+                          builder: (context) => CreatePostPage("Event")));
                     }
                   } else if (_currentPageIndex == 0 &&
                       _currentInnerPageIndex == 3) {
@@ -259,13 +259,13 @@ class _MainScaffoldState extends State<MainScaffold>
                         "Adding Lost and Found", userProvider.user!.uid);
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) =>
-                            CreatePostPage("lost and found")));
+                            CreatePostPage("LostAndFound")));
                   } else if (_currentPageIndex == 0 &&
                       _currentInnerPageIndex == 4) {
                     analyticsProvider.changeAction(
                         "Adding Question", userProvider.user!.uid);
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CreatePostPage("question")));
+                        builder: (context) => CreatePostPage("Question")));
                   } else if (_currentPageIndex == 2) {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ContactsPage()));
