@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _loadNotificationSettings();
     super.initState();
-    Provider.of<PostsProvider>(context, listen: false).loadPosts();
+    Provider.of<PostsProvider>(context, listen: false).loadPosts("");
   }
 
   Future<void> _loadNotificationSettings() async {
