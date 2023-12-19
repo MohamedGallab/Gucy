@@ -21,14 +21,13 @@ Future<void> main() async {
   await Future.delayed(const Duration(seconds: 2));
 
   runApp(MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => PostsProvider()),
-        ChangeNotifierProvider(create: (context) => UserProvider()),
-        ChangeNotifierProvider(create: (context) => AnalyticsProvider()),
-      ],
-      child: RestartWidget(
-        child: MainApp(),
-      )));
+    providers: [
+      ChangeNotifierProvider(create: (context) => PostsProvider()),
+      ChangeNotifierProvider(create: (context) => UserProvider()),
+      ChangeNotifierProvider(create: (context) => AnalyticsProvider()),
+    ],
+    child: MainApp(),
+  ));
 }
 
 class MainApp extends StatefulWidget {
@@ -142,37 +141,6 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
               seedColor: userProvider.chosenColor,
               brightness: userProvider.brightness)),
       routerConfig: _router,
-    );
-  }
-}
-
-class RestartWidget extends StatefulWidget {
-  RestartWidget({required this.child});
-
-  final Widget child;
-
-  static void restartApp(BuildContext context) {
-    context.findAncestorStateOfType<_RestartWidgetState>()?.restartApp();
-  }
-
-  @override
-  _RestartWidgetState createState() => _RestartWidgetState();
-}
-
-class _RestartWidgetState extends State<RestartWidget> {
-  Key key = UniqueKey();
-
-  void restartApp() {
-    setState(() {
-      key = UniqueKey();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return KeyedSubtree(
-      key: key,
-      child: widget.child,
     );
   }
 }
