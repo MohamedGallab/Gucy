@@ -129,19 +129,19 @@ class _CreatePostPageState extends State<CreatePostPage> {
     return PopScope(
       onPopInvoked: (e) async {
         switch (widget.type) {
-          case "confession":
+          case "Confession":
             analyticsProvider.changeAction(
                 "Viewing Confessions", userProvider.user!.uid);
             break;
-          case "event":
+          case "Event":
             analyticsProvider.changeAction(
                 "Viewing Events", userProvider.user!.uid);
             break;
-          case "question":
+          case "Question":
             analyticsProvider.changeAction(
                 "Viewing Questions", userProvider.user!.uid);
             break;
-          case "lost and found":
+          case "LostAndFound":
             analyticsProvider.changeAction(
                 "Viewing Lost and Found", userProvider.user!.uid);
             break;

@@ -9,7 +9,6 @@ class Review {
     required this.userId,
     required this.userName,
     required this.image,
-    //required this.image,
     required this.rating,
     required this.body,
   });

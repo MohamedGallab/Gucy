@@ -128,6 +128,7 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+
   Future<void> sendVerification(String email, String password) async {
     FirebaseApp app = await Firebase.initializeApp(
         name: 'Secondary', options: Firebase.app().options);
@@ -142,6 +143,16 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print(e);
+
+  Future<String> removeToken() async {
+    try {
+      await db.collection('users').doc(_user?.uid).update(
+        {'token': ""},
+      );
+      return "success";
+    } on FirebaseException catch (e) {
+      return e.code;
+
     }
   }
 

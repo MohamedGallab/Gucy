@@ -7,12 +7,12 @@ import 'package:url_launcher/url_launcher.dart';
 class Contact {
   final String name;
   final String phoneNumber;
-  final bool isEmergency;
+  //final bool isEmergency;
 
   Contact({
     required this.name,
     required this.phoneNumber,
-    required this.isEmergency,
+    //required this.isEmergency,
   });
 }
 
@@ -47,6 +47,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
   Future<void> loadUsers() async {
     List<Contacts> tempUsers = await getUsers();
+    print("LoadUsers");
     setState(() {
       contactsList = tempUsers;
       filteredList = contactsList;
@@ -98,107 +99,26 @@ class _ContactsPageState extends State<ContactsPage> {
               ),
             ),
             Expanded(
-              child: loading
-                  ? Center(
-                      child:
-                          CircularProgressIndicator(), // Show loading indicator
-                    )
-                  : Container(
-                      child: filteredList.isNotEmpty
-                          ? ListView.builder(
-                              itemCount: filteredList.length,
-                              itemBuilder: (context, index) {
-                                return contactComponent(
-                                    contact: filteredList[index]);
-                              },
-                            )
-                          : Center(
-                              child: Text(
-                                "No contacts found",
-                              ),
-                            ),
-                    ),
+              child: Container(
+                child: filteredList.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: filteredList.length,
+                        itemBuilder: (context, index) {
+                          return contactComponent(contact: filteredList[index]);
+                        },
+                      )
+                    : Center(
+                        child: Text(
+                          "No contacts found",
+                        ),
+                      ),
+              ),
             ),
           ],
         ));
   }
 
   Widget contactComponent({required Contacts contact}) {
-    // return GestureDetector(
-    //   onTap: () {
-    //     print("Contact clicked: ${contact.name}");
-    //     // Add code here to perform actions when tapped
-    //   },
-    //   child:
-    //   return Container(
-    //     margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    //     padding: EdgeInsets.all(10),
-    //     decoration: BoxDecoration(
-    //       borderRadius: BorderRadius.circular(10),
-    //       //border: Border.all(color: Colors.grey),
-    //     ),
-    //     child: Material(
-    //       //color: Colors.transparent, // Required for tap effect
-    //       child: InkWell(
-    //         onTap: () async {
-    //       if (contact.isEmergency) {
-    //       try {
-    //         await FlutterPhoneDirectCaller.callNumber(contact.phoneNumber);
-    //       } catch (e) {
-    //         print('Error calling phone number: $e');
-    //         // Handle the error as needed
-    //       }
-    //     } else {
-    //       // Handle normal contact action here (e.g., open dialer)
-    //       // You can implement your desired action for normal contacts here
-    //        try {
-    //         String temp =contact.phoneNumber;
-    //         Uri phoneno = Uri.parse('tel:$temp');
-    //         await launchUrl(phoneno);
-    //       } catch (e) {
-    //         print('Error calling phone number: $e');
-    //         // Handle the error as needed
-    //       }
-    //     }
-    //         },
-    //         borderRadius: BorderRadius.circular(10),
-    //         child: Row(
-    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //           children: [
-    //             Column(
-    //               crossAxisAlignment: CrossAxisAlignment.start,
-    //               children: [
-    //                 Text(
-    //                   contact.name,
-    //                   style: TextStyle(
-    //                    // color: Colors.white,
-    //                     fontWeight: FontWeight.bold,
-    //                   ),
-    //                 ),
-    //                 SizedBox(height: 5),
-    //                  Text(
-    //                     contact.isEmergency ? 'Emergency contact' : 'Normal contact',
-    //                     style: TextStyle(
-    //                       color: contact.isEmergency ? Colors.red : Colors.green,
-    //                       fontSize: 12,
-    //                     ),
-
-    //                 ),
-    //               ],
-    //             ),
-    //             SizedBox(width: 10),
-    //             Text(
-    //               contact.phoneNumber,
-    //               style: TextStyle(
-    //                 //color: Colors.grey,
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //   // ),
-    // );
     return Container(
         //margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         //padding: EdgeInsets.all(10),
@@ -211,25 +131,12 @@ class _ContactsPageState extends State<ContactsPage> {
             //color: Colors.transparent, // Required for tap effect
             child: InkWell(
               onTap: () async {
-                if (contact.isEmergency) {
-                  try {
-                    await FlutterPhoneDirectCaller.callNumber(
-                        contact.phoneNumber);
-                  } catch (e) {
-                    print('Error calling phone number: $e');
-                    // Handle the error as needed
-                  }
-                } else {
-                  // Handle normal contact action here (e.g., open dialer)
-                  // You can implement your desired action for normal contacts here
-                  try {
-                    String temp = contact.phoneNumber;
-                    Uri phoneno = Uri.parse('tel:$temp');
-                    await launchUrl(phoneno);
-                  } catch (e) {
-                    print('Error calling phone number: $e');
-                    // Handle the error as needed
-                  }
+                try {
+                  await FlutterPhoneDirectCaller.callNumber(
+                      contact.phoneNumber);
+                } catch (e) {
+                  print('Error calling phone number: $e');
+                  // Handle the error as needed
                 }
               },
               borderRadius: BorderRadius.circular(10),
@@ -252,14 +159,10 @@ class _ContactsPageState extends State<ContactsPage> {
                           ),
                           SizedBox(height: 2),
                           Text(
-                            contact.isEmergency
-                                ? 'Emergency contact'
-                                : 'Normal contact',
+                            'Emergency contact',
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                color: contact.isEmergency
-                                    ? Color.fromARGB(255, 183, 32, 21)
-                                    : Color.fromARGB(255, 6, 145, 64)),
+                                color: Color.fromARGB(255, 183, 32, 21)),
                           ),
                           Text(
                             contact.phoneNumber,

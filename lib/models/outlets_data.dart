@@ -13,12 +13,13 @@ class Review {
     required this.body,
   });
 
-  Map<String, dynamic> toJson() =>
-      {'userId': userId, 
-      'userName': userName, 
-      'image': image, 
-      'rating': rating,
-      'body': body};
+  Map<String, dynamic> toJson() => {
+        'userId': userId,
+        'userName': userName,
+        'image': image,
+        'rating': rating,
+        'body': body
+      };
 
   static Review fromJson(Map<String, dynamic> json) => Review(
         userId: json['userId'],
@@ -34,16 +35,17 @@ class Outlet {
   final String image;
   final String desc;
   final String name;
-  
+
   final List<Review> reviews;
   final String location;
-  
+  final String number;
   // Calculate average rating property
   double get rating {
     if (reviews.isEmpty) {
       return 3.0; // Default value when there are no reviews
     } else {
-      double totalRating = reviews.fold(0.0, (sum, review) => sum + review.rating);
+      double totalRating =
+          reviews.fold(0.0, (sum, review) => sum + review.rating);
       return totalRating / reviews.length;
     }
   }
@@ -55,21 +57,22 @@ class Outlet {
     required this.name,
     required this.reviews,
     required this.location,
+    required this.number,
   });
 
   Map<String, dynamic> toJson() => {
-        'id':id,
+        'id': id,
         'image': image,
         'desc': desc,
         'name': name,
-        
         'reviews': reviews.map((review) => review.toJson()).toList(),
         'location': location,
         'rating': rating, // Include the average rating in toJson()
+        'number':number
       };
 
   static Outlet fromJson(Map<String, dynamic> json) => Outlet(
-        id:json['id'],
+        id: json['id'],
         image: json['image'],
         desc: json['desc'],
         name: json['name'],
@@ -77,6 +80,7 @@ class Outlet {
             .map((reviewJson) => Review.fromJson(reviewJson))
             .toList(),
         location: json['location'],
+        number: json['number']
       );
 }
 
