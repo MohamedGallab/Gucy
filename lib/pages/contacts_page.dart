@@ -39,9 +39,9 @@ class _ContactsPageState extends State<ContactsPage> {
   void initState() {
     super.initState();
     loadUsers();
-    // setState(() {
-    //   //loading = false;
-    // });
+    setState(() {
+      //loading = false;
+    });
   }
 
   Future<void> loadUsers() async {
@@ -98,20 +98,26 @@ class _ContactsPageState extends State<ContactsPage> {
               ),
             ),
             Expanded(
-              child: Container(
-                child: filteredList.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: filteredList.length,
-                        itemBuilder: (context, index) {
-                          return contactComponent(contact: filteredList[index]);
-                        },
-                      )
-                    : Center(
-                        child: Text(
-                          "No contacts found",
-                        ),
-                      ),
-              ),
+              child: loading
+                  ? Center(
+                      child:
+                          CircularProgressIndicator(), // Show loading indicator
+                    )
+                  : Container(
+                      child: filteredList.isNotEmpty
+                          ? ListView.builder(
+                              itemCount: filteredList.length,
+                              itemBuilder: (context, index) {
+                                return contactComponent(
+                                    contact: filteredList[index]);
+                              },
+                            )
+                          : Center(
+                              child: Text(
+                                "No contacts found",
+                              ),
+                            ),
+                    ),
             ),
           ],
         ));

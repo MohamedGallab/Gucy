@@ -209,7 +209,11 @@ class _StaffPageState extends State<StaffPage> {
           ),
         ),
         Expanded(
-          child: Container(
+           child: loading
+      ? Center(
+          child: CircularProgressIndicator(), // Show loading indicator
+        )
+      : Container(
             //color: Colors.grey.shade900,
             child: filteredList.isNotEmpty
                 ? ListView.builder(
