@@ -1,5 +1,6 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:gucy/main.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:restart_app/restart_app.dart';
@@ -116,6 +117,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
               Provider.of<UserProvider>(context, listen: false)
                   .saveUserPreferences(
                       isDarkMode: isDark, chosenColor: dialogPickerColor);
+              RestartWidget.restartApp(context);
             },
           )
         ],

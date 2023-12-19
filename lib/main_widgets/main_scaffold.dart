@@ -55,7 +55,7 @@ class _MainScaffoldState extends State<MainScaffold>
   }
 
   Future<void> _requestPermission(BuildContext context) async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
     if (userProvider.user?.eventPermission == 'None') {
       userProvider.user?.eventPermission = 'requested';
       showDialog(
@@ -95,7 +95,7 @@ class _MainScaffoldState extends State<MainScaffold>
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
     final analyticsProvider =
         Provider.of<AnalyticsProvider>(context, listen: true);
     return Scaffold(
