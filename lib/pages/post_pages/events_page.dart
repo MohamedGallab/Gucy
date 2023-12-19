@@ -8,7 +8,6 @@ import '../../widgets/post.dart';
 
 class EventsPage extends StatefulWidget {
   final String sortingCriteria;
-
   const EventsPage({super.key, required this.sortingCriteria});
 
   @override
@@ -19,7 +18,8 @@ class _EventsPageState extends State<EventsPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PostsProvider>(context, listen: false).loadEvents(sortingMetric: widget.sortingCriteria);
+    Provider.of<PostsProvider>(context, listen: false)
+        .loadEvents(sortingMetric: widget.sortingCriteria);
   }
 
   @override
@@ -30,9 +30,11 @@ class _EventsPageState extends State<EventsPage> {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollInfo) {
         if (scrollInfo is ScrollStartNotification) {
-          analyticsProvider.setScrolling(true, "Home", userProvider.user!.uid);
+          analyticsProvider.setScrolling(
+              true, "Events", userProvider.user!.uid);
         } else if (scrollInfo is ScrollEndNotification) {
-          analyticsProvider.setScrolling(false, "Home", userProvider.user!.uid);
+          analyticsProvider.setScrolling(
+              false, "Events", userProvider.user!.uid);
         }
         return false;
       },

@@ -23,7 +23,7 @@ class PostsProvider with ChangeNotifier {
   List<PostData> get events => _events;
   List<PostData> get myPosts => _myPosts;
 
-  void loadPosts(String sortingMetric) {
+  void loadPosts({String sortingMetric = "createdAt"}) {
     FirebaseFirestore.instance.collection('posts').snapshots().listen(
       (QuerySnapshot snapshot) {
         _posts = snapshot.docs.map((doc) {

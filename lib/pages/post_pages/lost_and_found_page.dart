@@ -9,7 +9,7 @@ import '../../widgets/post.dart';
 class LostAndFoundPage extends StatefulWidget {
   final String sortingCriteria;
 
-  const LostAndFoundPage({super.key,  required this.sortingCriteria});
+  const LostAndFoundPage({super.key, required this.sortingCriteria});
 
   @override
   State<LostAndFoundPage> createState() => _LostAndFoundPageState();
@@ -19,7 +19,8 @@ class _LostAndFoundPageState extends State<LostAndFoundPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PostsProvider>(context, listen: false).loadLostAndFound(sortingMetric: widget.sortingCriteria);
+    Provider.of<PostsProvider>(context, listen: false)
+        .loadLostAndFound(sortingMetric: widget.sortingCriteria);
   }
 
   @override

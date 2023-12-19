@@ -7,7 +7,9 @@ import '../../providers/posts_provider.dart';
 import '../../widgets/post.dart';
 
 class ConfessionsPage extends StatefulWidget {
-  const ConfessionsPage({super.key, required String sortingCriteria});
+  final String sortingCriteria;
+
+  const ConfessionsPage({super.key, required this.sortingCriteria});
 
   @override
   State<ConfessionsPage> createState() => _ConfessionsPageState();

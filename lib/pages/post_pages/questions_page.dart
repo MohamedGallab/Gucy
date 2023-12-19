@@ -8,8 +8,8 @@ import '../../widgets/post.dart';
 
 class QuestionsPage extends StatefulWidget {
   final String sortingCriteria;
-  
-  const QuestionsPage({super.key,  required this.sortingCriteria});
+
+  const QuestionsPage({super.key, required this.sortingCriteria});
 
   @override
   State<QuestionsPage> createState() => _QuestionsPageState();
@@ -19,7 +19,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PostsProvider>(context, listen: false).loadQuestions(sortingMetric: widget.sortingCriteria);
+    Provider.of<PostsProvider>(context, listen: false)
+        .loadQuestions(sortingMetric: widget.sortingCriteria);
   }
 
   @override
@@ -30,9 +31,11 @@ class _QuestionsPageState extends State<QuestionsPage> {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollInfo) {
         if (scrollInfo is ScrollStartNotification) {
-          analyticsProvider.setScrolling(true, "Home", userProvider.user!.uid);
+          analyticsProvider.setScrolling(
+              true, "Questions", userProvider.user!.uid);
         } else if (scrollInfo is ScrollEndNotification) {
-          analyticsProvider.setScrolling(false, "Home", userProvider.user!.uid);
+          analyticsProvider.setScrolling(
+              false, "Questions", userProvider.user!.uid);
         }
         return false;
       },
