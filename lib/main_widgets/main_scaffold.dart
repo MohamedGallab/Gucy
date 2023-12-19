@@ -139,31 +139,31 @@ class _MainScaffoldState extends State<MainScaffold>
       ),
       appBar: AppBar(
           title: const Text('Gucy'),
-          actions: [
-            if (_currentPageIndex == 0)
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  setState(() {
-                    _sortingCriteria = value;
-                  });
-                  print('Selected sorting option: $value');
-                },
-                itemBuilder: (BuildContext context) => [
-                  PopupMenuItem<String>(
-                    value: 'createdAt',
-                    child: const Text('Sort by Date'),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'likes',
-                    child: const Text('Sort by Likes'),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'score',
-                    child: const Text('Sort by Guciness'),
-                  ),
-                ],
-              ),
-          ],
+          // actions: [
+          //   if (_currentPageIndex == 0)
+          //     PopupMenuButton<String>(
+          //       onSelected: (value) {
+          //         setState(() {
+          //           _sortingCriteria = value;
+          //         });
+          //         print('Selected sorting option: $value');
+          //       },
+          //       itemBuilder: (BuildContext context) => [
+          //         PopupMenuItem<String>(
+          //           value: 'createdAt',
+          //           child: const Text('Sort by Date'),
+          //         ),
+          //         PopupMenuItem<String>(
+          //           value: 'likes',
+          //           child: const Text('Sort by Likes'),
+          //         ),
+          //         PopupMenuItem<String>(
+          //           value: 'score',
+          //           child: const Text('Sort by Guciness'),
+          //         ),
+          //       ],
+          //     ),
+          // ],
           bottom: _currentPageIndex == 0
               ? TabBar(
                   tabAlignment: TabAlignment.center,

@@ -294,7 +294,7 @@ class _LoginPageState extends State<LoginPage>
                   return SlideTransition(
                     position: Tween<Offset>(
                       begin: Offset(0, isAnimating ? 0 : 0),
-                      end: Offset(0, isAnimating ? -1.695 : 0),
+                      end: Offset(0, isAnimating ? -1.1 : 0),
                     ).animate(CurvedAnimation(
                       curve: Curves.easeInOut,
                       parent: _animationController,
@@ -305,11 +305,13 @@ class _LoginPageState extends State<LoginPage>
                     ),
                   );
                 },
-                child: Opacity(
-                  opacity: 1, // Fade effect based on animation value
-                  child: Image.asset('assets/icon/icon.png', height: 250),
+                child:CircleAvatar(
+                  backgroundImage: AssetImage('assets/icon/icon.png'),
+                  minRadius: 170,
                 ),
+                
               ),
+              SizedBox(height: 20),
               if (!isAnimating)
                 AnimatedOpacity(
                   opacity: _animationController.value,
