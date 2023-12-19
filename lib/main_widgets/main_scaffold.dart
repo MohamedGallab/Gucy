@@ -24,15 +24,28 @@ class _MainScaffoldState extends State<MainScaffold>
   int _currentInnerPageIndex = 0;
   var tabController;
 
+  // Add the listener
   @override
   void initState() {
     super.initState();
 
     tabController = TabController(vsync: this, length: tabBars[0].length);
+
+    // Add the listener
+    tabController.addListener(() {
+      if (!tabController.indexIsChanging) {
+        // The tab index change is complete
+        setState(() {
+          _currentInnerPageIndex = tabController.index;
+          // Update analytics or any other necessary state here
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
+    tabController.removeListener(() {}); // Remove the listener
     tabController.dispose();
     super.dispose();
   }

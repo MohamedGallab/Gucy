@@ -1,6 +1,7 @@
 // user_provider.dart
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,12 +35,12 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<String> registerUser(String email, String password) async {
+    FirebaseApp app = await Firebase.initializeApp(
+        name: 'Secondary', options: Firebase.app().options);
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential userCredential = await FirebaseAuth.instanceFor(app: app)
+          .createUserWithEmailAndPassword(email: email, password: password);
+
       var user = {
         "uid": userCredential.user!.uid,
         "name": convertEmailToName(email),
@@ -55,9 +56,8 @@ class UserProvider extends ChangeNotifier {
         "uid": userCredential.user!.uid,
       };
       await db.collection("analytics").doc().set(analytics);
-      _email = userCredential.user!.email!;
 
-      _user = UserData.fromJson(user);
+      await userCredential.user!.sendEmailVerification();
       notifyListeners();
 
       return "success";
@@ -67,12 +67,20 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<String> loginUser(String email, String password) async {
+    FirebaseApp app = await Firebase.initializeApp(
+        name: 'Secondary', options: Firebase.app().options);
     try {
       UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+          await FirebaseAuth.instanceFor(app: app).signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      if (userCredential.user!.emailVerified == false) {
+        return "email-not-verified";
+      } else {
+        userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+      }
       FirebaseFirestore.instance
           .collection('users')
           .doc(userCredential.user!.uid)
@@ -117,6 +125,23 @@ class UserProvider extends ChangeNotifier {
       return "success";
     } on FirebaseException catch (e) {
       return e.code;
+    }
+  }
+
+  Future<void> sendVerification(String email, String password) async {
+    FirebaseApp app = await Firebase.initializeApp(
+        name: 'Secondary', options: Firebase.app().options);
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instanceFor(app: app).signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      await userCredential.user!.sendEmailVerification();
+      notifyListeners();
+    } catch (e) {
+      print(e);
     }
   }
 
