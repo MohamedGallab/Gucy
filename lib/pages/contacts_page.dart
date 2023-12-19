@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:gucy/models/contacts_data.dart';
 import 'package:gucy/pages/contact_service.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Contact {
   final String name;

@@ -49,9 +49,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   Future<void> handleInitialUrl() async {
     // Uri.base contains the initial URL if the app was launched via a deep link
     final initialUri = Uri.base;
-    if (initialUri != null) {
-      navigateBasedOnUrl(initialUri);
-    }
+    navigateBasedOnUrl(initialUri);
   }
 
   void navigateBasedOnUrl(Uri uri) {

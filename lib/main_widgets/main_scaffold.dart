@@ -13,7 +13,6 @@ import '../pages/post_pages/lost_and_found_page.dart';
 import '../pages/post_pages/questions_page.dart';
 import '../pages/staff_page.dart';
 import 'nav_bar.dart';
-import 'tab_bar_views.dart';
 import 'tab_bars.dart';
 
 class MainScaffold extends StatefulWidget {
