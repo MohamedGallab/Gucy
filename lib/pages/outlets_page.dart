@@ -102,6 +102,7 @@ class _OutletPageState extends State<OutletPage> {
           name: outletData['name'],
           reviews: reviews,
           location: outletData['location'],
+          number:outletData['number']
         );
         print(outlet.name);
         allOutlets.add(outlet);
@@ -122,6 +123,7 @@ class _OutletPageState extends State<OutletPage> {
       filteredList = outletsList.where((outlet) {
         return outlet.name.toLowerCase().contains(search.toLowerCase()) ||
             outlet.desc.toLowerCase().contains(search.toLowerCase()) ||
+            outlet.number.toLowerCase().contains(search.toLowerCase())||
             outlet.location.toLowerCase().contains(search.toLowerCase());
       }).toList();
     });
@@ -185,86 +187,6 @@ class _OutletPageState extends State<OutletPage> {
   }
 
   Widget outletComponent({required Outlet outlet}) {
-    // return GestureDetector(
-    //   onTap: () {
-        
-    //     // Add code here to perform actions when tapped
-    //   },
-    //   child:
-      // return Container(
-      //   margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      //   padding: EdgeInsets.all(10),
-      //   decoration: BoxDecoration(
-      //     borderRadius: BorderRadius.circular(10),
-      //     border: Border.all(color: Colors.grey),
-      //   ),
-      //   child: Material(
-      //     color: Colors.transparent, // Required for tap effect
-      //     child: InkWell(
-      //       onTap: () {
-      //         print("Outlet clicked: ${outlet.name}");
-      //         Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => OutletProfilePage(outlet: outlet),
-      //     ),
-      //   );
-      //         // Add code here to perform actions when tapped
-      //       },
-      //       borderRadius: BorderRadius.circular(10),
-      //       child: Row(
-      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //         children: [
-      //           Row(
-      //             children: [
-      //               Container(
-      //                 width: 60,
-      //                 height: 60,
-      //                 child: ClipRRect(
-      //                   borderRadius: BorderRadius.circular(50),
-      //                   child: Image.network(outlet.image),
-      //                 ),
-      //               ),
-      //               SizedBox(width: 10),
-      //               Column(
-      //                 crossAxisAlignment: CrossAxisAlignment.start,
-      //                 children: [
-      //                   Text(
-      //                     outlet.name,
-      //                     style: TextStyle(
-      //                       color: Colors.white,
-      //                       fontWeight: FontWeight.w500,
-      //                     ),
-      //                   ),
-      //                   SizedBox(height: 5),
-      //                   _buildRatingStars(outlet.rating),
-      //                 ],
-      //               ),
-      //             ],
-      //           ),
-      //           Expanded(
-      //             child: Row(
-      //               mainAxisAlignment: MainAxisAlignment.end,
-      //               children: [
-      //                 Icon(
-      //                   Icons.store,
-      //                   color:Theme.of(context).colorScheme.primary,
-      //                   size: 20,
-      //                 ),
-      //                 SizedBox(width: 5),
-      //                 Text(
-      //                   outlet.location,
-      //                   textAlign: TextAlign.right,
-      //                   //style: TextStyle(color: Colors.white),
-      //                 ),
-      //               ],
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // );
       return Container(
         //margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         //padding: EdgeInsets.all(10),

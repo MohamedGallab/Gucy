@@ -27,17 +27,30 @@ class _MainScaffoldState extends State<MainScaffold>
     with TickerProviderStateMixin {
   int _currentPageIndex = 0;
   int _currentInnerPageIndex = 0;
-  var tabController;
+  late TabController tabController;
 
+  // Add the listener
   @override
   void initState() {
     super.initState();
 
     tabController = TabController(vsync: this, length: tabBars[0].length);
+
+    // Add the listener
+    tabController.addListener(() {
+      if (!tabController.indexIsChanging) {
+        // The tab index change is complete
+        setState(() {
+          _currentInnerPageIndex = tabController.index;
+          // Update analytics or any other necessary state here
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
+    tabController.removeListener(() {}); // Remove the listener
     tabController.dispose();
     super.dispose();
   }
@@ -306,7 +319,7 @@ class _MainScaffoldState extends State<MainScaffold>
                         "Adding Lost and Found", userProvider.user!.uid);
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) =>
-                            CreatePostPage("Lost And Found")));
+                            CreatePostPage("LostAndFound")));
                   } else if (_currentPageIndex == 0 &&
                       _currentInnerPageIndex == 4) {
                     analyticsProvider.changeAction(
