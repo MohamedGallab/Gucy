@@ -2,6 +2,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:restart_app/restart_app.dart';
 
 class ColorPickerPage extends StatefulWidget {
   const ColorPickerPage({super.key, required this.themeMode});
@@ -72,7 +73,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
           ListTile(
             title: const Text('Click this color to modify it in a dialog. '
                 'The color is modified while dialog is open, but returns '
-                'to previous value if dialog is cancelled'),
+                'to previous value if dialog is cancelled. Note that you need to restart the app for the changes to take effect.'),
             subtitle: Text(
               // ignore: lines_longer_than_80_chars
               '${ColorTools.materialNameAndCode(dialogPickerColor, colorSwatchNameMap: colorsNameMap)} '
@@ -104,7 +105,8 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
           // Theme mode toggle
           SwitchListTile(
             title: const Text('Turn ON for dark mode'),
-            subtitle: const Text('Turn OFF for light mode'),
+            subtitle: const Text(
+                'Turn OFF for light mode. Note that you need to restart the app for the changes to take effect. '),
             value: isDark,
             onChanged: (bool value) {
               setState(() {
