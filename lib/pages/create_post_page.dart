@@ -287,7 +287,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                               },
                               icon: const Icon(Icons.close)),
                         const SizedBox(height: 10),
-                        if (widget.type != "confession")
+                        if (widget.type != "Confession")
                           OutlinedButton(
                             onPressed: () {
                               showImageOptions();
