@@ -43,7 +43,8 @@ class UserProvider extends ChangeNotifier {
 
     bool isDarkMode = prefs.getBool('isDarkMode') ?? false;
     brightness = isDarkMode ? Brightness.dark : Brightness.light;
-    int colorValue = prefs.getInt('chosenColor') ?? Color.fromARGB(255, 17, 186, 76).value;
+    int colorValue =
+        prefs.getInt('chosenColor') ?? Color.fromARGB(255, 17, 186, 76).value;
     chosenColor = Color(colorValue);
 
     notifyListeners();
@@ -158,7 +159,6 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-
   Future<void> sendVerification(String email, String password) async {
     FirebaseApp app = await Firebase.initializeApp(
         name: 'Secondary', options: Firebase.app().options);
@@ -173,6 +173,8 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print(e);
+    }
+  }
 
   Future<String> removeToken() async {
     try {
@@ -182,7 +184,6 @@ class UserProvider extends ChangeNotifier {
       return "success";
     } on FirebaseException catch (e) {
       return e.code;
-
     }
   }
 

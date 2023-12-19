@@ -99,281 +99,263 @@ class _MainScaffoldState extends State<MainScaffold>
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final analyticsProvider =
         Provider.of<AnalyticsProvider>(context, listen: true);
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollInfo) {
-        if (scrollInfo is ScrollStartNotification) {
-          analyticsProvider.setScrolling(true,
-              tabBars[0][_currentInnerPageIndex].text!, userProvider.user!.uid);
-        } else if (scrollInfo is ScrollEndNotification) {
-          analyticsProvider.setScrolling(false,
-              tabBars[0][_currentInnerPageIndex].text!, userProvider.user!.uid);
-        }
-        return false;
-      },
-      child: Scaffold(
-        onDrawerChanged: (isOpened) {
-          if (isOpened) {
-            setState(() {
-              if ((_currentPageIndex == 0 && _currentInnerPageIndex == 0)) {
-                actionBeforeDrawer = "Viewing Home";
-                pageBeforeDrawer = 'Home';
-              } else if ((_currentPageIndex == 0 &&
-                  _currentInnerPageIndex == 1)) {
-                actionBeforeDrawer = "Viewing Confessions";
-                pageBeforeDrawer = 'Confessions';
-              } else if (_currentPageIndex == 0 &&
-                  _currentInnerPageIndex == 2) {
-                actionBeforeDrawer = "Viewing Events";
-                pageBeforeDrawer = 'Events';
-              } else if (_currentPageIndex == 0 &&
-                  _currentInnerPageIndex == 3) {
-                actionBeforeDrawer = "Viewing Lost and Found";
-                pageBeforeDrawer = 'Lost and Found';
-              } else if (_currentPageIndex == 0 &&
-                  _currentInnerPageIndex == 4) {
-                actionBeforeDrawer = "Viewing Questions";
-                pageBeforeDrawer = 'Questions';
-              } else {
-                actionBeforeDrawer = "Viewing Other";
-                pageBeforeDrawer = 'Other';
-              }
-            });
-
-            analyticsProvider.changeAction(
-                "Viewing Profile", userProvider.user!.uid);
-            analyticsProvider.changePage('Profile', userProvider.user!.uid);
-          } else {
-            analyticsProvider.changeAction(
-                actionBeforeDrawer, userProvider.user!.uid);
-            analyticsProvider.changePage(
-                pageBeforeDrawer, userProvider.user!.uid);
-          }
-        },
-        drawer: const Drawer(
-          child: MainDrawer(),
-        ),
-        appBar: AppBar(
-            title: const Text('Gucy'),
-            actions: [
-              if (_currentPageIndex == 0)
-                PopupMenuButton<String>(
-                  onSelected: (value) {
-                    setState(() {
-                      _sortingCriteria = value;
-                    });
-                    print('Selected sorting option: $value');
-                  },
-                  itemBuilder: (BuildContext context) => [
-                    PopupMenuItem<String>(
-                      value: 'date',
-                      child: const Text('Sort by Date'),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'likes',
-                      child: const Text('Sort by Likes'),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'comments',
-                      child: const Text('Sort by Comments'),
-                    ),
-                  ],
-                ),
-            ],
-            bottom: _currentPageIndex == 0
-                ? TabBar(
-                    isScrollable: true,
-                    controller: tabController,
-                    tabs: tabBars[_currentPageIndex],
-                    onTap: (value) => setState(() {
-                      _currentInnerPageIndex = value;
-                      if ((_currentPageIndex == 0 &&
-                          _currentInnerPageIndex == 0)) {
-                        analyticsProvider.changeAction(
-                            "Viewing Home", userProvider.user!.uid);
-                        analyticsProvider.changePage(
-                            'Home', userProvider.user!.uid);
-                      } else if ((_currentPageIndex == 0 &&
-                          _currentInnerPageIndex == 1)) {
-                        analyticsProvider.changeAction(
-                            "Viewing Confessions", userProvider.user!.uid);
-                        analyticsProvider.changePage(
-                            'Confessions', userProvider.user!.uid);
-                      } else if (_currentPageIndex == 0 &&
-                          _currentInnerPageIndex == 2) {
-                        analyticsProvider.changeAction(
-                            "Viewing Events", userProvider.user!.uid);
-                        analyticsProvider.changePage(
-                            'Events', userProvider.user!.uid);
-                      } else if (_currentPageIndex == 0 &&
-                          _currentInnerPageIndex == 3) {
-                        analyticsProvider.changeAction(
-                            "Viewing Lost and Found", userProvider.user!.uid);
-                        analyticsProvider.changePage(
-                            'Lost and Found', userProvider.user!.uid);
-                      } else if (_currentPageIndex == 0 &&
-                          _currentInnerPageIndex == 4) {
-                        analyticsProvider.changeAction(
-                            "Viewing Questions", userProvider.user!.uid);
-                        analyticsProvider.changePage(
-                            'Questions', userProvider.user!.uid);
-                      } else {
-                        analyticsProvider.changeAction(
-                            "Viewing Other", userProvider.user!.uid);
-                        analyticsProvider.changePage(
-                            'Other', userProvider.user!.uid);
-                      }
-                    }),
-                  )
-                : null),
-        body: [
-          TabBarView(
-            controller: tabController,
-            children: [
-              HomePage(
-                sortingCriteria: _sortingCriteria,
-              ),
-              ConfessionsPage(
-                sortingCriteria: _sortingCriteria,
-              ),
-              EventsPage(
-                sortingCriteria: _sortingCriteria,
-              ),
-              LostAndFoundPage(
-                sortingCriteria: _sortingCriteria,
-              ),
-              QuestionsPage(
-                sortingCriteria: _sortingCriteria,
-              ),
-            ],
-          ),
-          StaffPage(),
-          OutletPage(),
-        ][_currentPageIndex],
-        floatingActionButton: ((_currentPageIndex == 0 &&
-                    _currentInnerPageIndex != 0) ||
-                (_currentPageIndex == 2))
-            ? FloatingActionButton(
-                onPressed: () async {
-                  if ((_currentPageIndex == 0 && _currentInnerPageIndex == 1)) {
-                    analyticsProvider.changeAction(
-                        "Adding Confession", userProvider.user!.uid);
-
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CreatePostPage("Confession")));
-                  } else if (_currentPageIndex == 0 &&
-                      _currentInnerPageIndex == 2) {
-                    if (userProvider.user?.eventPermission != "Home" &&
-                        userProvider.user?.eventPermission != "accepted") {
-                      await showDialog<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Permession Required'),
-                            content: Text(userProvider.user?.eventPermission ==
-                                    "None"
-                                ? 'You do not have permission to post events!'
-                                : userProvider.user?.eventPermission ==
-                                        "requested"
-                                    ? 'Permission already requested and is currently pending.'
-                                    : 'Sorry your recent request has been rejected by the admin. If you have any questions or concerns, please contact our support team'),
-                            actions: <Widget>[
-                              userProvider.user?.eventPermission == "None"
-                                  ? TextButton(
-                                      onPressed: () async {
-                                        try {
-                                          await _requestPermission(context);
-                                        } catch (error) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: const Text(
-                                                'Failed to post. Please try again later.'),
-                                            backgroundColor: Theme.of(context)
-                                                .colorScheme
-                                                .error,
-                                          ));
-                                          Navigator.pop(context);
-                                        }
-                                      },
-                                      child: const Text('Request Permission'),
-                                    )
-                                  : Container(),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    } else {
-                      analyticsProvider.changeAction(
-                          "Adding Event", userProvider.user!.uid);
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CreatePostPage("Event")));
-                    }
-                  } else if (_currentPageIndex == 0 &&
-                      _currentInnerPageIndex == 3) {
-                    analyticsProvider.changeAction(
-                        "Adding Lost and Found", userProvider.user!.uid);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            CreatePostPage("LostAndFound")));
-                  } else if (_currentPageIndex == 0 &&
-                      _currentInnerPageIndex == 4) {
-                    analyticsProvider.changeAction(
-                        "Adding Question", userProvider.user!.uid);
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CreatePostPage("Question")));
-                  } else if (_currentPageIndex == 2) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ContactsPage()));
-                  }
-                },
-                child: _currentPageIndex == 2
-                    ? const Icon(Icons.call)
-                    : const Icon(Icons.edit),
-              )
-            : null,
-        bottomNavigationBar: NavBar(
-          currentPageIndex: _currentPageIndex,
-          onDestinationSelected: (int index) async {
-            setState(() {
-              _currentPageIndex = index;
-              _currentInnerPageIndex = tabController.index;
-            });
-
+    return Scaffold(
+      onDrawerChanged: (isOpened) {
+        if (isOpened) {
+          setState(() {
             if ((_currentPageIndex == 0 && _currentInnerPageIndex == 0)) {
-              analyticsProvider.changeAction(
-                  "Viewing Home", userProvider.user!.uid);
-              analyticsProvider.changePage('Home', userProvider.user!.uid);
+              actionBeforeDrawer = "Viewing Home";
+              pageBeforeDrawer = 'Home';
             } else if ((_currentPageIndex == 0 &&
                 _currentInnerPageIndex == 1)) {
-              analyticsProvider.changeAction(
-                  "Viewing Confessions", userProvider.user!.uid);
-              analyticsProvider.changePage(
-                  'Confessions', userProvider.user!.uid);
+              actionBeforeDrawer = "Viewing Confessions";
+              pageBeforeDrawer = 'Confessions';
             } else if (_currentPageIndex == 0 && _currentInnerPageIndex == 2) {
-              analyticsProvider.changeAction(
-                  "Viewing Events", userProvider.user!.uid);
-              analyticsProvider.changePage('Events', userProvider.user!.uid);
+              actionBeforeDrawer = "Viewing Events";
+              pageBeforeDrawer = 'Events';
             } else if (_currentPageIndex == 0 && _currentInnerPageIndex == 3) {
-              analyticsProvider.changeAction(
-                  "Viewing Lost and Found", userProvider.user!.uid);
-              analyticsProvider.changePage(
-                  'Lost and Found', userProvider.user!.uid);
+              actionBeforeDrawer = "Viewing Lost and Found";
+              pageBeforeDrawer = 'Lost and Found';
             } else if (_currentPageIndex == 0 && _currentInnerPageIndex == 4) {
-              analyticsProvider.changeAction(
-                  "Viewing Questions", userProvider.user!.uid);
-              analyticsProvider.changePage('Questions', userProvider.user!.uid);
+              actionBeforeDrawer = "Viewing Questions";
+              pageBeforeDrawer = 'Questions';
             } else {
-              analyticsProvider.changeAction(
-                  "Viewing Other", userProvider.user!.uid);
-              analyticsProvider.changePage('Other', userProvider.user!.uid);
+              actionBeforeDrawer = "Viewing Other";
+              pageBeforeDrawer = 'Other';
             }
-          },
+          });
+
+          analyticsProvider.changeAction(
+              "Viewing Profile", userProvider.user!.uid);
+          analyticsProvider.changePage('Profile', userProvider.user!.uid);
+        } else {
+          analyticsProvider.changeAction(
+              actionBeforeDrawer, userProvider.user!.uid);
+          analyticsProvider.changePage(
+              pageBeforeDrawer, userProvider.user!.uid);
+        }
+      },
+      drawer: const Drawer(
+        child: MainDrawer(),
+      ),
+      appBar: AppBar(
+          title: const Text('Gucy'),
+          actions: [
+            if (_currentPageIndex == 0)
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  setState(() {
+                    _sortingCriteria = value;
+                  });
+                  print('Selected sorting option: $value');
+                },
+                itemBuilder: (BuildContext context) => [
+                  PopupMenuItem<String>(
+                    value: 'date',
+                    child: const Text('Sort by Date'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'likes',
+                    child: const Text('Sort by Likes'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'comments',
+                    child: const Text('Sort by Comments'),
+                  ),
+                ],
+              ),
+          ],
+          bottom: _currentPageIndex == 0
+              ? TabBar(
+                  isScrollable: true,
+                  controller: tabController,
+                  tabs: tabBars[_currentPageIndex],
+                  onTap: (value) => setState(() {
+                    _currentInnerPageIndex = value;
+                    if ((_currentPageIndex == 0 &&
+                        _currentInnerPageIndex == 0)) {
+                      analyticsProvider.changeAction(
+                          "Viewing Home", userProvider.user!.uid);
+                      analyticsProvider.changePage(
+                          'Home', userProvider.user!.uid);
+                    } else if ((_currentPageIndex == 0 &&
+                        _currentInnerPageIndex == 1)) {
+                      analyticsProvider.changeAction(
+                          "Viewing Confessions", userProvider.user!.uid);
+                      analyticsProvider.changePage(
+                          'Confessions', userProvider.user!.uid);
+                    } else if (_currentPageIndex == 0 &&
+                        _currentInnerPageIndex == 2) {
+                      analyticsProvider.changeAction(
+                          "Viewing Events", userProvider.user!.uid);
+                      analyticsProvider.changePage(
+                          'Events', userProvider.user!.uid);
+                    } else if (_currentPageIndex == 0 &&
+                        _currentInnerPageIndex == 3) {
+                      analyticsProvider.changeAction(
+                          "Viewing Lost and Found", userProvider.user!.uid);
+                      analyticsProvider.changePage(
+                          'Lost and Found', userProvider.user!.uid);
+                    } else if (_currentPageIndex == 0 &&
+                        _currentInnerPageIndex == 4) {
+                      analyticsProvider.changeAction(
+                          "Viewing Questions", userProvider.user!.uid);
+                      analyticsProvider.changePage(
+                          'Questions', userProvider.user!.uid);
+                    } else {
+                      analyticsProvider.changeAction(
+                          "Viewing Other", userProvider.user!.uid);
+                      analyticsProvider.changePage(
+                          'Other', userProvider.user!.uid);
+                    }
+                  }),
+                )
+              : null),
+      body: [
+        TabBarView(
+          controller: tabController,
+          children: [
+            HomePage(
+              sortingCriteria: _sortingCriteria,
+            ),
+            ConfessionsPage(
+              sortingCriteria: _sortingCriteria,
+            ),
+            EventsPage(
+              sortingCriteria: _sortingCriteria,
+            ),
+            LostAndFoundPage(
+              sortingCriteria: _sortingCriteria,
+            ),
+            QuestionsPage(
+              sortingCriteria: _sortingCriteria,
+            ),
+          ],
         ),
+        StaffPage(),
+        OutletPage(),
+      ][_currentPageIndex],
+      floatingActionButton: ((_currentPageIndex == 0 &&
+                  _currentInnerPageIndex != 0) ||
+              (_currentPageIndex == 2))
+          ? FloatingActionButton(
+              onPressed: () async {
+                if ((_currentPageIndex == 0 && _currentInnerPageIndex == 1)) {
+                  analyticsProvider.changeAction(
+                      "Adding Confession", userProvider.user!.uid);
+
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CreatePostPage("Confession")));
+                } else if (_currentPageIndex == 0 &&
+                    _currentInnerPageIndex == 2) {
+                  if (userProvider.user?.eventPermission != "Home" &&
+                      userProvider.user?.eventPermission != "accepted") {
+                    await showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Permission Required'),
+                          content: Text(userProvider.user?.eventPermission ==
+                                  "None"
+                              ? 'You do not have permission to post events!'
+                              : userProvider.user?.eventPermission ==
+                                      "requested"
+                                  ? 'Permission already requested and is currently pending.'
+                                  : 'Sorry your recent request has been rejected by the admin. If you have any questions or concerns, please contact our support team'),
+                          actions: <Widget>[
+                            userProvider.user?.eventPermission == "None"
+                                ? TextButton(
+                                    onPressed: () async {
+                                      try {
+                                        await _requestPermission(context);
+                                      } catch (error) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: const Text(
+                                              'Failed to post. Please try again later.'),
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .error,
+                                        ));
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    child: const Text('Request Permission'),
+                                  )
+                                : Container(),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    analyticsProvider.changeAction(
+                        "Adding Event", userProvider.user!.uid);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => CreatePostPage("Event")));
+                  }
+                } else if (_currentPageIndex == 0 &&
+                    _currentInnerPageIndex == 3) {
+                  analyticsProvider.changeAction(
+                      "Adding Lost and Found", userProvider.user!.uid);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CreatePostPage("LostAndFound")));
+                } else if (_currentPageIndex == 0 &&
+                    _currentInnerPageIndex == 4) {
+                  analyticsProvider.changeAction(
+                      "Adding Question", userProvider.user!.uid);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CreatePostPage("Question")));
+                } else if (_currentPageIndex == 2) {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => ContactsPage()));
+                }
+              },
+              child: _currentPageIndex == 2
+                  ? const Icon(Icons.call)
+                  : const Icon(Icons.edit),
+            )
+          : null,
+      bottomNavigationBar: NavBar(
+        currentPageIndex: _currentPageIndex,
+        onDestinationSelected: (int index) async {
+          setState(() {
+            _currentPageIndex = index;
+            _currentInnerPageIndex = tabController.index;
+          });
+
+          if ((_currentPageIndex == 0 && _currentInnerPageIndex == 0)) {
+            analyticsProvider.changeAction(
+                "Viewing Home", userProvider.user!.uid);
+            analyticsProvider.changePage('Home', userProvider.user!.uid);
+          } else if ((_currentPageIndex == 0 && _currentInnerPageIndex == 1)) {
+            analyticsProvider.changeAction(
+                "Viewing Confessions", userProvider.user!.uid);
+            analyticsProvider.changePage('Confessions', userProvider.user!.uid);
+          } else if (_currentPageIndex == 0 && _currentInnerPageIndex == 2) {
+            analyticsProvider.changeAction(
+                "Viewing Events", userProvider.user!.uid);
+            analyticsProvider.changePage('Events', userProvider.user!.uid);
+          } else if (_currentPageIndex == 0 && _currentInnerPageIndex == 3) {
+            analyticsProvider.changeAction(
+                "Viewing Lost and Found", userProvider.user!.uid);
+            analyticsProvider.changePage(
+                'Lost and Found', userProvider.user!.uid);
+          } else if (_currentPageIndex == 0 && _currentInnerPageIndex == 4) {
+            analyticsProvider.changeAction(
+                "Viewing Questions", userProvider.user!.uid);
+            analyticsProvider.changePage('Questions', userProvider.user!.uid);
+          } else {
+            analyticsProvider.changeAction(
+                "Viewing Other", userProvider.user!.uid);
+            analyticsProvider.changePage('Other', userProvider.user!.uid);
+          }
+        },
       ),
     );
   }

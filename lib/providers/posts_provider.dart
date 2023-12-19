@@ -24,11 +24,7 @@ class PostsProvider with ChangeNotifier {
   List<PostData> get myPosts => _myPosts;
 
   void loadPosts(String sortingMetric) {
-    FirebaseFirestore.instance
-        .collection('posts')
-        .orderBy(sortingMetric)
-        .snapshots()
-        .listen(
+    FirebaseFirestore.instance.collection('posts').snapshots().listen(
       (QuerySnapshot snapshot) {
         _posts = snapshot.docs.map((doc) {
           Map<String, dynamic> postData = doc.data() as Map<String, dynamic>;
@@ -55,7 +51,6 @@ class PostsProvider with ChangeNotifier {
     FirebaseFirestore.instance
         .collection('posts')
         .where('type', isEqualTo: 'Confession')
-        .orderBy(sortingMetric)
         .snapshots()
         .listen(
       (QuerySnapshot snapshot) {
@@ -78,7 +73,6 @@ class PostsProvider with ChangeNotifier {
     FirebaseFirestore.instance
         .collection('posts')
         .where('type', isEqualTo: 'Question')
-        .orderBy(sortingMetric)
         .snapshots()
         .listen(
       (QuerySnapshot snapshot) {
@@ -101,7 +95,6 @@ class PostsProvider with ChangeNotifier {
     FirebaseFirestore.instance
         .collection('posts')
         .where('type', isEqualTo: 'LostAndFound')
-        .orderBy(sortingMetric)
         .snapshots()
         .listen(
       (QuerySnapshot snapshot) {
@@ -124,7 +117,6 @@ class PostsProvider with ChangeNotifier {
     FirebaseFirestore.instance
         .collection('posts')
         .where('type', isEqualTo: 'Event')
-        .orderBy(sortingMetric)
         .snapshots()
         .listen(
       (QuerySnapshot snapshot) {

@@ -102,7 +102,7 @@ class _PostState extends State<Post> {
     }
 
     return Consumer<PostsProvider>(builder: (context, postsProvider, child) {
-      return GestureDetector(
+      return InkWell(
         onTap: () {
           analyticsProvider.clickPost(
               "${widget.postData.type}Clicked", userProvider.user!.uid);
