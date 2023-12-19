@@ -151,7 +151,7 @@ class _MainScaffoldState extends State<MainScaffold>
                 },
                 itemBuilder: (BuildContext context) => [
                   PopupMenuItem<String>(
-                    value: 'date',
+                    value: 'createdAt',
                     child: const Text('Sort by Date'),
                   ),
                   PopupMenuItem<String>(
@@ -159,8 +159,8 @@ class _MainScaffoldState extends State<MainScaffold>
                     child: const Text('Sort by Likes'),
                   ),
                   PopupMenuItem<String>(
-                    value: 'comments',
-                    child: const Text('Sort by Comments'),
+                    value: 'score',
+                    child: const Text('Sort by Guciness'),
                   ),
                 ],
               ),
