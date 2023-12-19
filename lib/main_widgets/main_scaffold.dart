@@ -167,6 +167,7 @@ class _MainScaffoldState extends State<MainScaffold>
           ],
           bottom: _currentPageIndex == 0
               ? TabBar(
+                  tabAlignment: TabAlignment.center,
                   isScrollable: true,
                   controller: tabController,
                   tabs: tabBars[_currentPageIndex],

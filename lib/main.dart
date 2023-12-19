@@ -7,6 +7,7 @@ import 'package:gucy/main_widgets/main_scaffold.dart';
 import 'package:gucy/pages/login_signup_page.dart';
 import 'package:gucy/providers/analytics_provider.dart';
 import 'package:gucy/providers/posts_provider.dart';
+import 'package:gucy/widgets/post.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'providers/user_provider.dart';
@@ -39,8 +40,37 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    handleInitialUrl();
+  }
+
+  Future<void> handleInitialUrl() async {
+    // Uri.base contains the initial URL if the app was launched via a deep link
+    final initialUri = Uri.base;
+    if (initialUri != null) {
+      navigateBasedOnUrl(initialUri);
+    }
+  }
+
+  void navigateBasedOnUrl(Uri uri) {
+    // Parse the URI and get the path and parameters
+    String path = uri.path;
+    Map<String, String> params = uri.queryParameters;
+
+    // Example: Navigate to a specific widget based on the path
+    if (path == '/post') {
+      // Assuming you have a method to navigate
+      // You can pass parameters if needed
+      navigateToYourWidget(params);
+    }
+  }
+
+  void navigateToYourWidget(Map<String, String> params) {
+    // Use GoRouter or your preferred navigation method to navigate
+    // Example:
+    GoRouter.of(context).go('/post', extra: params);
   }
 
   @override
@@ -91,7 +121,19 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
         GoRoute(
           path: '/mainScaffold',
           builder: (context, state) => const MainScaffold(),
-        )
+        ),
+        GoRoute(
+          path: '/post',
+          builder: (context, state) {
+            // Extract parameters from the state
+            final params = state.pathParameters;
+            final postId = params['id'];
+            final postProvider =
+                Provider.of<PostsProvider>(context, listen: true);
+            final post = postProvider.getPostById(postId!);
+            return Post(postData: post);
+          },
+        ),
       ],
     );
     return MaterialApp.router(
