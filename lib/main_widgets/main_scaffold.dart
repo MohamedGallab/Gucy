@@ -92,7 +92,7 @@ class _MainScaffoldState extends State<MainScaffold>
 
   String actionBeforeDrawer = "";
   String pageBeforeDrawer = "";
-  String _sortingCriteria = "";
+  String _sortingCriteria = "createdAt";
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +165,7 @@ class _MainScaffoldState extends State<MainScaffold>
                   },
                   itemBuilder: (BuildContext context) => [
                     PopupMenuItem<String>(
-                      value: 'date',
+                      value: 'createdAt',
                       child: const Text('Sort by Date'),
                     ),
                     PopupMenuItem<String>(
@@ -173,8 +173,8 @@ class _MainScaffoldState extends State<MainScaffold>
                       child: const Text('Sort by Likes'),
                     ),
                     PopupMenuItem<String>(
-                      value: 'comments',
-                      child: const Text('Sort by Comments'),
+                      value: 'score',
+                      child: const Text('Sort by Guciness'),
                     ),
                   ],
                 ),
@@ -318,8 +318,7 @@ class _MainScaffoldState extends State<MainScaffold>
                     analyticsProvider.changeAction(
                         "Adding Lost and Found", userProvider.user!.uid);
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            CreatePostPage("LostAndFound")));
+                        builder: (context) => CreatePostPage("LostAndFound")));
                   } else if (_currentPageIndex == 0 &&
                       _currentInnerPageIndex == 4) {
                     analyticsProvider.changeAction(
