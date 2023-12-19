@@ -34,6 +34,21 @@ class UserProvider extends ChangeNotifier {
         _user = UserData.fromJson(data);
         _email = user.email!;
       }
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user!.uid)
+          .snapshots()
+          .listen(
+        (DocumentSnapshot snapshot) {
+          if (snapshot.exists) {
+            final data = snapshot.data() as Map<String, dynamic>;
+            _user = UserData.fromJson(data);
+            notifyListeners();
+          }
+        },
+      );
+
       notifyListeners();
     });
   }
@@ -112,20 +127,21 @@ class UserProvider extends ChangeNotifier {
         userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
       }
+
       FirebaseFirestore.instance
           .collection('users')
-          .doc(userCredential.user!.uid)
+          .doc(_user!.uid)
           .snapshots()
           .listen(
         (DocumentSnapshot snapshot) {
           if (snapshot.exists) {
             final data = snapshot.data() as Map<String, dynamic>;
             _user = UserData.fromJson(data);
-            _email = userCredential.user!.email!;
             notifyListeners();
           }
         },
       );
+
       return "success";
     } on FirebaseAuthException catch (e) {
       return e.code;
