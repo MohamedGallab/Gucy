@@ -144,7 +144,7 @@ class _PostState extends State<Post> {
               SizedBox(height: 10),
               Text(widget.postData.title,
                   style: Theme.of(context).textTheme.titleLarge),
-              if (widget.postData.tags.length > 0) SizedBox(height: 10),
+              SizedBox(height: 10),
               if (widget.postData.tags.length > 0)
                 Wrap(
                   spacing: 8,
@@ -155,15 +155,17 @@ class _PostState extends State<Post> {
                 ),
               if (widget.postData.tags.length > 0) SizedBox(height: 10),
               // GUCY METER
-              if (widget.postData.type == "confession") _buildGucyMeter(),
-              if (widget.postData.type != "confession" &&
+              if (widget.postData.type == "Confession") _buildGucyMeter(),
+              if (widget.postData.type != "Confession" &&
                   widget.postData.picture != "")
                 Image.network(
                   widget.postData.picture,
                   height: 300,
                   width: double.infinity,
                 ),
-              const SizedBox(height: 10),
+              if (widget.postData.type == "Confession" ||
+                  widget.postData.picture != "")
+                const SizedBox(height: 10),
               Text(widget.postData.body),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
