@@ -1,15 +1,19 @@
-// user_provider.dart
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:gucy/models/user_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider extends ChangeNotifier {
   UserData? _user = null;
   FirebaseFirestore db = FirebaseFirestore.instance;
   String _email = "";
+
+  late Brightness brightness = Brightness.light;
+  late Color chosenColor = Colors.orange;
 
   UserData? get user => _user;
   String get email => _email;
@@ -17,6 +21,7 @@ class UserProvider extends ChangeNotifier {
   bool get isAuthenticated => _user != null;
 
   UserProvider() {
+    loadUserPrefs();
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       _email = "";
       if (user == null) {
@@ -33,13 +38,39 @@ class UserProvider extends ChangeNotifier {
     });
   }
 
+  Future<void> loadUserPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    bool isDarkMode = prefs.getBool('isDarkMode') ?? false;
+    brightness = isDarkMode ? Brightness.dark : Brightness.light;
+    int colorValue = prefs.getInt('chosenColor') ?? Color.fromARGB(255, 17, 186, 76).value;
+    chosenColor = Color(colorValue);
+
+    notifyListeners();
+  }
+
+  Future<void> saveUserPreferences({
+    required bool isDarkMode,
+    required Color chosenColor,
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setBool('isDarkMode', isDarkMode);
+    await prefs.setInt('chosenColor', chosenColor.value);
+
+    brightness = isDarkMode ? Brightness.dark : Brightness.light;
+    this.chosenColor = chosenColor;
+
+    notifyListeners();
+  }
+
   Future<String> registerUser(String email, String password) async {
+    FirebaseApp app = await Firebase.initializeApp(
+        name: 'Secondary', options: Firebase.app().options);
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential userCredential = await FirebaseAuth.instanceFor(app: app)
+          .createUserWithEmailAndPassword(email: email, password: password);
+
       var user = {
         "uid": userCredential.user!.uid,
         "name": convertEmailToName(email),
@@ -55,9 +86,8 @@ class UserProvider extends ChangeNotifier {
         "uid": userCredential.user!.uid,
       };
       await db.collection("analytics").doc().set(analytics);
-      _email = userCredential.user!.email!;
 
-      _user = UserData.fromJson(user);
+      await userCredential.user!.sendEmailVerification();
       notifyListeners();
 
       return "success";
@@ -67,12 +97,20 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<String> loginUser(String email, String password) async {
+    FirebaseApp app = await Firebase.initializeApp(
+        name: 'Secondary', options: Firebase.app().options);
     try {
       UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+          await FirebaseAuth.instanceFor(app: app).signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      if (userCredential.user!.emailVerified == false) {
+        return "email-not-verified";
+      } else {
+        userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+      }
       FirebaseFirestore.instance
           .collection('users')
           .doc(userCredential.user!.uid)
@@ -120,6 +158,22 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+
+  Future<void> sendVerification(String email, String password) async {
+    FirebaseApp app = await Firebase.initializeApp(
+        name: 'Secondary', options: Firebase.app().options);
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instanceFor(app: app).signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      await userCredential.user!.sendEmailVerification();
+      notifyListeners();
+    } catch (e) {
+      print(e);
+
   Future<String> removeToken() async {
     try {
       await db.collection('users').doc(_user?.uid).update(
@@ -128,6 +182,7 @@ class UserProvider extends ChangeNotifier {
       return "success";
     } on FirebaseException catch (e) {
       return e.code;
+
     }
   }
 

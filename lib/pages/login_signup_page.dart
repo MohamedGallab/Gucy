@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:gucy/providers/user_provider.dart';
@@ -71,6 +72,25 @@ class _LoginPageState extends State<LoginPage>
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
+  void toggleLoginSignUp() {
+    setState(() {
+      if (state == "login") {
+        state = "signup";
+      } else {
+        state = "login";
+      }
+      username = '';
+      password = '';
+      confirmPassword = '';
+      passwordError = '';
+      usernameError = '';
+      confirmPasswordError = '';
+      usernameController.clear();
+      passwordController.clear();
+      confirmPasswordController.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -106,9 +126,9 @@ class _LoginPageState extends State<LoginPage>
         confirmPasswordError = 'Passwords do not match!';
       } else if (!emailRegex.hasMatch(username)) {
         usernameError = 'Invalid Email!';
-      } else if (state == "login") //add and condition for db returning false
-      {
+      } else if (state == "login") {
         isSendingData = true;
+
         String code = await userProvider.loginUser(username, password);
         isSendingData = false;
         if (code == 'invalid-credential') {
@@ -147,13 +167,32 @@ class _LoginPageState extends State<LoginPage>
               );
             },
           );
+        } else if (code == "email-not-verified") {
+          await showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text(
+                    'Email not verified! Check your email to verify your account then proceed to login.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
         } else if (code != "success") {
           await showDialog<void>(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text('Error'),
-                content: const Text('Unknown Error!'),
+                content: const Text('Unknown Error! Try again later!'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
@@ -167,18 +206,21 @@ class _LoginPageState extends State<LoginPage>
           );
         }
       } else if (state == "signup") {
+        print("register");
         isSendingData = true;
         String code = await userProvider.registerUser(username, password);
         isSendingData = false;
         if (code == 'weak-password') {
           passwordError = 'Password is too weak!';
         } else if (code == 'email-already-in-use') {
+          userProvider.sendVerification(username, password);
           await showDialog<void>(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text('Error'),
-                content: const Text('User already exists!'),
+                content: const Text(
+                    'User already exists! Verification mail resent!'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
@@ -190,13 +232,33 @@ class _LoginPageState extends State<LoginPage>
               );
             },
           );
+        } else if (code == "success") {
+          await showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Success'),
+                content: const Text(
+                    'Account created successfully! Check your email to verify your account then proceed to login.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+          toggleLoginSignUp();
         } else if (code != "success") {
           await showDialog<void>(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text('Error'),
-                content: const Text('Unknown Error!'),
+                content: const Text('Unknown Error! Try again later!'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
@@ -352,22 +414,7 @@ class _LoginPageState extends State<LoginPage>
                       Container(
                         child: TextButton(
                           onPressed: () {
-                            setState(() {
-                              if (state == "login") {
-                                state = "signup";
-                              } else {
-                                state = "login";
-                              }
-                              username = '';
-                              password = '';
-                              confirmPassword = '';
-                              passwordError = '';
-                              usernameError = '';
-                              confirmPasswordError = '';
-                              usernameController.clear();
-                              passwordController.clear();
-                              confirmPasswordController.clear();
-                            });
+                            toggleLoginSignUp();
                           },
                           child: Text(
                             state == "login"

@@ -8,7 +8,7 @@ import '../../providers/posts_provider.dart';
 import '../../widgets/post.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required String sortingCriteria});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> notificationTypes = [
       'Confession',
-      'Lost and Found',
+      'LostAndFound',
       'Event',
       'Question',
       'Mentions',

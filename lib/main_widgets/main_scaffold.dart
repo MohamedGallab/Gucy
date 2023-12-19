@@ -6,6 +6,11 @@ import 'package:gucy/providers/analytics_provider.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import '../pages/outlets_page.dart';
+import '../pages/post_pages/confessions_page.dart';
+import '../pages/post_pages/events_page.dart';
+import '../pages/post_pages/home_page.dart';
+import '../pages/post_pages/lost_and_found_page.dart';
+import '../pages/post_pages/questions_page.dart';
 import '../pages/staff_page.dart';
 import 'nav_bar.dart';
 import 'tab_bar_views.dart';
@@ -22,17 +27,30 @@ class _MainScaffoldState extends State<MainScaffold>
     with TickerProviderStateMixin {
   int _currentPageIndex = 0;
   int _currentInnerPageIndex = 0;
-  var tabController;
+  late TabController tabController;
 
+  // Add the listener
   @override
   void initState() {
     super.initState();
 
     tabController = TabController(vsync: this, length: tabBars[0].length);
+
+    // Add the listener
+    tabController.addListener(() {
+      if (!tabController.indexIsChanging) {
+        // The tab index change is complete
+        setState(() {
+          _currentInnerPageIndex = tabController.index;
+          // Update analytics or any other necessary state here
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
+    tabController.removeListener(() {}); // Remove the listener
     tabController.dispose();
     super.dispose();
   }
@@ -74,6 +92,7 @@ class _MainScaffoldState extends State<MainScaffold>
 
   String actionBeforeDrawer = "";
   String pageBeforeDrawer = "";
+  String _sortingCriteria = "";
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +154,31 @@ class _MainScaffoldState extends State<MainScaffold>
         ),
         appBar: AppBar(
             title: const Text('Gucy'),
+            actions: [
+              if (_currentPageIndex == 0)
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    setState(() {
+                      _sortingCriteria = value;
+                    });
+                    print('Selected sorting option: $value');
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    PopupMenuItem<String>(
+                      value: 'date',
+                      child: const Text('Sort by Date'),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'likes',
+                      child: const Text('Sort by Likes'),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'comments',
+                      child: const Text('Sort by Comments'),
+                    ),
+                  ],
+                ),
+            ],
             bottom: _currentPageIndex == 0
                 ? TabBar(
                     isScrollable: true,
@@ -184,7 +228,23 @@ class _MainScaffoldState extends State<MainScaffold>
         body: [
           TabBarView(
             controller: tabController,
-            children: tabBarViews[0],
+            children: [
+              HomePage(
+                sortingCriteria: _sortingCriteria,
+              ),
+              ConfessionsPage(
+                sortingCriteria: _sortingCriteria,
+              ),
+              EventsPage(
+                sortingCriteria: _sortingCriteria,
+              ),
+              LostAndFoundPage(
+                sortingCriteria: _sortingCriteria,
+              ),
+              QuestionsPage(
+                sortingCriteria: _sortingCriteria,
+              ),
+            ],
           ),
           StaffPage(),
           OutletPage(),
@@ -199,7 +259,7 @@ class _MainScaffoldState extends State<MainScaffold>
                         "Adding Confession", userProvider.user!.uid);
 
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CreatePostPage("confession")));
+                        builder: (context) => CreatePostPage("Confession")));
                   } else if (_currentPageIndex == 0 &&
                       _currentInnerPageIndex == 2) {
                     if (userProvider.user?.eventPermission != "Home" &&
@@ -251,7 +311,7 @@ class _MainScaffoldState extends State<MainScaffold>
                       analyticsProvider.changeAction(
                           "Adding Event", userProvider.user!.uid);
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CreatePostPage("event")));
+                          builder: (context) => CreatePostPage("Event")));
                     }
                   } else if (_currentPageIndex == 0 &&
                       _currentInnerPageIndex == 3) {
@@ -259,13 +319,13 @@ class _MainScaffoldState extends State<MainScaffold>
                         "Adding Lost and Found", userProvider.user!.uid);
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) =>
-                            CreatePostPage("lost and found")));
+                            CreatePostPage("LostAndFound")));
                   } else if (_currentPageIndex == 0 &&
                       _currentInnerPageIndex == 4) {
                     analyticsProvider.changeAction(
                         "Adding Question", userProvider.user!.uid);
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CreatePostPage("question")));
+                        builder: (context) => CreatePostPage("Question")));
                   } else if (_currentPageIndex == 2) {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ContactsPage()));

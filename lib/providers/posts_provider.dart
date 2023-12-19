@@ -54,7 +54,7 @@ class PostsProvider with ChangeNotifier {
   void loadConfessions(String sortingMetric) {
     FirebaseFirestore.instance
         .collection('posts')
-        .where('type', isEqualTo: 'confession')
+        .where('type', isEqualTo: 'Confession')
         .orderBy(sortingMetric)
         .snapshots()
         .listen(
@@ -77,7 +77,7 @@ class PostsProvider with ChangeNotifier {
   void loadQuestions(String sortingMetric) {
     FirebaseFirestore.instance
         .collection('posts')
-        .where('type', isEqualTo: 'question')
+        .where('type', isEqualTo: 'Question')
         .orderBy(sortingMetric)
         .snapshots()
         .listen(
@@ -100,7 +100,7 @@ class PostsProvider with ChangeNotifier {
   void loadLostAndFound(String sortingMetric) {
     FirebaseFirestore.instance
         .collection('posts')
-        .where('type', isEqualTo: 'lost and found')
+        .where('type', isEqualTo: 'LostAndFound')
         .orderBy(sortingMetric)
         .snapshots()
         .listen(
@@ -123,7 +123,7 @@ class PostsProvider with ChangeNotifier {
   void loadEvents(String sortingMetric) {
     FirebaseFirestore.instance
         .collection('posts')
-        .where('type', isEqualTo: 'event')
+        .where('type', isEqualTo: 'Event')
         .orderBy(sortingMetric)
         .snapshots()
         .listen(

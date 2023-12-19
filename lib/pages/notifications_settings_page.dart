@@ -8,7 +8,7 @@ class NotificationsSettingsPage extends StatefulWidget {
   const NotificationsSettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<NotificationsSettingsPage> createState() =>
+  _NotificationsSettingsPageState createState() =>
       _NotificationsSettingsPageState();
 }
 
@@ -16,7 +16,7 @@ class _NotificationsSettingsPageState extends State<NotificationsSettingsPage> {
   // Sample list of notification types
   List<String> notificationTypes = [
     'Confession',
-    'Lost and Found',
+    'LostAndFound',
     'Event',
     'Question',
     'Mentions',

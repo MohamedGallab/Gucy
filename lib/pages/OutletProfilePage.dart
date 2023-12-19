@@ -28,26 +28,24 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
     super.initState();
     _reviews = widget.outlet.reviews;
   }
-  openMaps(){
+
+  openMaps() {
     _launcjMaps(widget.outlet.location);
   }
-  void _launcjMaps(String location) async{
-    Uri url =Uri.parse(location);
-    try {
-           
-           await launchUrl(url);
-         } catch (e) {
-           print('can not open: $e');
-           // Handle the error as needed
-        }
 
+  void _launcjMaps(String location) async {
+    Uri url = Uri.parse(location);
+    try {
+      await launchUrl(url);
+    } catch (e) {
+      print('can not open: $e');
+      // Handle the error as needed
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(
-      context,listen: false
-    );
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     for (int i = 0; i < widget.outlet.reviews.length; i++) {
       if (widget.outlet.reviews[i].userId == userProvider.user?.uid) {
         setState(() {
@@ -59,7 +57,7 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
       appBar: AppBar(
         title: Text(widget.outlet.name),
       ),
-       floatingActionButton: hasReview
+      floatingActionButton: hasReview
           ? FloatingActionButton(
               onPressed: () {
                 print(MediaQuery.of(context).viewInsets.bottom);
@@ -94,8 +92,6 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                       
-                       
                         Text(
                           widget.outlet.name,
                           style: TextStyle(
@@ -116,7 +112,7 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Description',
                   style: TextStyle(fontSize: 20),
@@ -129,9 +125,55 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
                 ),
               ],
             ),
-
+            SizedBox(height: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20),
+                Container(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              
+                                  Text(
+                                    "Phone number",
+                                    style: TextStyle( fontSize: 20),
+                                  ),
+                                
+                              ],
+                          ),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                              TextButton(
+                                onPressed: () {
+                                  try {
+                                    String temp = widget.outlet.number;
+                                    Uri phoneno = Uri.parse('tel:$temp');
+                                    launchUrl(phoneno);
+                                  } catch (e) {
+                                    print('Error calling phone number: $e');
+                                  }
+                                },
+                                child: Text(widget.outlet.number,style: TextStyle(fontSize: 16),),
+                              )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+               ],
+            ),
             // Display outlet reviews
-
+            SizedBox(height: 10),
             if (_reviews.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +215,6 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
       ),
     );
   }
-
 
   List<Widget> _buildReviewsList(userProvider) {
     List<Widget> widgets = [];
@@ -258,7 +299,9 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
                     Container(
                       width: 150,
                       child: Text(
-                        _reviews[i].userName.length>12?_reviews[i].userName.substring(0, 10)+"..":_reviews[i].userName,
+                        _reviews[i].userName.length > 12
+                            ? _reviews[i].userName.substring(0, 10) + ".."
+                            : _reviews[i].userName,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
@@ -331,9 +374,8 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
         context: ctx,
         isScrollControlled: true,
         builder: (sheetContext) {
-          final userProvider = Provider.of<UserProvider>(
-            context,listen: false
-          );
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
           print(hasReview);
           return Padding(
               padding: EdgeInsets.only(
@@ -411,7 +453,7 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
       Review newReview = Review(
         image: userProvider.user?.picture == "" ||
                 userProvider.user?.picture == null
-            ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            ? "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/768px-Windows_10_Default_Profile_Picture.svg.png?20221210150350"
             : userProvider.user?.picture,
         userId: userProvider.user?.uid as String,
         userName: userProvider.user?.name as String,
@@ -493,9 +535,7 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final userProvider = Provider.of<UserProvider>(
-          context,listen: false
-        );
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
         return AlertDialog(
           title: Text('Delete Confirmation'),
           content: Text('Are you sure you want to delete this item?'),
@@ -539,8 +579,7 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
           newList.add(_reviews[i].toJson());
         }
       }
-      if(remove>-1)
-        _reviews.removeAt(remove);
+      if (remove > -1) _reviews.removeAt(remove);
       await FirebaseFirestore.instance
           .collection('outlets')
           .doc(widget.outlet.id)

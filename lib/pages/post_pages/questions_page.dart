@@ -5,7 +5,7 @@ import '../../providers/posts_provider.dart';
 import '../../widgets/post.dart';
 
 class QuestionsPage extends StatefulWidget {
-  const QuestionsPage({super.key});
+  const QuestionsPage({super.key, required String sortingCriteria});
 
   @override
   State<QuestionsPage> createState() => _QuestionsPageState();
