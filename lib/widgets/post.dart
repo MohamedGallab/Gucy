@@ -5,9 +5,8 @@ import 'package:gucy/widgets/flare.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
-
 import '../models/post_data.dart'; // For formatting time
-
+import 'package:share_plus/share_plus.dart';
 import '../providers/posts_provider.dart';
 import 'expanded_post_page.dart';
 
@@ -41,6 +40,17 @@ class _PostState extends State<Post> {
     } else {
       return 'Just now';
     }
+  }
+
+  String generateDeepLink(String path, Map<String, dynamic> queryParams) {
+    Uri uri = Uri(
+      scheme:
+          'gucy', // Or 'https' if you are using Universal Links or App Links
+      host: 'gucy.page.link',
+      path: "post",
+      queryParameters: queryParams,
+    );
+    return uri.toString();
   }
 
   @override
@@ -234,7 +244,11 @@ class _PostState extends State<Post> {
                   ),
                   IconButton(
                     icon: Icon(Icons.share),
-                    onPressed: () {},
+                    onPressed: () {
+                      String url = generateDeepLink(
+                          '/yourPath', {'id': widget.postData.id});
+                      Share.share('Check out this content!\n$url');
+                    },
                   ),
                 ],
               ),

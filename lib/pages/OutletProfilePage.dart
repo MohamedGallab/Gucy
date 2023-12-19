@@ -105,7 +105,13 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
                     ),
                   ],
                 ),
-                ElevatedButton(onPressed: openMaps, child: Text("open in maps"))
+                ElevatedButton(
+                    onPressed: openMaps,
+                    child: Row(
+                      children: [
+                        Icon(Icons.map),
+                      ],
+                    ))
               ],
             ),
 
@@ -138,30 +144,31 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
                         children: [
                           Row(
                             children: [
-                              
-                                  Text(
-                                    "Phone number",
-                                    style: TextStyle( fontSize: 20),
-                                  ),
-                                
-                              ],
+                              Text(
+                                "Phone number",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ],
                           ),
                           Expanded(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                              TextButton(
-                                onPressed: () {
-                                  try {
-                                    String temp = widget.outlet.number;
-                                    Uri phoneno = Uri.parse('tel:$temp');
-                                    launchUrl(phoneno);
-                                  } catch (e) {
-                                    print('Error calling phone number: $e');
-                                  }
-                                },
-                                child: Text(widget.outlet.number,style: TextStyle(fontSize: 16),),
-                              )
+                                TextButton(
+                                  onPressed: () {
+                                    try {
+                                      String temp = widget.outlet.number;
+                                      Uri phoneno = Uri.parse('tel:$temp');
+                                      launchUrl(phoneno);
+                                    } catch (e) {
+                                      print('Error calling phone number: $e');
+                                    }
+                                  },
+                                  child: Text(
+                                    widget.outlet.number,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -170,7 +177,7 @@ class _OutletProfilePageState extends State<OutletProfilePage> {
                     ],
                   ),
                 ),
-               ],
+              ],
             ),
             // Display outlet reviews
             SizedBox(height: 10),
