@@ -15,9 +15,9 @@ class _QuestionsPageState extends State<QuestionsPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PostsProvider>(context, listen: false).loadQuestions();
+    Provider.of<PostsProvider>(context, listen: false).loadQuestions("");
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PostsProvider>(

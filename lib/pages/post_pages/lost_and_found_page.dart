@@ -15,9 +15,9 @@ class _LostAndFoundPageState extends State<LostAndFoundPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PostsProvider>(context, listen: false).loadLostAndFound();
+    Provider.of<PostsProvider>(context, listen: false).loadLostAndFound("");
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PostsProvider>(
