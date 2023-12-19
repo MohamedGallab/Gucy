@@ -105,7 +105,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
 
     final _router = GoRouter(
       redirect: (context, state) {
-        if (!Provider.of<UserProvider>(context, listen: false).isAuthenticated) {
+        if (!Provider.of<UserProvider>(context, listen: true).isAuthenticated) {
           return '/';
         } else {}
 
