@@ -10,11 +10,11 @@ import 'package:gucy/pages/staff_page.dart';
 
 List<List<Widget>> tabBarViews = [
   [
-    HomePage(),
-    ConfessionsPage(),
-    EventsPage(),
-    LostAndFoundPage(),
-    QuestionsPage(),
+    // HomePage(),
+    // ConfessionsPage(),
+    // EventsPage(),
+    // LostAndFoundPage(),
+    // QuestionsPage(),
   ],
   [
     StaffPage(),

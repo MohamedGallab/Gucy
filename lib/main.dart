@@ -77,7 +77,7 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
 
     final _router = GoRouter(
       redirect: (context, state) {
-        if (!userProvider.isAuthenticated) {
+        if (!Provider.of<UserProvider>(context, listen: true).isAuthenticated) {
           return '/';
         } else {}
 
@@ -100,10 +100,6 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
           colorScheme: ColorScheme.fromSeed(
               seedColor: userProvider.chosenColor,
               brightness: userProvider.brightness)),
-      // darkTheme: ThemeData(
-      //     useMaterial3: true,
-      //     colorScheme: ColorScheme.fromSeed(
-      //         seedColor: Color.fromARGB(255, 4, 199, 14), brightness: Brightness.dark)),
       routerConfig: _router,
     );
   }

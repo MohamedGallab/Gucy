@@ -46,6 +46,14 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
     dialogPickerColor = Colors.red;
     dialogSelectColor = const Color(0xFFA239CA);
     isDark = false;
+
+    setState(() {
+      isDark = Provider.of<UserProvider>(context, listen: false).brightness ==
+          Brightness.dark;
+      dialogPickerColor =
+          Provider.of<UserProvider>(context, listen: false).chosenColor;
+    });
+
     super.initState();
   }
 
@@ -85,7 +93,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
                   setState(() {
                     dialogPickerColor = colorBeforeDialog;
                   });
-                  Provider.of<UserProvider>(context, listen: false)
+                  Provider.of<UserProvider>(context, listen: true)
                       .saveUserPreferences(
                           isDarkMode: isDark, chosenColor: dialogPickerColor);
                 }
@@ -116,10 +124,12 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
   Future<bool> colorPickerDialog() async {
     return ColorPicker(
       color: dialogPickerColor,
-      onColorChanged: (Color color) => setState(() {
-        dialogPickerColor = color;
+      onColorChangeEnd: (Color color) {
         Provider.of<UserProvider>(context, listen: false).saveUserPreferences(
             isDarkMode: isDark, chosenColor: dialogPickerColor);
+      },
+      onColorChanged: (Color color) => setState(() {
+        dialogPickerColor = color;
       }),
       width: 40,
       height: 40,

@@ -6,6 +6,11 @@ import 'package:gucy/providers/analytics_provider.dart';
 import 'package:gucy/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import '../pages/outlets_page.dart';
+import '../pages/post_pages/confessions_page.dart';
+import '../pages/post_pages/events_page.dart';
+import '../pages/post_pages/home_page.dart';
+import '../pages/post_pages/lost_and_found_page.dart';
+import '../pages/post_pages/questions_page.dart';
 import '../pages/staff_page.dart';
 import 'nav_bar.dart';
 import 'tab_bar_views.dart';
@@ -74,6 +79,7 @@ class _MainScaffoldState extends State<MainScaffold>
 
   String actionBeforeDrawer = "";
   String pageBeforeDrawer = "";
+  String _sortingCriteria = "";
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +141,31 @@ class _MainScaffoldState extends State<MainScaffold>
         ),
         appBar: AppBar(
             title: const Text('Gucy'),
+            actions: [
+              if (_currentPageIndex == 0)
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    setState(() {
+                      _sortingCriteria = value;
+                    });
+                    print('Selected sorting option: $value');
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    PopupMenuItem<String>(
+                      value: 'date',
+                      child: const Text('Sort by Date'),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'likes',
+                      child: const Text('Sort by Likes'),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'comments',
+                      child: const Text('Sort by Comments'),
+                    ),
+                  ],
+                ),
+            ],
             bottom: _currentPageIndex == 0
                 ? TabBar(
                     isScrollable: true,
@@ -184,7 +215,23 @@ class _MainScaffoldState extends State<MainScaffold>
         body: [
           TabBarView(
             controller: tabController,
-            children: tabBarViews[0],
+            children: [
+              HomePage(
+                sortingCriteria: _sortingCriteria,
+              ),
+              ConfessionsPage(
+                sortingCriteria: _sortingCriteria,
+              ),
+              EventsPage(
+                sortingCriteria: _sortingCriteria,
+              ),
+              LostAndFoundPage(
+                sortingCriteria: _sortingCriteria,
+              ),
+              QuestionsPage(
+                sortingCriteria: _sortingCriteria,
+              ),
+            ],
           ),
           StaffPage(),
           OutletPage(),

@@ -56,6 +56,9 @@ class UserProvider extends ChangeNotifier {
     await prefs.setBool('isDarkMode', isDarkMode);
     await prefs.setInt('chosenColor', chosenColor.value);
 
+    brightness = isDarkMode ? Brightness.dark : Brightness.light;
+    this.chosenColor = chosenColor;
+
     notifyListeners();
   }
 
