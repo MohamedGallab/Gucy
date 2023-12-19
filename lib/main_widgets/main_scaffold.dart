@@ -92,7 +92,7 @@ class _MainScaffoldState extends State<MainScaffold>
 
   String actionBeforeDrawer = "";
   String pageBeforeDrawer = "";
-  String _sortingCriteria = "";
+  String _sortingCriteria = "createdAt";
 
   @override
   Widget build(BuildContext context) {

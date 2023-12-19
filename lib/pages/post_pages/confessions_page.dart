@@ -17,7 +17,8 @@ class _ConfessionsPageState extends State<ConfessionsPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<PostsProvider>(context, listen: false).loadConfessions("");
+    Provider.of<PostsProvider>(context, listen: false)
+        .loadConfessions(sortingMetric: widget.sortingCriteria);
   }
 
   @override

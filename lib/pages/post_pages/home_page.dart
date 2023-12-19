@@ -9,7 +9,9 @@ import '../../providers/posts_provider.dart';
 import '../../widgets/post.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required String sortingCriteria});
+  final String sortingCriteria;
+
+  const HomePage({super.key, required this.sortingCriteria});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -20,7 +22,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _loadNotificationSettings();
     super.initState();
-    Provider.of<PostsProvider>(context, listen: false).loadPosts("");
+    Provider.of<PostsProvider>(context, listen: false)
+        .loadPosts(sortingMetric: widget.sortingCriteria);
   }
 
   Future<void> _loadNotificationSettings() async {

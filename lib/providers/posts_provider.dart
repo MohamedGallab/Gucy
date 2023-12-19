@@ -13,7 +13,7 @@ class PostsProvider with ChangeNotifier {
   List<PostData> _myPosts = [];
 
   PostsProvider() {
-    loadPosts("");
+    loadPosts();
   }
 
   List<PostData> get posts => _posts;
@@ -47,7 +47,7 @@ class PostsProvider with ChangeNotifier {
     );
   }
 
-  void loadConfessions(String sortingMetric) {
+  void loadConfessions({String sortingMetric = "createdAt"}) {
     FirebaseFirestore.instance
         .collection('posts')
         .where('type', isEqualTo: 'Confession')
@@ -69,7 +69,7 @@ class PostsProvider with ChangeNotifier {
     );
   }
 
-  void loadQuestions(String sortingMetric) {
+  void loadQuestions({String sortingMetric = "createdAt"}) {
     FirebaseFirestore.instance
         .collection('posts')
         .where('type', isEqualTo: 'Question')
@@ -91,7 +91,7 @@ class PostsProvider with ChangeNotifier {
     );
   }
 
-  void loadLostAndFound(String sortingMetric) {
+  void loadLostAndFound({String sortingMetric = "createdAt"}) {
     FirebaseFirestore.instance
         .collection('posts')
         .where('type', isEqualTo: 'LostAndFound')
@@ -113,7 +113,7 @@ class PostsProvider with ChangeNotifier {
     );
   }
 
-  void loadEvents(String sortingMetric) {
+  void loadEvents({String sortingMetric = "createdAt"}) {
     FirebaseFirestore.instance
         .collection('posts')
         .where('type', isEqualTo: 'Event')
