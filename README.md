@@ -1,3 +1,3 @@
-# gucy
+# Gucy
 
 A new Flutter project.
